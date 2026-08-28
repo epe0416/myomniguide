@@ -2,14 +2,14 @@
 import { GLOSARIO } from '../data/glosario';
 ---
 
-<!-- Modal Flotante / Popover de Glosario -->
+<!-- Modal Flotante de Glosario Centrado (Móvil y Desktop) -->
 <div 
   id="glosario-modal" 
-  class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
+  class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
 >
   <div 
     id="glosario-card"
-    class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl border border-slate-200 transform translate-y-4 sm:translate-y-0 transition-transform duration-200"
+    class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl border border-slate-200 transition-all duration-200"
   >
     <div class="flex items-start justify-between mb-2">
       <div class="flex items-center gap-2">
@@ -38,7 +38,6 @@ import { GLOSARIO } from '../data/glosario';
 <script is:inline define:vars={{ GLOSARIO }}>
   document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('glosario-modal');
-    const card = document.getElementById('glosario-card');
     const tituloEl = document.getElementById('glosario-titulo');
     const descEl = document.getElementById('glosario-descripcion');
     const btnCerrar = document.getElementById('glosario-cerrar');
@@ -60,7 +59,6 @@ import { GLOSARIO } from '../data/glosario';
       modal.classList.remove('opacity-100');
     }
 
-    // Event Delegated Listener para cualquier palabra con clase .glosario-term
     document.addEventListener('click', (e) => {
       const target = e.target.closest('.glosario-term');
       if (target) {
