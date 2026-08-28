@@ -7,14 +7,11 @@ categorias:
   - "Nutrición General"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
-  - "Aporte de licopeno y zinc para la protección antioxidante del tejido prostático."
+  - 'Aporte de <dfn class="glosario-term" data-term="licopeno">licopeno</dfn> y zinc para la protección antioxidante del tejido prostático.'
   - "Soporte al bienestar del tracto urinario mediante extracto de arándano rojo (cranberry)."
-  - "Mantenimiento del equilibrio hormonal y nutricional masculino (selenio, vitamina C y E)."
-modoUso: "Disolver 1 sobre en 200 a 250 ml de agua fresca o fría. Tomar de 1 a 3 sobres al día según las necesidades individuales."
+modoUso: "Disolver 1 sobre en 200 a 250 ml de agua fresca o fría."
 paraQuienEs:
   - "Hombres de cualquier edad que buscan prevención y soporte para la salud prostática y urinaria."
-  - "Hombres expuestos a alto estrés laboral, desgaste físico o hábitos sedentarios."
-  - "Personas que buscan nutrición sin azúcares añadidos (endulzado con estevia)."
 destacado: true
 
 empresario:
@@ -40,4 +37,4 @@ empresario:
 
 ### Descripción Nutricional
 
-Homo Plus es una formulación técnica diseñada para cubrir los requerimientos nutricionales del sistema reproductor y urinario masculino. Su matriz combina carotenoides liposolubles (licopeno), flavonoides de arándano rojo, minerales traza concentrados (zinc y selenio) y vitaminas antioxidantes que combaten el daño oxidativo celular de la pelvis masculina.
+Homo Plus es una formulación técnica diseñada para cubrir los requerimientos nutricionales del sistema reproductor y urinario masculino. Su matriz combina carotenoides liposolubles (<dfn class="glosario-term" data-term="licopeno">licopeno</dfn>), flavonoides de arándano rojo y zinc.

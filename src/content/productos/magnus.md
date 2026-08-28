@@ -7,7 +7,7 @@ categorias:
   - "Nutrición General"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
-  - "Optimizador endógeno de energía a través del Complejo B y Cromo."
+  - 'Optimizador endógeno de energía a través del Complejo B y <dfn class="glosario-term" data-term="cromo">Cromo</dfn>.'
 modoUso: "Disolver 1 sobre en 200 a 250 ml de agua fría."
 paraQuienEs:
   - "Profesionales y estudiantes con altas jornadas de exigencia mental."
@@ -37,4 +37,4 @@ empresario:
 
 ### Descripción Nutricional
 
-Magnus es una formulación técnica diseñada para potenciar la producción natural de energía a nivel celular. A diferencia de las bebidas estimulantes convencionales cargadas de sacarosa, Magnus integra vitaminas hidrosolubles y minerales traza que acompañan las rutas metabólicas del organismo sin sobrecargar el sistema digestivo ni alterar los niveles de glucosa en sangre.
+Magnus es una formulación técnica diseñada para potenciar la producción natural de energía a nivel celular. A diferencia de las bebidas estimulantes convencionales cargadas de sacarosa, Magnus integra vitaminas hidrosolubles y minerales traza como el <dfn class="glosario-term" data-term="cromo">Cromo</dfn>.

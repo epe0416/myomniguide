@@ -47,10 +47,10 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
       
       <h2 class="text-xl font-extrabold text-slate-950 mb-2">{nombre}</h2>
       
-      <!-- Descripción con límite estricto de 2 líneas para simetría -->
-      <p class="text-slate-700 text-sm leading-relaxed mb-4 line-clamp-2" title={beneficioPrincipal}>
-        {beneficioPrincipal}
-      </p>
+      <p 
+        class="text-slate-700 text-sm leading-relaxed mb-4 line-clamp-2" 
+        set:html={beneficioPrincipal} 
+      />
     </div>
     
     <!-- Bloque inferior empujado al fondo de la tarjeta -->

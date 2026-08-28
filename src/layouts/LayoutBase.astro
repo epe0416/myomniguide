@@ -1,6 +1,7 @@
 ---
 // src/layouts/LayoutBase.astro
 import '../styles/global.css';
+import GlosarioModal from '../components/GlosarioModal.astro';
 
 interface Props {
   titulo: string;
@@ -88,6 +89,15 @@ const currentPath = Astro.url.pathname;
       </p>
     </div>
   </footer>
+  <GlosarioModal/>
 
   </body>
 </html>
+
+<style is:global>
+  @import "tailwindcss";
+
+  .glosario-term {
+    @apply underline decoration-dotted decoration-purple-600 underline-offset-4 cursor-pointer font-semibold text-purple-900 hover:text-purple-700 not-italic;
+  }
+</style>
