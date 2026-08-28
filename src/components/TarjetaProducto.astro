@@ -1,0 +1,55 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro'; // Importamos el tipo estricto
+
+interface Props {
+  slug: string;
+  nombre: string;
+  categoria: string;
+  beneficioPrincipal: string;
+  formato: string;
+  imagen?: ImageMetadata; // <-- El signo '?' indica que puede ser undefined
+}
+
+const { slug, nombre, categoria, beneficioPrincipal, formato, imagen } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
+---
+
+<article class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden">
+  <div class="bg-slate-50 p-6 flex justify-center items-center h-48 border-b border-slate-100">
+    {imagen ? (
+      <Image 
+        src={imagen} 
+        alt={`Imagen de ${nombre}`} 
+        class="max-h-full w-auto object-contain drop-shadow-sm"
+        width={300}
+        height={300}
+      />
+    ) : (
+      <div class="text-slate-400 text-xs font-medium">Sin imagen disponible</div>
+    )}
+  </div>
+
+  <div class="p-6 flex flex-col flex-1 justify-between">
+    <div>
+      <div class="flex justify-between items-start mb-2 gap-2">
+        <span class="text-xs font-semibold tracking-wider text-purple-700 uppercase">
+          {categoria}
+        </span>
+        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">
+          {formato}
+        </span>
+      </div>
+      
+      <h3 class="text-xl font-bold text-slate-900 mb-2">{nombre}</h3>
+      <p class="text-slate-600 text-sm leading-relaxed mb-4">{beneficioPrincipal}</p>
+    </div>
+    
+    <a 
+      href={`${baseUrl}productos/${slug}`}
+      class="block w-full text-center bg-purple-700 hover:bg-purple-800 text-white font-medium py-2.5 px-4 rounded-lg text-sm transition-colors"
+    >
+      Ver ficha completa
+    </a>
+  </div>
+</article>

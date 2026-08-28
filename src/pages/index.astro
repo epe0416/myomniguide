@@ -1,11 +1,87 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import LayoutBase from '../layouts/LayoutBase.astro';
+import TarjetaProducto from '../components/TarjetaProducto.astro';
+import { getCollection } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const productos = await getCollection('productos');
+// Filtramos solo los productos marcados como destacados en su Frontmatter
+const productosDestacados = productos.filter((p) => p.data.destacado);
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<LayoutBase titulo="Inicio - Guía Interactiva Omnilife">
+  <!-- Hero Section con Selección de Perfil -->
+  <section class="bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-950 text-white rounded-3xl p-8 md:p-12 mb-12 shadow-xl">
+    <div class="max-w-3xl">
+      <span class="inline-block text-xs font-bold tracking-widest bg-purple-500/30 text-purple-200 px-3.5 py-1.5 rounded-full uppercase border border-purple-400/30 mb-4">
+        Bienvenido a MyOmniGuide
+      </span>
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4">
+        Tu portal técnico de nutrición y herramientas de negocio.
+      </h1>
+      <p class="text-purple-100 text-lg leading-relaxed mb-8">
+        Información precisa para cuidar tu salud como consumidor o potenciar tus ventas como Empresario Omnilife.
+      </p>
+
+      <!-- Tarjetas de Selección de Perfil -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <a 
+          href={`${baseUrl}productos?perfil=consumidor`} 
+          class="bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md p-5 rounded-2xl transition-all group"
+        >
+          <div class="text-2xl mb-1">🥤</div>
+          <h3 class="font-bold text-white group-hover:text-purple-200 text-lg flex items-center justify-between">
+            Soy Consumidor
+            <span class="group-hover:translate-x-1 transition-transform">→</span>
+          </h3>
+          <p class="text-purple-200 text-xs mt-1">
+            Descubre beneficios, modos de preparación y suplementación adecuada.
+          </p>
+        </a>
+
+        <a 
+          href={`${baseUrl}productos?perfil=empresario`} 
+          class="bg-purple-600/40 hover:bg-purple-600/60 border border-purple-400/40 backdrop-blur-md p-5 rounded-2xl transition-all group"
+        >
+          <div class="text-2xl mb-1">💼</div>
+          <h3 class="font-bold text-white group-hover:text-purple-200 text-lg flex items-center justify-between">
+            Soy Empresario / Distribuidor
+            <span class="group-hover:translate-x-1 transition-transform">→</span>
+          </h3>
+          <p class="text-purple-200 text-xs mt-1">
+            Accede a argumentos de venta, tips de demostración y fichas completas.
+          </p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Productos Destacados -->
+  <section class="mb-12">
+    <div class="flex justify-between items-end mb-6">
+      <div>
+        <h2 class="text-2xl font-bold text-slate-900">Productos Destacados</h2>
+        <p class="text-slate-600 text-sm">Los suplementos de mayor impacto en el catálogo.</p>
+      </div>
+      <a 
+        href={`${baseUrl}productos`} 
+        class="text-sm font-semibold text-purple-700 hover:text-purple-900 transition-colors"
+      >
+        Ver catálogo completo →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {productosDestacados.map((item) => (
+        <TarjetaProducto
+          slug={item.id}
+          nombre={item.data.nombre}
+          categoria={item.data.categoria}
+          beneficioPrincipal={item.data.beneficiosPrincipales[0]}
+          formato={item.data.formato}
+          imagen={item.data.imagen}
+        />
+      ))}
+    </div>
+  </section>
+</LayoutBase>

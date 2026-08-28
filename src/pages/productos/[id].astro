@@ -1,0 +1,112 @@
+---
+import LayoutBase from '../../layouts/LayoutBase.astro';
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets'; // <-- Importación nativa
+
+export async function getStaticPaths() {
+  const productos = await getCollection('productos');
+  return productos.map((producto) => ({
+    params: { id: producto.id },
+    props: { producto },
+  }));
+}
+
+const { producto } = Astro.props;
+const { nombre, subtitulo, categoria, formato, beneficiosPrincipales, modoUso, paraQuienEs, imagen } = producto.data;
+const { Content } = await render(producto);
+const baseUrl = import.meta.env.BASE_URL;
+---
+
+<LayoutBase titulo={`${nombre} - Ficha Técnica`}>
+  <div class="mb-8 mt-4">
+    <a href={baseUrl} class="inline-flex items-center gap-2 text-sm font-semibold text-purple-700 hover:text-purple-900 transition-colors">
+      ← Volver al catálogo completo
+    </a>
+  </div>
+
+  <article class="bg-white rounded-3xl border border-slate-100 p-8 md:p-12 shadow-lg shadow-slate-100/50">
+    <!-- Encabezado con Grid: Imagen a un lado y Datos al otro -->
+    <header class="grid grid-cols-1 md:grid-cols-12 gap-8 border-b border-slate-100 pb-10 mb-10 items-center">
+      
+      <!-- Imagen optimizada grande -->
+      <div class="md:col-span-4 bg-slate-50 p-6 rounded-2xl border border-slate-100 flex justify-center items-center">
+        {imagen ? (
+          <Image 
+            src={imagen} 
+            alt={`Empaque oficial de ${nombre}`}
+            class="max-h-64 w-auto object-contain drop-shadow-md"
+            loading="eager"
+          />
+        ) : (
+          <div class="text-slate-400 text-sm font-medium py-12">Sin imagen de producto</div>
+        )}
+      </div>
+
+      <!-- Títulos y resumen del encabezado -->
+      <div class="md:col-span-8">
+        <div class="flex flex-wrap items-center gap-3 mb-3">
+          <span class="text-xs font-bold tracking-widest text-purple-700 uppercase bg-purple-100 px-3.5 py-1 rounded-full">
+            {categoria}
+          </span>
+          <span class="text-xs font-medium text-slate-600 bg-slate-100 px-3.5 py-1 rounded-full border border-slate-200">
+            {formato}
+          </span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-950 tracking-tight">{nombre}</h1>
+        <p class="text-slate-700 text-lg mt-3 leading-relaxed">{subtitulo}</p>
+      </div>
+    </header>
+
+    <!-- Resumen de Beneficios y Uso: Grid con mejor espaciado -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+      
+      <!-- Panel de Beneficios Clave: Fondo de color suave para destacar -->
+      <div class="bg-purple-50 p-8 rounded-2xl border border-purple-100 shadow-inner">
+        <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          Key Highlights / Beneficios Clave
+        </h2>
+        <ul class="space-y-4">
+          {beneficiosPrincipales.map((beneficio) => (
+            <li class="text-slate-800 text-base flex items-start gap-3 leading-relaxed">
+              <!-- Viñeta estilizada -->
+              <span class="mt-1 text-purple-600 font-bold text-xl">•</span>
+              <span>{beneficio}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Panel de Uso y Público: Más organizado -->
+      <div class="space-y-10">
+        <div class="bg-white p-6 rounded-2xl border border-slate-100">
+          <h3 class="text-lg font-bold text-slate-950 mb-3 flex items-center gap-3">
+            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            Modo de Uso Recomendado
+          </h3>
+          <p class="text-slate-700 text-base leading-relaxed">{modoUso}</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-100">
+          <h3 class="text-lg font-bold text-slate-950 mb-4 flex items-center gap-3">
+            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            Público / Enfoque Comercial
+          </h3>
+          <div class="flex flex-wrap gap-2.5">
+            {paraQuienEs.map((publico) => (
+              <span class="text-sm bg-slate-100 text-slate-800 px-3.5 py-1.5 rounded-lg font-medium border border-slate-200 shadow-sm">
+                {publico}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido Markdown Renderizado: Aquí aplicamos 'prose' -->
+    <!-- 'prose-purple' tiñe los enlaces y viñetas del Markdown con el color del tema -->
+    <div class="border-t border-slate-100 pt-12 mt-12 prose prose-slate prose-purple max-w-none prose-headings:tracking-tight prose-headings:font-extrabold prose-p:leading-relaxed">
+      <Content />
+    </div>
+  </article>
+</LayoutBase>

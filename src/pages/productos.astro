@@ -1,0 +1,57 @@
+---
+import LayoutBase from '../layouts/LayoutBase.astro';
+import TarjetaProducto from '../components/TarjetaProducto.astro';
+import { getCollection } from 'astro:content';
+
+const productos = await getCollection('productos');
+
+// Obtenemos las categorías únicas disponibles en la colección
+const categorias = [...new Set(productos.map((p) => p.data.categoria))];
+const baseUrl = import.meta.env.BASE_URL;
+---
+
+<LayoutBase titulo="Catálogo de Productos - MyOmniGuide">
+  <!-- Encabezado de la Sección -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+      Catálogo Completo de Productos
+    </h1>
+    <p class="text-slate-600 text-base">
+      Explora la línea nutricional de Omnilife con información técnica detallada.
+    </p>
+  </div>
+
+  <!-- Barra de Filtros y Selección de Perfil -->
+  <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+    <!-- Indicador de Categorías -->
+    <div class="flex flex-wrap gap-2">
+      <span class="text-xs font-semibold bg-purple-100 text-purple-700 px-3 py-1.5 rounded-lg">
+        Todas las categorías ({productos.length})
+      </span>
+      {categorias.map((cat) => (
+        <span class="text-xs font-medium bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-200">
+          {cat}
+        </span>
+      ))}
+    </div>
+
+    <!-- Mensaje Informativo de Perfil -->
+    <div class="text-xs text-slate-500 bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
+      💡 <strong class="text-slate-700">Tip:</strong> Al entrar a cada producto podrás alternar entre la vista de Consumidor y Empresario.
+    </div>
+  </div>
+
+  <!-- Grid de Productos -->
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {productos.map((item) => (
+      <TarjetaProducto
+        slug={item.id}
+        nombre={item.data.nombre}
+        categoria={item.data.categoria}
+        beneficioPrincipal={item.data.beneficiosPrincipales[0]}
+        formato={item.data.formato}
+        imagen={item.data.imagen}
+      />
+    ))}
+  </section>
+</LayoutBase>

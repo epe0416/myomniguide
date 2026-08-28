@@ -1,0 +1,78 @@
+---
+// src/layouts/LayoutBase.astro
+import '../styles/global.css';
+
+interface Props {
+  titulo: string;
+}
+
+const { titulo } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
+
+// Obtenemos la ruta actual para marcar el enlace activo
+const currentPath = Astro.url.pathname;
+---
+
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-50">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{titulo} | MyOmniGuide</title>
+  </head>
+  <body class="min-h-screen flex flex-col text-slate-900 antialiased font-sans">
+    
+    <!-- Navbar Flotante / Sticky con Cristal Esmerilado (Backdrop Blur) -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all">
+      <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        
+        <!-- Logo / Marca -->
+        <a href={baseUrl} class="flex items-center gap-2 group">
+          <div class="w-9 h-9 bg-purple-700 text-white font-extrabold rounded-xl flex items-center justify-center text-lg shadow-md shadow-purple-700/20 group-hover:scale-105 transition-transform">
+            O
+          </div>
+          <span class="text-xl font-extrabold tracking-tight text-slate-950">
+            MyOmni<span class="text-purple-700">Guide</span>
+          </span>
+        </a>
+
+        <!-- Enlaces de Navegación -->
+        <nav class="flex items-center gap-1 sm:gap-2">
+          <a 
+            href={baseUrl} 
+            class={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+              currentPath === baseUrl || currentPath === `${baseUrl}`
+                ? 'bg-purple-50 text-purple-700'
+                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/80'
+            }`}
+          >
+            Inicio
+          </a>
+
+          <a 
+            href={`${baseUrl}productos`} 
+            class={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+              currentPath.includes('productos')
+                ? 'bg-purple-50 text-purple-700'
+                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/80'
+            }`}
+          >
+            Catálogo
+          </a>
+        </nav>
+
+      </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-6xl mx-auto px-6 py-8 flex-1 w-full">
+      <slot />
+    </main>
+
+    <!-- Footer Discreto -->
+    <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 mt-auto">
+      <p>© {new Date().getFullYear()} MyOmniGuide. Guía independiente de consulta técnica.</p>
+    </footer>
+
+  </body>
+</html>
