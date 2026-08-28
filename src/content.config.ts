@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { glob } from 'astro/loaders';
 
 const productos = defineCollection({
-  // Asegúrate de usar './src/content/productos'
   loader: glob({ pattern: '**/*.md', base: './src/content/productos' }),
   schema: ({ image }) =>
     z.object({
@@ -21,6 +20,15 @@ const productos = defineCollection({
       modoUso: z.string(),
       paraQuienEs: z.array(z.string()),
       destacado: z.boolean().default(false),
+
+      empresario: z
+        .object({
+          argumentosVenta: z.array(z.string()),
+          loQueHace: z.array(z.string()),
+          loQueNoHace: z.array(z.string()),
+          tipsDemostra: z.array(z.string()).optional(),
+        })
+        .optional(),
     }),
 });
 

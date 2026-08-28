@@ -1,7 +1,7 @@
 ---
 import LayoutBase from '../../layouts/LayoutBase.astro';
 import { getCollection, render } from 'astro:content';
-import { Image } from 'astro:assets'; // <-- Importación nativa
+import { Image } from 'astro:assets';
 
 export async function getStaticPaths() {
   const productos = await getCollection('productos');
@@ -12,101 +12,211 @@ export async function getStaticPaths() {
 }
 
 const { producto } = Astro.props;
-const { nombre, subtitulo, categoria, formato, beneficiosPrincipales, modoUso, paraQuienEs, imagen } = producto.data;
 const { Content } = await render(producto);
-const baseUrl = import.meta.env.BASE_URL;
+const { data } = producto;
+
+const rawBaseUrl = import.meta.env.BASE_URL;
+const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 ---
 
-<LayoutBase titulo={`${nombre} - Ficha Técnica`}>
-  <div class="mb-8 mt-4">
-    <a href={baseUrl} class="inline-flex items-center gap-2 text-sm font-semibold text-purple-700 hover:text-purple-900 transition-colors">
-      ← Volver al catálogo completo
+<LayoutBase titulo={`${data.nombre} - Ficha Técnica`}>
+  <div class="mb-6">
+    <a href={`${baseUrl}productos`} class="text-xs font-semibold text-purple-700 hover:text-purple-900 transition-colors">
+      ← Volver al catálogo
     </a>
   </div>
 
-  <article class="bg-white rounded-3xl border border-slate-100 p-8 md:p-12 shadow-lg shadow-slate-100/50">
-    <!-- Encabezado con Grid: Imagen a un lado y Datos al otro -->
-    <header class="grid grid-cols-1 md:grid-cols-12 gap-8 border-b border-slate-100 pb-10 mb-10 items-center">
-      
-      <!-- Imagen optimizada grande -->
-      <div class="md:col-span-4 bg-slate-50 p-6 rounded-2xl border border-slate-100 flex justify-center items-center">
-        {imagen ? (
-          <Image 
-            src={imagen} 
-            alt={`Empaque oficial de ${nombre}`}
-            class="max-h-64 w-auto object-contain drop-shadow-md"
-            loading="eager"
-          />
-        ) : (
-          <div class="text-slate-400 text-sm font-medium py-12">Sin imagen de producto</div>
-        )}
+  <!-- Encabezado del Producto (Con Imagen) -->
+  <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/80 shadow-xs mb-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center">
+    {data.imagen && (
+      <div class="md:col-span-4 flex justify-center items-center bg-slate-50 p-6 rounded-2xl border border-slate-100 max-h-64 md:max-h-72">
+        <Image 
+          src={data.imagen} 
+          alt={`Imagen de ${data.nombre}`} 
+          class="max-h-52 w-auto object-contain drop-shadow-md"
+          width={400}
+          height={400}
+        />
       </div>
-
-      <!-- Títulos y resumen del encabezado -->
-      <div class="md:col-span-8">
-        <div class="flex flex-wrap items-center gap-3 mb-3">
-          <span class="text-xs font-bold tracking-widest text-purple-700 uppercase bg-purple-100 px-3.5 py-1 rounded-full">
-            {categoria}
-          </span>
-          <span class="text-xs font-medium text-slate-600 bg-slate-100 px-3.5 py-1 rounded-full border border-slate-200">
-            {formato}
-          </span>
-        </div>
-        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-950 tracking-tight">{nombre}</h1>
-        <p class="text-slate-700 text-lg mt-3 leading-relaxed">{subtitulo}</p>
+    )}
+    
+    <div class={data.imagen ? "md:col-span-8" : "md:col-span-12"}>
+      <span class="inline-block text-xs font-bold tracking-wider text-purple-700 bg-purple-50 px-3 py-1 rounded-md uppercase mb-3">
+        {data.categoria}
+      </span>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-950 mb-2">{data.nombre}</h1>
+      <p class="text-slate-600 text-lg mb-4">{data.subtitulo}</p>
+      <div class="inline-flex items-center gap-2 text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg">
+        <span>📦 Formato:</span>
+        <strong class="text-slate-800">{data.formato}</strong>
       </div>
-    </header>
+    </div>
+  </div>
 
-    <!-- Resumen de Beneficios y Uso: Grid con mejor espaciado -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
-      
-      <!-- Panel de Beneficios Clave: Fondo de color suave para destacar -->
-      <div class="bg-purple-50 p-8 rounded-2xl border border-purple-100 shadow-inner">
-        <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          Key Highlights / Beneficios Clave
-        </h2>
-        <ul class="space-y-4">
-          {beneficiosPrincipales.map((beneficio) => (
-            <li class="text-slate-800 text-base flex items-start gap-3 leading-relaxed">
-              <!-- Viñeta estilizada -->
-              <span class="mt-1 text-purple-600 font-bold text-xl">•</span>
-              <span>{beneficio}</span>
+  <!-- Conmutador de Perfiles (Tabs) -->
+  <div class="flex border-b border-slate-200 mb-8 bg-slate-100/80 p-1.5 rounded-2xl max-w-md mx-auto">
+    <button
+      id="tab-consumidor"
+      class="tab-btn flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer bg-white text-purple-700 shadow-xs"
+      data-target="panel-consumidor"
+    >
+      🥤 Guía de Uso
+    </button>
+    <button
+      id="tab-empresario"
+      class="tab-btn flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer text-slate-600 hover:text-purple-700 hover:bg-white/50"
+      data-target="panel-empresario"
+    >
+      💼 Guía Comercial
+    </button>
+  </div>
+
+  <!-- PANEL 1: CONSUMIDOR FINAL -->
+  <div id="panel-consumidor" class="tab-panel space-y-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-purple-50/60 border border-purple-100 p-6 rounded-2xl">
+        <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2 text-base">
+          <span class="text-purple-600">✨</span> Beneficios Clave
+        </h3>
+        <ul class="space-y-2.5 text-slate-700 text-sm">
+          {data.beneficiosPrincipales.map((b) => (
+            <li class="flex items-start gap-2">
+              <span class="text-purple-600 font-bold">•</span>
+              <span>{b}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      <!-- Panel de Uso y Público: Más organizado -->
-      <div class="space-y-10">
-        <div class="bg-white p-6 rounded-2xl border border-slate-100">
-          <h3 class="text-lg font-bold text-slate-950 mb-3 flex items-center gap-3">
-            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            Modo de Uso Recomendado
-          </h3>
-          <p class="text-slate-700 text-base leading-relaxed">{modoUso}</p>
-        </div>
+      <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-xs">
+        <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2 text-base">
+          <span class="text-purple-600">⚡</span> Modo de Uso Recomendado
+        </h3>
+        <p class="text-slate-700 text-sm leading-relaxed mb-6">{data.modoUso}</p>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-100">
-          <h3 class="text-lg font-bold text-slate-950 mb-4 flex items-center gap-3">
-            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-            Público / Enfoque Comercial
-          </h3>
-          <div class="flex flex-wrap gap-2.5">
-            {paraQuienEs.map((publico) => (
-              <span class="text-sm bg-slate-100 text-slate-800 px-3.5 py-1.5 rounded-lg font-medium border border-slate-200 shadow-sm">
-                {publico}
-              </span>
-            ))}
-          </div>
+        <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2">Ideal para:</h4>
+        <div class="flex flex-wrap gap-2">
+          {data.paraQuienEs.map((p) => (
+            <span class="text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-md font-medium border border-slate-200/60">
+              {p}
+            </span>
+          ))}
         </div>
       </div>
     </div>
 
-    <!-- Contenido Markdown Renderizado: Aquí aplicamos 'prose' -->
-    <!-- 'prose-purple' tiñe los enlaces y viñetas del Markdown con el color del tema -->
-    <div class="border-t border-slate-100 pt-12 mt-12 prose prose-slate prose-purple max-w-none prose-headings:tracking-tight prose-headings:font-extrabold prose-p:leading-relaxed">
+    <!-- Contenido enriquecido (Markdown) -->
+    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs prose prose-purple max-w-none">
       <Content />
     </div>
-  </article>
+  </div>
+
+  <!-- PANEL 2: GUÍA COMERCIAL -->
+  <div id="panel-empresario" class="tab-panel hidden space-y-6">
+    {data.empresario ? (
+      <>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-emerald-50/60 border border-emerald-200/80 p-6 rounded-2xl">
+            <h3 class="font-bold text-emerald-950 mb-3 flex items-center gap-2 text-base">
+              <span>✅</span> Lo que SÍ hace el producto
+            </h3>
+            <ul class="space-y-2 text-emerald-900 text-sm">
+              {data.empresario.loQueHace.map((item) => (
+                <li class="flex items-start gap-2">
+                  <span class="font-bold text-emerald-600">✓</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="bg-amber-50/60 border border-amber-200/80 p-6 rounded-2xl">
+            <h3 class="font-bold text-amber-950 mb-3 flex items-center gap-2 text-base">
+              <span>🛡️</span> Alcance Nutricional y Límites Técnicos
+            </h3>
+            <ul class="space-y-2 text-amber-900 text-sm">
+              {data.empresario.loQueNoHace.map((item) => (
+                <li class="flex items-start gap-2">
+                  <span class="font-bold text-amber-600">i</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <!-- Tarjetas de Recomendaciones Comerciales Rediseñadas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-xs flex flex-col justify-between">
+            <div>
+              <h3 class="text-base font-bold text-purple-300 mb-4 flex items-center gap-2">
+                🎯 Enfoque Recomendado
+              </h3>
+              <ul class="space-y-3 text-slate-200 text-sm">
+                {data.empresario.argumentosVenta.map((arg) => (
+                  <li class="flex items-start gap-2.5">
+                    <span class="text-purple-400 font-bold">➔</span>
+                    <span class="leading-relaxed">{arg}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {data.empresario.tipsDemostra && (
+            <div class="bg-purple-900 text-white p-6 rounded-2xl shadow-xs flex flex-col justify-between">
+              <div>
+                <h3 class="text-base font-bold text-amber-300 mb-4 flex items-center gap-2">
+                  ✨ Tips de Experiencia
+                </h3>
+                <ul class="space-y-3 text-purple-100 text-sm">
+                  {data.empresario.tipsDemostra.map((tip) => (
+                    <li class="flex items-start gap-2.5">
+                      <span class="text-amber-400 font-bold">★</span>
+                      <span class="leading-relaxed">{tip}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+      </>
+    ) : (
+      <div class="bg-slate-100 p-8 rounded-2xl text-center text-slate-500 text-sm">
+        Este producto aún no cuenta con información en la guía comercial.
+      </div>
+    )}
+  </div>
 </LayoutBase>
+
+<script>
+  function initTabs() {
+    const buttons = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.tab-panel');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+
+        buttons.forEach((b) => {
+          b.classList.remove('bg-white', 'text-purple-700', 'shadow-xs');
+          b.classList.add('text-slate-600', 'hover:text-purple-700', 'hover:bg-white/50');
+        });
+
+        btn.classList.add('bg-white', 'text-purple-700', 'shadow-xs');
+        btn.classList.remove('text-slate-600', 'hover:text-purple-700', 'hover:bg-white/50');
+
+        panels.forEach((p) => {
+          if (p.id === targetId) {
+            p.classList.remove('hidden');
+          } else {
+            p.classList.add('hidden');
+          }
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initTabs);
+</script>
