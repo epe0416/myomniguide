@@ -9,12 +9,17 @@ const productos = defineCollection({
       nombre: z.string(),
       subtitulo: z.string(),
       imagen: image().optional(),
-      categoria: z.enum([
-        'Nutrición General',
-        'Energía y Deporte',
-        'Control de Peso',
-        'Cuidado Personal',
-      ]),
+      categorias: z.array(
+        z.enum([
+          'Nutrición General',
+          'Energía y Deporte',
+          'Control de Peso',
+          'Cuidado Personal',
+          'Sistema Inmunológico',
+          'Salud Femenina',
+          'Salud Masculina',
+        ])
+      ).min(1),
       formato: z.string(),
       beneficiosPrincipales: z.array(z.string()),
       modoUso: z.string(),

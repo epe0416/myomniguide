@@ -2,16 +2,15 @@
 nombre: "Magnus"
 subtitulo: "Activación del metabolismo energético celular y soporte a la concentración"
 imagen: "./magnus.png"
-categoria: "Energía y Deporte"
+categorias:
+  - "Energía y Deporte"
+  - "Nutrición General"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - "Optimizador endógeno de energía a través del Complejo B y Cromo."
-  - "Reducción de la fatiga física y soporte a la nitidez mental."
-  - "Endulzado con Estevia: Cero impacto glucémico significativo."
-modoUso: "Disolver 1 sachet en 200 a 250 ml de agua fría. Agitar vigorosamente y consumir preferiblemente por la mañana o antes de la actividad física."
+modoUso: "Disolver 1 sobre en 200 a 250 ml de agua fría."
 paraQuienEs:
   - "Profesionales y estudiantes con altas jornadas de exigencia mental."
-  - "Deportistas y personas activas que buscan rendimiento sin azúcares añadidos."
 destacado: true
 
 empresario:

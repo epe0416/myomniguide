@@ -5,53 +5,125 @@ import { getCollection } from 'astro:content';
 
 const productos = await getCollection('productos');
 
-// Obtenemos las categorías únicas disponibles en la colección
-const categorias = [...new Set(productos.map((p) => p.data.categoria))];
-const baseUrl = import.meta.env.BASE_URL;
+// Conteo correcto considerando que un producto puede estar en varias categorías
+const categoriasMap = productos.reduce((acc, p) => {
+  p.data.categorias.forEach((cat) => {
+    acc[cat] = (acc[cat] || 0) + 1;
+  });
+  return acc;
+}, {} as Record<string, number>);
+
+const categoriasUnicas = Object.keys(categoriasMap);
+const totalProductos = productos.length;
 ---
 
-<LayoutBase titulo="Catálogo de Productos - MyOmniGuide">
-  <!-- Encabezado de la Sección -->
+<LayoutBase titulo="Catálogo de Productos">
   <div class="mb-8">
-    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+    <h1 class="text-3xl md:text-4xl font-extrabold text-slate-950 mb-2">
       Catálogo Completo de Productos
     </h1>
-    <p class="text-slate-600 text-base">
+    <p class="text-slate-700 text-base md:text-lg">
       Explora la línea nutricional de Omnilife con información técnica detallada.
     </p>
   </div>
 
-  <!-- Barra de Filtros y Selección de Perfil -->
-  <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
-    <!-- Indicador de Categorías -->
-    <div class="flex flex-wrap gap-2">
-      <span class="text-xs font-semibold bg-purple-100 text-purple-700 px-3 py-1.5 rounded-lg">
-        Todas las categorías ({productos.length})
-      </span>
-      {categorias.map((cat) => (
-        <span class="text-xs font-medium bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-200">
-          {cat}
-        </span>
+  <!-- Filtros -->
+  <div class="text-xs text-slate-800 bg-amber-50 border border-amber-200/80 px-3.5 py-2 rounded-xl flex items-center gap-2 shrink-0 mb-3">
+    <span class="text-amber-700 font-bold">💡 Tip:</span>
+    <span>Al entrar a cada producto podrás alternar entre la <strong>Guía de Uso</strong> y la <strong>Guía Comercial</strong>.</span>
+  </div>
+
+  <div class="bg-white p-4 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs mb-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+    <div class="flex flex-wrap items-center gap-2" id="filter-buttons">
+      <button
+        data-category="todas"
+        class="filter-btn cursor-pointer px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 bg-purple-900 text-white shadow-xs"
+      >
+        Todas las categorías ({totalProductos})
+      </button>
+
+      {categoriasUnicas.map((cat) => (
+        <button
+          data-category={cat}
+          class="filter-btn cursor-pointer px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 bg-slate-100 text-slate-800 hover:bg-purple-50 hover:text-purple-900 border border-slate-200/80"
+        >
+          {cat} ({categoriasMap[cat]})
+        </button>
       ))}
     </div>
 
-    <!-- Mensaje Informativo de Perfil -->
-    <div class="text-xs text-slate-500 bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
-      💡 <strong class="text-slate-700">Tip:</strong> Al entrar a cada producto podrás alternar entre la vista de Consumidor y Empresario.
-    </div>
   </div>
-
-  <!-- Grid de Productos -->
-  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {productos.map((item) => (
+  
+  
+  
+  <!-- Rejilla con lista separada por comas en data-categories -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid">
+  {productos.map((item) => (
+    <div 
+      class="product-item transition-all duration-300 h-full flex flex-col" 
+      data-categories={item.data.categorias.join(',')}
+    >
       <TarjetaProducto
         slug={item.id}
         nombre={item.data.nombre}
-        categoria={item.data.categoria}
+        categorias={item.data.categorias}
         beneficioPrincipal={item.data.beneficiosPrincipales[0]}
         formato={item.data.formato}
         imagen={item.data.imagen}
       />
-    ))}
-  </section>
+    </div>
+  ))}
+</div>
+
+  <div id="no-results" class="hidden bg-slate-100 p-12 rounded-2xl text-center text-slate-700 font-medium">
+    No hay productos registrados en esta categoría.
+  </div>
 </LayoutBase>
+
+<!-- Reemplazar el bloque <script> en src/pages/productos.astro -->
+<script>
+  function initFilters() {
+    const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+    const productItems = document.querySelectorAll<HTMLElement>('.product-item');
+    const noResults = document.getElementById('no-results');
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        // Garantizamos tipo string asignando fallback en caso de null
+        const selectedCat = btn.getAttribute('data-category') ?? 'todas';
+
+        filterBtns.forEach((b) => {
+          b.classList.remove('bg-purple-900', 'text-white', 'shadow-xs');
+          b.classList.add('bg-slate-100', 'text-slate-800', 'hover:bg-purple-50', 'hover:text-purple-900', 'border', 'border-slate-200/80');
+        });
+
+        btn.classList.add('bg-purple-900', 'text-white', 'shadow-xs');
+        btn.classList.remove('bg-slate-100', 'text-slate-800', 'hover:bg-purple-50', 'hover:text-purple-900', 'border', 'border-slate-200/80');
+
+        let visibleCount = 0;
+        productItems.forEach((item) => {
+          // Garantizamos tipo string asignando fallback en caso de null
+          const rawCategories = item.getAttribute('data-categories') ?? '';
+          const itemCats = rawCategories.split(',');
+
+          if (selectedCat === 'todas' || itemCats.includes(selectedCat)) {
+            item.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            item.classList.add('hidden');
+          }
+        });
+
+        if (noResults) {
+          if (visibleCount === 0) {
+            noResults.classList.remove('hidden');
+          } else {
+            noResults.classList.add('hidden');
+          }
+        }
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initFilters);
+</script>
