@@ -2,6 +2,7 @@
 nombre: "Omniplus"
 subtitulo: 'Multivitamínico concentrado con tecnología de <dfn class="glosario-term" data-term="micelizacion">micelización</dfn> para el sistema inmunológico'
 imagen: "./omniplus.png"
+puntos: 87
 categorias:
   - "Nutrición General"
   - "Sistema Inmunológico"
@@ -12,7 +13,7 @@ beneficiosPrincipales:
 modoUso: "Disolver 1 sobre en 200 ml de agua fresca o jugo natural."
 paraQuienEs:
   - "Niños, adultos y adultos mayores."
-destacado: true
+destacado: false
 
 empresario:
   argumentosVenta:

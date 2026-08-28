@@ -2,6 +2,7 @@
 nombre: "Fem Plus"
 subtitulo: "Aporte de fitoestrógenos de origen vegetal y micronutrientes para el equilibrio hormonal femenino"
 imagen: "./fem-plus.png"
+puntos: 56
 categorias:
   - "Salud Femenina"
   - "Nutrición General"

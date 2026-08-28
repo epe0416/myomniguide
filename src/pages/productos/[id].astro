@@ -28,7 +28,7 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 
   <!-- Encabezado del Producto -->
   <!-- Encabezado del Producto (Optimizado para LCP y CLS) -->
-  <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/80 shadow-xs mb-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center min-h-[280px]">
+  <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/80 shadow-xs mb-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center min-h-70">
     {data.imagen && (
       <div class="md:col-span-4 flex justify-center items-center bg-slate-50 p-6 rounded-2xl border border-slate-100 h-64 w-full aspect-square shrink-0">
         <Image 
@@ -123,6 +123,22 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
   <div id="panel-empresario" class="tab-panel hidden space-y-6">
     {data.empresario ? (
       <>
+        <!-- Dentro de la pestaña Guía Comercial en [id].astro -->
+        <div class="bg-purple-900 text-white p-5 rounded-2xl mb-6 flex items-center justify-between shadow-xs">
+          <div>
+            <span class="text-xs font-bold text-purple-200 uppercase tracking-wider block mb-0.5">
+              Puntuación de Volumen Oficial
+            </span>
+            <p class="text-xs text-purple-100">
+              Utiliza este valor para calcular metas de descuento (25% al 40%) y listas de calificación.
+            </p>
+          </div>
+          <div class="bg-white text-purple-950 font-black text-2xl px-4 py-2 rounded-xl shadow-xs shrink-0 flex items-center gap-1">
+            <span>💎</span>
+            <span>{data.puntos}</span>
+            <span class="text-xs font-bold text-purple-800">PTS</span>
+          </div>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="bg-emerald-50/70 border border-emerald-200/80 p-6 rounded-2xl">
             <h2 class="font-bold text-emerald-950 mb-3 flex items-center gap-2 text-base">

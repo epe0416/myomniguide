@@ -9,6 +9,7 @@ const productos = defineCollection({
       nombre: z.string(),
       subtitulo: z.string(),
       imagen: image().optional(),
+      puntos: z.number().min(0).optional(),
       categorias: z.array(
         z.enum([
           'Nutrición General',

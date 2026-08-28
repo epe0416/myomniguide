@@ -2,15 +2,21 @@
 nombre: "Magnus"
 subtitulo: "Activación del metabolismo energético celular y soporte a la concentración"
 imagen: "./magnus.png"
+puntos: 51
 categorias:
   - "Energía y Deporte"
   - "Nutrición General"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
-  - 'Optimizador endógeno de energía a través del Complejo B y <dfn class="glosario-term" data-term="cromo">Cromo</dfn>.'
+  - 'Estimulación natural de la producción de energía celular (ATP) mediante el Complejo B y <dfn class="glosario-term" data-term="cromo">Cromo</dfn>.'
+  - "Soporte al rendimiento físico y mental en jornadas de alta exigencia o trabajo prolongado."
+  - "Favorece la claridad mental y la alerta sin provocar picos bruscos de ansiedad ni efecto 'crash'."
+  - "Contribuye a disminuir la sensación de fatiga nutricional, proporcionando una sensación de vitalidad sostenida."
 modoUso: "Disolver 1 sobre en 200 a 250 ml de agua fría."
 paraQuienEs:
-  - "Profesionales y estudiantes con altas jornadas de exigencia mental."
+  - "Profesionales, emprendedores y estudiantes con altas jornadas de exigencia mental o física."
+  - "Deportistas o personas activas que buscan un soporte energético previo a la actividad física."
+  - "Personas que buscan sustituir las bebidas energizantes carbonatadas y azucaradas por una alternativa nutricional limpia."
 destacado: true
 
 empresario:
@@ -37,4 +43,4 @@ empresario:
 
 ### Descripción Nutricional
 
-Magnus es una formulación técnica diseñada para potenciar la producción natural de energía a nivel celular. A diferencia de las bebidas estimulantes convencionales cargadas de sacarosa, Magnus integra vitaminas hidrosolubles y minerales traza como el <dfn class="glosario-term" data-term="cromo">Cromo</dfn>.
+Magnus es una formulación técnica diseñada para potenciar la producción natural de energía a nivel celular. A diferencia de las bebidas estimulantes convencionales cargadas de sacarosa y carbonatación, Magnus integra vitaminas hidrosolubles del Complejo B, aminoácidos y minerales traza como el <dfn class="glosario-term" data-term="cromo">Cromo</dfn>, los cuales acompañan las rutas metabólicas del organismo optimizando la transformación de nutrientes en combustible celular sin sobrecargar el sistema digestivo.

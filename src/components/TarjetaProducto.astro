@@ -5,20 +5,20 @@ import type { ImageMetadata } from 'astro';
 interface Props {
   slug: string;
   nombre: string;
+  puntos?: number; // <-- Nueva Prop
   categorias: string[];
   beneficioPrincipal: string;
   formato: string;
   imagen?: ImageMetadata;
 }
 
-const { slug, nombre, categorias, beneficioPrincipal, formato, imagen } = Astro.props;
+const { slug, nombre, puntos, categorias, beneficioPrincipal, formato, imagen } = Astro.props;
 
 const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 ---
 
 <article class="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition-all flex flex-col justify-between overflow-hidden h-full">
-  <!-- Contenedor de Imagen -->
   <div class="bg-slate-50 p-6 flex justify-center items-center h-48 border-b border-slate-100 shrink-0">
     {imagen ? (
       <Image 
@@ -33,11 +33,9 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
     )}
   </div>
 
-  <!-- Contenido de la Tarjeta -->
   <div class="p-6 flex flex-col flex-1 justify-between">
     <div>
-      <!-- Insignias de Categorías -->
-      <div class="flex flex-wrap gap-1 mb-3 min-h-[24px]">
+      <div class="flex flex-wrap gap-1 mb-3 min-h-6">
         {categorias.map((cat) => (
           <span class="text-[10px] font-bold tracking-wider text-purple-900 bg-purple-100 px-2 py-0.5 rounded-md uppercase">
             {cat}
@@ -47,17 +45,17 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
       
       <h2 class="text-xl font-extrabold text-slate-950 mb-2">{nombre}</h2>
       
-      <p 
-        class="text-slate-700 text-sm leading-relaxed mb-4 line-clamp-2" 
-        set:html={beneficioPrincipal} 
-      />
+      <p class="text-slate-700 text-sm leading-relaxed mb-4 line-clamp-2" set:html={beneficioPrincipal} />
     </div>
     
-    <!-- Bloque inferior empujado al fondo de la tarjeta -->
     <div class="mt-auto">
       <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2 mb-4 text-xs">
         <span class="text-slate-800 font-semibold bg-slate-100 px-2 py-1 rounded border border-slate-200/60">
           📦 {formato}
+        </span>
+        <!-- Insignia de Puntos de Volumen -->
+        <span class="text-purple-950 font-extrabold bg-purple-50 px-2.5 py-1 rounded-md border border-purple-200/80 shrink-0">
+          💎 {puntos} pts
         </span>
       </div>
 
