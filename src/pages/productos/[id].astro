@@ -21,18 +21,18 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 
 <LayoutBase titulo={`${data.nombre} - Ficha Técnica`}>
   <div class="mb-6">
-    <a href={`${baseUrl}productos`} class="text-xs font-semibold text-purple-700 hover:text-purple-900 transition-colors">
+    <a href={`${baseUrl}productos`} class="text-xs font-bold text-purple-800 hover:text-purple-950 transition-colors">
       ← Volver al catálogo
     </a>
   </div>
 
-  <!-- Encabezado del Producto (Con Imagen) -->
+  <!-- Encabezado del Producto -->
   <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/80 shadow-xs mb-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center">
     {data.imagen && (
       <div class="md:col-span-4 flex justify-center items-center bg-slate-50 p-6 rounded-2xl border border-slate-100 max-h-64 md:max-h-72">
         <Image 
           src={data.imagen} 
-          alt={`Imagen de ${data.nombre}`} 
+          alt={`Imagen del producto ${data.nombre}`} 
           class="max-h-52 w-auto object-contain drop-shadow-md"
           width={400}
           height={400}
@@ -41,30 +41,30 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
     )}
     
     <div class={data.imagen ? "md:col-span-8" : "md:col-span-12"}>
-      <span class="inline-block text-xs font-bold tracking-wider text-purple-700 bg-purple-50 px-3 py-1 rounded-md uppercase mb-3">
+      <span class="inline-block text-xs font-bold tracking-wider text-purple-900 bg-purple-100 px-3 py-1 rounded-md uppercase mb-3">
         {data.categoria}
       </span>
       <h1 class="text-3xl md:text-4xl font-extrabold text-slate-950 mb-2">{data.nombre}</h1>
-      <p class="text-slate-600 text-lg mb-4">{data.subtitulo}</p>
-      <div class="inline-flex items-center gap-2 text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg">
+      <p class="text-slate-700 text-lg mb-4">{data.subtitulo}</p>
+      <div class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200/60">
         <span>📦 Formato:</span>
-        <strong class="text-slate-800">{data.formato}</strong>
+        <strong class="text-slate-900">{data.formato}</strong>
       </div>
     </div>
   </div>
 
   <!-- Conmutador de Perfiles (Tabs) -->
-  <div class="flex border-b border-slate-200 mb-8 bg-slate-100/80 p-1.5 rounded-2xl max-w-md mx-auto">
+  <div class="flex border border-slate-200/80 mb-8 bg-slate-100 p-1.5 rounded-2xl max-w-md mx-auto">
     <button
       id="tab-consumidor"
-      class="tab-btn flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer bg-white text-purple-700 shadow-xs"
+      class="tab-btn flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer bg-white text-purple-900 shadow-xs"
       data-target="panel-consumidor"
     >
       🥤 Guía de Uso
     </button>
     <button
       id="tab-empresario"
-      class="tab-btn flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer text-slate-600 hover:text-purple-700 hover:bg-white/50"
+      class="tab-btn flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer text-slate-700 hover:text-purple-900 hover:bg-white/60"
       data-target="panel-empresario"
     >
       💼 Guía Comercial
@@ -74,14 +74,14 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
   <!-- PANEL 1: CONSUMIDOR FINAL -->
   <div id="panel-consumidor" class="tab-panel space-y-8">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-purple-50/60 border border-purple-100 p-6 rounded-2xl">
-        <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2 text-base">
-          <span class="text-purple-600">✨</span> Beneficios Clave
-        </h3>
-        <ul class="space-y-2.5 text-slate-700 text-sm">
+      <div class="bg-purple-50/70 border border-purple-200/80 p-6 rounded-2xl">
+        <h2 class="font-bold text-purple-950 mb-4 flex items-center gap-2 text-base">
+          <span class="text-purple-700">✨</span> Beneficios Clave
+        </h2>
+        <ul class="space-y-2.5 text-slate-800 text-sm">
           {data.beneficiosPrincipales.map((b) => (
             <li class="flex items-start gap-2">
-              <span class="text-purple-600 font-bold">•</span>
+              <span class="text-purple-700 font-bold">•</span>
               <span>{b}</span>
             </li>
           ))}
@@ -89,15 +89,15 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
       </div>
 
       <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-xs">
-        <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2 text-base">
-          <span class="text-purple-600">⚡</span> Modo de Uso Recomendado
-        </h3>
-        <p class="text-slate-700 text-sm leading-relaxed mb-6">{data.modoUso}</p>
+        <h2 class="font-bold text-slate-950 mb-4 flex items-center gap-2 text-base">
+          <span class="text-purple-700">⚡</span> Modo de Uso Recomendado
+        </h2>
+        <p class="text-slate-800 text-sm leading-relaxed mb-6">{data.modoUso}</p>
 
-        <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2">Ideal para:</h4>
+        <h3 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2">Ideal para:</h3>
         <div class="flex flex-wrap gap-2">
           {data.paraQuienEs.map((p) => (
-            <span class="text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-md font-medium border border-slate-200/60">
+            <span class="text-xs bg-slate-100 text-slate-800 px-3 py-1 rounded-md font-semibold border border-slate-200">
               {p}
             </span>
           ))}
@@ -116,28 +116,28 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
     {data.empresario ? (
       <>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-emerald-50/60 border border-emerald-200/80 p-6 rounded-2xl">
-            <h3 class="font-bold text-emerald-950 mb-3 flex items-center gap-2 text-base">
+          <div class="bg-emerald-50/70 border border-emerald-200/80 p-6 rounded-2xl">
+            <h2 class="font-bold text-emerald-950 mb-3 flex items-center gap-2 text-base">
               <span>✅</span> Lo que SÍ hace el producto
-            </h3>
-            <ul class="space-y-2 text-emerald-900 text-sm">
+            </h2>
+            <ul class="space-y-2 text-emerald-950 text-sm">
               {data.empresario.loQueHace.map((item) => (
                 <li class="flex items-start gap-2">
-                  <span class="font-bold text-emerald-600">✓</span>
+                  <span class="font-bold text-emerald-700">✓</span>
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div class="bg-amber-50/60 border border-amber-200/80 p-6 rounded-2xl">
-            <h3 class="font-bold text-amber-950 mb-3 flex items-center gap-2 text-base">
+          <div class="bg-amber-50/70 border border-amber-200/80 p-6 rounded-2xl">
+            <h2 class="font-bold text-amber-950 mb-3 flex items-center gap-2 text-base">
               <span>🛡️</span> Alcance Nutricional y Límites Técnicos
-            </h3>
-            <ul class="space-y-2 text-amber-900 text-sm">
+            </h2>
+            <ul class="space-y-2 text-amber-950 text-sm">
               {data.empresario.loQueNoHace.map((item) => (
                 <li class="flex items-start gap-2">
-                  <span class="font-bold text-amber-600">i</span>
+                  <span class="font-bold text-amber-700">i</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -145,14 +145,14 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
           </div>
         </div>
 
-        <!-- Tarjetas de Recomendaciones Comerciales Rediseñadas -->
+        <!-- Tarjetas de Recomendaciones Comerciales -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-xs flex flex-col justify-between">
+          <div class="bg-slate-950 text-white p-6 rounded-2xl shadow-xs flex flex-col justify-between border border-slate-800">
             <div>
-              <h3 class="text-base font-bold text-purple-300 mb-4 flex items-center gap-2">
+              <h2 class="text-base font-bold text-purple-300 mb-4 flex items-center gap-2">
                 🎯 Enfoque Recomendado
-              </h3>
-              <ul class="space-y-3 text-slate-200 text-sm">
+              </h2>
+              <ul class="space-y-3 text-slate-100 text-sm">
                 {data.empresario.argumentosVenta.map((arg) => (
                   <li class="flex items-start gap-2.5">
                     <span class="text-purple-400 font-bold">➔</span>
@@ -164,11 +164,11 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
           </div>
 
           {data.empresario.tipsDemostra && (
-            <div class="bg-purple-900 text-white p-6 rounded-2xl shadow-xs flex flex-col justify-between">
+            <div class="bg-purple-950 text-white p-6 rounded-2xl shadow-xs flex flex-col justify-between border border-purple-900">
               <div>
-                <h3 class="text-base font-bold text-amber-300 mb-4 flex items-center gap-2">
+                <h2 class="text-base font-bold text-amber-300 mb-4 flex items-center gap-2">
                   ✨ Tips de Experiencia
-                </h3>
+                </h2>
                 <ul class="space-y-3 text-purple-100 text-sm">
                   {data.empresario.tipsDemostra.map((tip) => (
                     <li class="flex items-start gap-2.5">
@@ -183,7 +183,7 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
         </div>
       </>
     ) : (
-      <div class="bg-slate-100 p-8 rounded-2xl text-center text-slate-500 text-sm">
+      <div class="bg-slate-100 p-8 rounded-2xl text-center text-slate-700 text-sm font-medium">
         Este producto aún no cuenta con información en la guía comercial.
       </div>
     )}
@@ -200,12 +200,12 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
         const targetId = btn.getAttribute('data-target');
 
         buttons.forEach((b) => {
-          b.classList.remove('bg-white', 'text-purple-700', 'shadow-xs');
-          b.classList.add('text-slate-600', 'hover:text-purple-700', 'hover:bg-white/50');
+          b.classList.remove('bg-white', 'text-purple-900', 'shadow-xs');
+          b.classList.add('text-slate-700', 'hover:text-purple-900', 'hover:bg-white/60');
         });
 
-        btn.classList.add('bg-white', 'text-purple-700', 'shadow-xs');
-        btn.classList.remove('text-slate-600', 'hover:text-purple-700', 'hover:bg-white/50');
+        btn.classList.add('bg-white', 'text-purple-900', 'shadow-xs');
+        btn.classList.remove('text-slate-700', 'hover:text-purple-900', 'hover:bg-white/60');
 
         panels.forEach((p) => {
           if (p.id === targetId) {
