@@ -4,48 +4,52 @@ import TarjetaProducto from '../components/TarjetaProducto.astro';
 import { getCollection } from 'astro:content';
 
 const productos = await getCollection('productos');
-// Filtramos solo los productos marcados como destacados en su Frontmatter
 const productosDestacados = productos.filter((p) => p.data.destacado);
+
 const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 ---
 
-<LayoutBase titulo="Inicio - Guía Interactiva Omnilife">
-  <!-- Hero Section con Selección de Perfil -->
-  <section class="bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-950 text-white rounded-3xl p-8 md:p-12 mb-12 shadow-xl">
+<LayoutBase titulo="Inicio - MyOmniGuide">
+  <!-- Hero Section Refactorizado -->
+  <section class="bg-linear-to-br from-purple-900 via-purple-950 to-slate-950 text-white rounded-3xl p-8 md:p-12 shadow-md mb-12">
     <div class="max-w-3xl">
-      <span class="inline-block text-xs font-bold tracking-widest bg-purple-500/30 text-purple-200 px-3.5 py-1.5 rounded-full uppercase border border-purple-400/30 mb-4">
-        Bienvenido a MyOmniGuide
+      <span class="inline-block text-xs font-bold tracking-wider text-purple-300 bg-purple-800/60 px-3.5 py-1.5 rounded-full uppercase mb-4 border border-purple-700/50">
+        BIENVENIDO A MYOMNIGUIDE
       </span>
-      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4">
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight">
         Tu portal técnico de nutrición y herramientas de negocio.
       </h1>
-      <p class="text-purple-100 text-lg leading-relaxed mb-8">
-        Información precisa para cuidar tu salud como consumidor o potenciar tus ventas como Empresario Omnilife.
+      <p class="text-purple-100 text-base md:text-lg mb-8 leading-relaxed">
+        Información precisa para cuidar tu salud con nuestras <strong>Guías de Uso</strong> o potenciar tus ventas como Empresario Omnilife con nuestras <strong>Guías Comerciales</strong>.
       </p>
 
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <a href={`${baseUrl}productos`} class="group bg-purple-900 p-6 rounded-2xl text-white hover:bg-purple-950 transition-colors">
-        <h2 class="font-bold text-white group-hover:text-purple-200 text-lg flex items-center justify-between">
-          <span>Soy Consumidor</span>
-          <span>→</span>
-        </h2>
-        <p class="text-purple-200 text-sm mt-2">
-          Explora soluciones nutricionales, beneficios y modo de uso recomendado.
-        </p>
-      </a>
-
-      <a href={`${baseUrl}productos`} class="group bg-slate-900 p-6 rounded-2xl text-white hover:bg-slate-950 transition-colors">
-        <h2 class="font-bold text-white group-hover:text-slate-300 text-lg flex items-center justify-between">
-          <span>Soy Distribuidor / Empresario</span>
-          <span>→</span>
-        </h2>
-        <p class="text-slate-400 text-sm mt-2">
-          Accede a argumentos técnicos, guía de objeciones y límites de comercialización.
-        </p>
-      </a>
+      <!-- CTA Único -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+        <a
+          href={`${baseUrl}productos`}
+          class="inline-flex items-center justify-center gap-2 bg-white text-purple-950 hover:bg-purple-100 font-extrabold px-6 py-3.5 rounded-xl text-sm transition-all shadow-md hover:shadow-lg"
+        >
+          <span>Explorar Catálogo Completo</span>
+          <span class="text-lg">→</span>
+        </a>
+      </div>
     </div>
+
+    <!-- Indicadores de Valor en lugar de botones duplicados -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10 pt-8 border-t border-purple-800/60 text-xs">
+      <div class="flex items-center gap-2.5 text-purple-200">
+        <span class="text-amber-400 font-bold text-base">🥤</span>
+        <span><strong>Guía de Uso:</strong> Beneficios, dosis y modo de consumo.</span>
+      </div>
+      <div class="flex items-center gap-2.5 text-purple-200">
+        <span class="text-emerald-400 font-bold text-base">💼</span>
+        <span><strong>Guía Comercial:</strong> Argumentos de venta y cumplimiento.</span>
+      </div>
+      <div class="flex items-center gap-2.5 text-purple-200">
+        <span class="text-purple-300 font-bold text-base">⚡</span>
+        <span><strong>Matriz Nutricional:</strong> Datos técnicos verificados.</span>
+      </div>
     </div>
   </section>
 
@@ -53,12 +57,12 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
   <section class="mb-12">
     <div class="flex justify-between items-end mb-6">
       <div>
-        <h2 class="text-2xl font-bold text-slate-900">Productos Destacados</h2>
-        <p class="text-slate-600 text-sm">Los suplementos de mayor impacto en el catálogo.</p>
+        <h2 class="text-2xl font-extrabold text-slate-950">Productos Destacados</h2>
+        <p class="text-slate-700 text-sm mt-1">Los suplementos de mayor impacto en el catálogo.</p>
       </div>
       <a 
         href={`${baseUrl}productos`} 
-        class="text-sm font-semibold text-purple-700 hover:text-purple-900 transition-colors"
+        class="text-xs font-bold text-purple-800 hover:text-purple-950 transition-colors hidden sm:inline-block"
       >
         Ver catálogo completo →
       </a>
@@ -66,15 +70,26 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {productosDestacados.map((item) => (
-        <TarjetaProducto
-          slug={item.id}
-          nombre={item.data.nombre}
-          categorias={item.data.categorias}
-          beneficioPrincipal={item.data.beneficiosPrincipales[0]}
-          formato={item.data.formato}
-          imagen={item.data.imagen}
-        />
+        <div class="h-full flex flex-col">
+          <TarjetaProducto
+            slug={item.id}
+            nombre={item.data.nombre}
+            categorias={item.data.categorias}
+            beneficioPrincipal={item.data.beneficiosPrincipales[0]}
+            formato={item.data.formato}
+            imagen={item.data.imagen}
+          />
+        </div>
       ))}
+    </div>
+
+    <div class="mt-8 text-center sm:hidden">
+      <a 
+        href={`${baseUrl}productos`} 
+        class="inline-block text-xs font-bold text-purple-800 hover:text-purple-950 transition-colors"
+      >
+        Ver catálogo completo →
+      </a>
     </div>
   </section>
 </LayoutBase>

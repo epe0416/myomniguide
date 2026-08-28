@@ -72,8 +72,21 @@ const currentPath = Astro.url.pathname;
       <slot />
     </main>
 
-  <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-600 font-medium mt-auto">
-    <p>© {new Date().getFullYear()} MyOmniGuide. Guía independiente de consulta técnica.</p>
+  <footer class="border-t border-slate-200 bg-white py-6 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-700 font-medium space-y-1.5">
+      <p>© {new Date().getFullYear()} MyOmniGuide. Guía independiente de consulta técnica.</p>
+      <p class="text-slate-600">
+        Desarrollado por{' '}
+        <a 
+          href="https://github.com/epe0416" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="text-purple-800 hover:text-purple-950 font-bold underline decoration-purple-300 underline-offset-2 transition-colors"
+        >
+          epedev
+        </a>
+      </p>
+    </div>
   </footer>
 
   </body>
