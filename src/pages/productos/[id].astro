@@ -27,15 +27,18 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
   </div>
 
   <!-- Encabezado del Producto -->
-  <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/80 shadow-xs mb-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center">
+  <!-- Encabezado del Producto (Optimizado para LCP y CLS) -->
+  <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/80 shadow-xs mb-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center min-h-[280px]">
     {data.imagen && (
-      <div class="md:col-span-4 flex justify-center items-center bg-slate-50 p-6 rounded-2xl border border-slate-100 max-h-64 md:max-h-72">
+      <div class="md:col-span-4 flex justify-center items-center bg-slate-50 p-6 rounded-2xl border border-slate-100 h-64 w-full aspect-square shrink-0">
         <Image 
           src={data.imagen} 
           alt={`Imagen del producto ${data.nombre}`} 
           class="max-h-52 w-auto object-contain drop-shadow-md"
           width={400}
           height={400}
+          loading="eager"
+          fetchpriority="high"
         />
       </div>
     )}

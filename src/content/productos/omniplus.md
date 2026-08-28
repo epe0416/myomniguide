@@ -8,7 +8,7 @@ beneficiosPrincipales:
   - "Soporte integral al sistema inmunológico y defensas naturales."
   - "Tecnología de Micelización: Máxima absorción celular de vitaminas hidrosolubles y liposolubles."
   - "Aporte completo de extractos herbales, minerales traza y antioxidantes."
-modoUso: "Disolver 1 sachet (30 ml) en 200 ml de agua fresca o jugo natural. Tomar de 1 a 3 veces al día según las necesidades nutricionales."
+modoUso: "Disolver 1 sobre (30 ml) en 200 ml de agua fresca o jugo natural. Tomar de 1 a 3 veces al día según las necesidades nutricionales."
 paraQuienEs:
   - "Niños, adultos y adultos mayores que buscan fortalecer su nutrición diaria."
   - "Personas expuestas a cambios de clima, alto estrés o etapas de desgaste físico."
