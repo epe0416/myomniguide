@@ -1,0 +1,219 @@
+---
+// src/components/HeroCarousel.astro
+const rawBaseUrl = import.meta.env.BASE_URL;
+const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
+
+const slides = [
+  {
+    tag: "BIENVENIDO A MYOMNIGUIDE",
+    titulo: "Tu portal técnico de nutrición y herramientas de negocio.",
+    descripcion: "Información precisa para cuidar tu salud con nuestras <strong>Guías de Uso</strong> o potenciar tus ventas como Empresario Omnilife con nuestras <strong>Guías Comerciales</strong>.",
+    linkText: "Explorar Catálogo Completo →",
+    linkUrl: `${baseUrl}productos`,
+    iconoMeta: "⚡",
+    metaText: "Información estructurada para consulta rápida"
+  },
+  {
+    tag: "TECNOLOGÍA DE NUTRICEUTICOS",
+    titulo: "Micelización: Máxima absorción en minutos.",
+    descripcion: "Proceso patentado que fracciona nutrientes fat-solubles (vitaminas A, D, E, K) en microgotas solubles en agua, permitiendo una absorción del <strong>90% al 99% en menos de 10 minutos</strong>.",
+    linkText: "Ver Productos Micelizados →",
+    linkUrl: `${baseUrl}productos`,
+    iconoMeta: "💡",
+    metaText: "Sin sobrecargar el sistema digestivo"
+  },
+  {
+    tag: "TIPS DE CONSUMO Y SINERGIA",
+    titulo: "Combina productos para potenciar resultados.",
+    descripcion: "Los nutrientes actúan en equipo: asociar vitaminas micelizadas con minerales u aminoácidos (ej. Omniplus + Power Maker) optimiza la asimilación celular y el rendimiento físico.",
+    linkText: "Ver Combos Sugeridos →",
+    linkUrl: `${baseUrl}combos`,
+    iconoMeta: "🧬",
+    metaText: "Protocolos integrales por objetivo"
+  },
+  {
+    tag: "HERRAMIENTAS PARA EMPRESARIOS",
+    titulo: "Potencia tu red y optimiza tus puntos.",
+    descripcion: "Accede a estrategias de prospección, cálculo de volumen y herramientas comerciales diseñadas para escalar tu negocio en Omnilife con base en datos técnicos reales.",
+    linkText: "Ver Guías Comerciales →",
+    linkUrl: `${baseUrl}productos`,
+    iconoMeta: "📈",
+    metaText: "Crecimiento estructurado y duplicable"
+  }
+];
+---
+
+<div id="hero-carousel-container" class="relative group my-4">
+  <!-- Contenedor del Carrusel con Scroll Snap -->
+  <div 
+    id="hero-carousel" 
+    class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none rounded-3xl bg-linear-to-br from-purple-950 via-purple-900 to-slate-950 text-white shadow-xl border border-purple-900/40"
+    style="scroll-behavior: smooth;"
+  >
+    {slides.map((slide, index) => (
+      <div 
+        class="snap-center shrink-0 w-full p-6 sm:p-10 md:p-12 flex flex-col justify-between min-h-90 md:min-h-95"
+        data-slide-index={index}
+      >
+        <!-- Encabezado del Slide -->
+        <div class="space-y-4 max-w-3xl">
+          <span class="inline-block px-3 py-1 bg-purple-900/80 border border-purple-700/50 text-purple-200 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+            {slide.tag}
+          </span>
+          <h2 class="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight text-white">
+            {slide.titulo}
+          </h2>
+          <p class="text-purple-100/90 text-sm sm:text-base md:text-lg font-normal leading-relaxed" set:html={slide.descripcion} />
+        </div>
+
+        <!-- Botón de Acción y Meta -->
+        <div class="pt-6 border-t border-purple-800/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-6">
+          <a 
+            href={slide.linkUrl}
+            class="inline-flex items-center justify-center gap-2 bg-white hover:bg-purple-50 text-purple-950 font-extrabold px-6 py-3 rounded-2xl shadow-md transition-all text-xs sm:text-sm hover:scale-[1.02] active:scale-95 shrink-0"
+          >
+            <span>{slide.linkText}</span>
+          </a>
+
+          <div class="flex items-center gap-2 text-xs text-purple-200/80 font-medium">
+            <span class="text-base">{slide.iconoMeta}</span>
+            <span>{slide.metaText}</span>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Botones de Navegación (Visibles desde 'md') -->
+  <button 
+    id="carousel-prev" 
+    type="button" 
+    aria-label="Anterior slide"
+    class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-2xl bg-slate-950/40 hover:bg-slate-950/80 border border-white/10 text-white items-center justify-center backdrop-blur-xs transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+  >
+    ‹
+  </button>
+  <button 
+    id="carousel-next" 
+    type="button" 
+    aria-label="Siguiente slide"
+    class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-2xl bg-slate-950/40 hover:bg-slate-950/80 border border-white/10 text-white items-center justify-center backdrop-blur-xs transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+  >
+    ›
+  </button>
+
+  <!-- Indicadores de Puntos (Dots) -->
+  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
+    {slides.map((_, index) => (
+      <button 
+        type="button" 
+        data-dot-index={index}
+        aria-label={`Ir al slide ${index + 1}`}
+        class="carousel-dot w-2.5 h-2.5 rounded-full bg-white/30 transition-all cursor-pointer hover:bg-white/60"
+      ></button>
+    ))}
+  </div>
+</div>
+
+<script is:inline>
+  function initHeroCarousel() {
+    const carousel = document.getElementById('hero-carousel');
+    const prevBtn = document.getElementById('carousel-prev');
+    const nextBtn = document.getElementById('carousel-next');
+    const dots = document.querySelectorAll('.carousel-dot');
+
+    if (!carousel) return;
+
+    let currentIndex = 0;
+    const totalSlides = dots.length;
+    let autoPlayTimer = null;
+
+    function updateActiveDot(index) {
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.classList.add('!bg-white', '!w-6');
+          dot.classList.remove('bg-white/30');
+        } else {
+          dot.classList.remove('!bg-white', '!w-6');
+          dot.classList.add('bg-white/30');
+        }
+      });
+    }
+
+    function scrollToSlide(index) {
+      const slideWidth = carousel.clientWidth;
+      carousel.scrollTo({
+        left: slideWidth * index,
+        behavior: 'smooth'
+      });
+      currentIndex = index;
+      updateActiveDot(index);
+    }
+
+    function nextSlide() {
+      const next = (currentIndex + 1) % totalSlides;
+      scrollToSlide(next);
+    }
+
+    function prevSlide() {
+      const prev = (currentIndex - 1 + totalSlides) % totalSlides;
+      scrollToSlide(prev);
+    }
+
+    function startAutoPlay() {
+      stopAutoPlay();
+      autoPlayTimer = setInterval(nextSlide, 6000);
+    }
+
+    function stopAutoPlay() {
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
+    }
+
+    nextBtn?.addEventListener('click', () => {
+      nextSlide();
+      startAutoPlay();
+    });
+
+    prevBtn?.addEventListener('click', () => {
+      prevSlide();
+      startAutoPlay();
+    });
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const index = parseInt(dot.getAttribute('data-dot-index') || '0', 10);
+        scrollToSlide(index);
+        startAutoPlay();
+      });
+    });
+
+    carousel.addEventListener('scroll', () => {
+      const slideWidth = carousel.clientWidth;
+      if (slideWidth === 0) return;
+      const newIndex = Math.round(carousel.scrollLeft / slideWidth);
+      if (newIndex !== currentIndex && newIndex < totalSlides) {
+        currentIndex = newIndex;
+        updateActiveDot(newIndex);
+      }
+    });
+
+    carousel.addEventListener('mouseenter', stopAutoPlay);
+    carousel.addEventListener('mouseleave', startAutoPlay);
+    carousel.addEventListener('touchstart', stopAutoPlay, { passive: true });
+
+    updateActiveDot(0);
+    startAutoPlay();
+  }
+
+  document.addEventListener('DOMContentLoaded', initHeroCarousel);
+</script>
+
+<style>
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>

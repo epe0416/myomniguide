@@ -1,6 +1,8 @@
 ---
+// src/pages/index.astro
 import LayoutBase from '../layouts/LayoutBase.astro';
 import TarjetaProducto from '../components/TarjetaProducto.astro';
+import HeroCarousel from '../components/HeroCarousel.astro';
 import { getCollection } from 'astro:content';
 
 const productos = await getCollection('productos');
@@ -11,50 +13,11 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 ---
 
 <LayoutBase titulo="Inicio - MyOmniGuide">
-  <!-- Hero Section Refactorizado -->
-  <section class="bg-linear-to-br from-purple-900 via-purple-950 to-slate-950 text-white rounded-3xl p-8 md:p-12 shadow-md mb-12">
-    <div class="max-w-3xl">
-      <span class="inline-block text-xs font-bold tracking-wider text-purple-300 bg-purple-800/60 px-3.5 py-1.5 rounded-full uppercase mb-4 border border-purple-700/50">
-        BIENVENIDO A MYOMNIGUIDE
-      </span>
-      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight">
-        Tu portal técnico de nutrición y herramientas de negocio.
-      </h1>
-      <p class="text-purple-100 text-base md:text-lg mb-8 leading-relaxed">
-        Información precisa para cuidar tu salud con nuestras <strong>Guías de Uso</strong> o potenciar tus ventas como Empresario Omnilife con nuestras <strong>Guías Comerciales</strong>.
-      </p>
-
-      <!-- CTA Único -->
-      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-        <a
-          href={`${baseUrl}productos`}
-          class="inline-flex items-center justify-center gap-2 bg-white text-purple-950 hover:bg-purple-100 font-extrabold px-6 py-3.5 rounded-xl text-sm transition-all shadow-md hover:shadow-lg"
-        >
-          <span>Explorar Catálogo Completo</span>
-          <span class="text-lg">→</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- Indicadores de Valor en lugar de botones duplicados -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10 pt-8 border-t border-purple-800/60 text-xs">
-      <div class="flex items-center gap-2.5 text-purple-200">
-        <span class="text-amber-400 font-bold text-base">🥤</span>
-        <span><strong>Guía de Uso:</strong> Beneficios, dosis y modo de consumo.</span>
-      </div>
-      <div class="flex items-center gap-2.5 text-purple-200">
-        <span class="text-emerald-400 font-bold text-base">💼</span>
-        <span><strong>Guía Comercial:</strong> Argumentos de venta y cumplimiento.</span>
-      </div>
-      <div class="flex items-center gap-2.5 text-purple-200">
-        <span class="text-purple-300 font-bold text-base">⚡</span>
-        <span><strong>Matriz Nutricional:</strong> Datos técnicos verificados.</span>
-      </div>
-    </div>
-  </section>
+  <!-- Carrusel Dinámico Principal -->
+  <HeroCarousel />
 
   <!-- Sección de Productos Destacados -->
-  <section class="mb-12">
+  <section class="mb-12 mt-8">
     <div class="flex justify-between items-end mb-6">
       <div>
         <h2 class="text-2xl font-extrabold text-slate-950">Productos Destacados</h2>
@@ -74,7 +37,6 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
           <TarjetaProducto
             slug={item.id}
             nombre={item.data.nombre}
-            puntos={item.data.puntos}
             categorias={item.data.categorias}
             beneficioPrincipal={item.data.beneficiosPrincipales[0]}
             formato={item.data.formato}

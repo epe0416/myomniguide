@@ -1,11 +1,11 @@
 ---
+// src/pages/productos.astro
 import LayoutBase from '../layouts/LayoutBase.astro';
 import TarjetaProducto from '../components/TarjetaProducto.astro';
 import { getCollection } from 'astro:content';
 
 const productos = await getCollection('productos');
 
-// Extraer categorías únicas
 const categoriasUnicas = Array.from(
   new Set(productos.flatMap((p) => p.data.categorias))
 ).sort();
@@ -25,7 +25,6 @@ const categoriasUnicas = Array.from(
 
     <!-- Buscador y Filtro por Categorías -->
     <div class="mb-8 space-y-4">
-      <!-- Buscador de Texto -->
       <div class="relative max-w-xl">
         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
           🔍
@@ -38,7 +37,6 @@ const categoriasUnicas = Array.from(
         />
       </div>
 
-      <!-- Filtros por Categoría -->
       <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="contenedor-categorias">
         <button
           type="button"
@@ -58,7 +56,6 @@ const categoriasUnicas = Array.from(
         ))}
       </div>
 
-      <!-- Metadata de Búsqueda -->
       <div class="text-xs text-slate-500 flex justify-between items-center px-1">
         <span id="contador-resultados">Cargando productos...</span>
         <button 
@@ -84,7 +81,8 @@ const categoriasUnicas = Array.from(
             <TarjetaProducto
               slug={item.id}
               nombre={item.data.nombre}
-              puntos={item.data.puntos}
+              precioNIO={item.data.nio?.precio}
+              precioUSD={item.data.usa?.precio}
               categorias={item.data.categorias}
               beneficioPrincipal={item.data.beneficiosPrincipales[0]}
               formato={item.data.formato}
@@ -95,14 +93,12 @@ const categoriasUnicas = Array.from(
       })}
     </div>
 
-    <!-- Centinela para Infinite Scroll -->
     <div id="scroll-sentinel" class="h-12 flex items-center justify-center mt-6">
       <div id="cargando-indicador" class="hidden text-xs text-slate-400 font-medium">
         Cargando más productos...
       </div>
     </div>
 
-    <!-- Estado Vacío -->
     <div 
       id="sin-resultados" 
       class="hidden text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-xs mt-6"
@@ -116,122 +112,7 @@ const categoriasUnicas = Array.from(
   </main>
 </LayoutBase>
 
-<script is:inline>
-  document.addEventListener('DOMContentLoaded', () => {
-    const BATCH_SIZE = 6;
-    let limiteActual = BATCH_SIZE;
-
-    const inputBuscador = document.getElementById('buscador-productos');
-    const botonesCategoria = document.querySelectorAll('.btn-categoria');
-    const tarjetas = Array.from(document.querySelectorAll('.tarjeta-item'));
-    const sinResultados = document.getElementById('sin-resultados');
-    const contador = document.getElementById('contador-resultados');
-    const btnLimpiar = document.getElementById('btn-limpiar');
-    const sentinel = document.getElementById('scroll-sentinel');
-    const indicador = document.getElementById('cargando-indicador');
-
-    let categoriaSeleccionada = 'todas';
-    let tarjetasFiltradas = [];
-
-    function actualizarVisibilidad() {
-      const query = inputBuscador ? inputBuscador.value.trim().toLowerCase() : '';
-
-      // 1. Filtrar tarjetas por búsqueda y categoría
-      tarjetasFiltradas = tarjetas.filter((tarjeta) => {
-        const searchData = tarjeta.getAttribute('data-search') || '';
-        const categoriesData = (tarjeta.getAttribute('data-categories') || '').split('|');
-
-        const coincideTexto = query === '' || searchData.includes(query);
-        const coincideCategoria = categoriaSeleccionada === 'todas' || categoriesData.includes(categoriaSeleccionada);
-
-        return coincideTexto && coincideCategoria;
-      });
-
-      // 2. Ocultar todas primero
-      tarjetas.forEach(t => t.classList.add('hidden'));
-
-      // 3. Mostrar solo la tanda visible según el limiteActual
-      const visiblesAhora = tarjetasFiltradas.slice(0, limiteActual);
-      visiblesAhora.forEach(t => t.classList.remove('hidden'));
-
-      // 4. Actualizar estado del indicador de scroll
-      const hayMas = limiteActual < tarjetasFiltradas.length;
-      if (indicador) {
-        indicador.classList.toggle('hidden', !hayMas);
-      }
-
-      // 5. Actualizar contador
-      if (contador) {
-        contador.textContent = `${tarjetasFiltradas.length} ${tarjetasFiltradas.length === 1 ? 'producto encontrado' : 'productos encontrados'}`;
-      }
-
-      // 6. Botón limpiar y estado vacío
-      const hayFiltrosActivos = query !== '' || categoriaSeleccionada !== 'todas';
-      if (btnLimpiar) btnLimpiar.classList.toggle('hidden', !hayFiltrosActivos);
-      if (sinResultados) sinResultados.classList.toggle('hidden', tarjetasFiltradas.length > 0);
-    }
-
-    function cargarMasTanda() {
-      if (limiteActual < tarjetasFiltradas.length) {
-        limiteActual += BATCH_SIZE;
-        actualizarVisibilidad();
-      }
-    }
-
-    // Configurar IntersectionObserver para Infinite Scroll
-    if (sentinel && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          cargarMasTanda();
-        }
-      }, { rootMargin: '100px' });
-
-      observer.observe(sentinel);
-    }
-
-    // Eventos de entrada
-    inputBuscador?.addEventListener('input', () => {
-      limiteActual = BATCH_SIZE;
-      actualizarVisibilidad();
-    });
-
-    botonesCategoria.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        botonesCategoria.forEach((b) => {
-          b.classList.remove('bg-purple-950', 'text-white');
-          b.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
-        });
-
-        btn.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
-        btn.classList.add('bg-purple-950', 'text-white');
-
-        categoriaSeleccionada = btn.getAttribute('data-category') || 'todas';
-        limiteActual = BATCH_SIZE;
-        actualizarVisibilidad();
-      });
-    });
-
-    btnLimpiar?.addEventListener('click', () => {
-      if (inputBuscador) inputBuscador.value = '';
-      categoriaSeleccionada = 'todas';
-
-      botonesCategoria.forEach((b) => {
-        const esTodas = b.getAttribute('data-category') === 'todas';
-        if (esTodas) {
-          b.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
-          b.classList.add('bg-purple-950', 'text-white');
-        } else {
-          b.classList.remove('bg-purple-950', 'text-white');
-          b.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
-        }
-      });
-
-      limiteActual = BATCH_SIZE;
-      actualizarVisibilidad();
-      inputBuscador?.focus();
-    });
-
-    // Carga inicial
-    actualizarVisibilidad();
-  });
+<script>
+  import { initCatalogo } from '../scripts/catalogoFiltros';
+  document.addEventListener('DOMContentLoaded', initCatalogo);
 </script>
