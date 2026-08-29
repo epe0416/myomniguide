@@ -2,6 +2,11 @@ import { defineCollection, reference } from 'astro:content';
 import { z } from 'zod';
 import { glob } from 'astro/loaders';
 
+const mercadoSchema = z.object({
+  puntos: z.number().min(0),
+  precio: z.number().positive(),
+});
+
 const productos = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/productos' }),
   schema: ({ image }) =>
@@ -9,7 +14,12 @@ const productos = defineCollection({
       nombre: z.string(),
       subtitulo: z.string(),
       imagen: image().optional(),
-      puntos: z.number().min(0).optional(),
+
+      // Estructura regional simétrica por mercado
+      nio: mercadoSchema.optional(),
+      usa: mercadoSchema.optional(),
+
+      // Validación estricta de categorías (Omnilife + Seytú)
       categorias: z.array(
         z.enum([
           'Sistema Inmune',
@@ -40,6 +50,7 @@ const productos = defineCollection({
           'Anti-Edad'
         ])
       ).min(1),
+
       formato: z.string(),
       beneficiosPrincipales: z.array(z.string()),
       modoUso: z.string(),

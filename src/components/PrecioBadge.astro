@@ -1,0 +1,65 @@
+---
+// src/components/PrecioBadge.astro
+interface Props {
+  precioNIO?: number;
+  precioUSD?: number;
+  clases?: string;
+}
+
+const { precioNIO, precioUSD, clases = "" } = Astro.props;
+---
+
+{(precioNIO || precioUSD) && (
+  <div class="relative group/tooltip inline-block">
+    <span 
+      class={`precio-badge inline-flex items-center gap-1 font-extrabold text-slate-900 bg-slate-100 border border-slate-200/80 px-2.5 py-1 rounded-lg text-xs cursor-help ${clases}`}
+      data-nio-val={precioNIO ? `C$ ${precioNIO.toLocaleString('es-NI', { minimumFractionDigits: 2 })}` : ''}
+      data-usa-val={precioUSD ? `$${precioUSD.toFixed(2)} USD` : ''}
+      data-nio-tip="Este es el precio oficial en Nicaragua (NIO)"
+      data-usa-tip="Este es el precio oficial en Estados Unidos (USA)"
+    >
+      <span class="precio-value">
+        {precioNIO ? `C$ ${precioNIO.toLocaleString('es-NI', { minimumFractionDigits: 2 })}` : `$${precioUSD?.toFixed(2)} USD`}
+      </span>
+    </span>
+
+    <!-- Burbuja Informativa (Tooltip) -->
+    <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:flex flex-col items-center z-50 whitespace-nowrap transition-all duration-150">
+      <span class="precio-tooltip-text bg-slate-950 text-white text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-xl border border-slate-800">
+        Este es el precio oficial en Nicaragua (NIO)
+      </span>
+      <span class="w-2 h-2 -mt-1 rotate-45 bg-slate-950 border-r border-b border-slate-800"></span>
+    </div>
+  </div>
+)}
+
+<script is:inline>
+  function actualizarPreciosVisibles() {
+    let mercado = localStorage.getItem('moneda_pref') || 'NIO';
+    if (mercado === 'USD') mercado = 'USA';
+    
+    const keyVal = `data-${mercado.toLowerCase()}-val`;
+    const keyTip = `data-${mercado.toLowerCase()}-tip`;
+
+    const badges = document.querySelectorAll('.precio-badge');
+    
+    badges.forEach((badge) => {
+      const val = badge.getAttribute(keyVal);
+      const tip = badge.getAttribute(keyTip);
+
+      const targetVal = badge.querySelector('.precio-value');
+      const container = badge.closest('.group\\/tooltip');
+      const targetTip = container ? container.querySelector('.precio-tooltip-text') : null;
+
+      if (targetVal && val) {
+        targetVal.textContent = val;
+      }
+      if (targetTip && tip) {
+        targetTip.textContent = tip;
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', actualizarPreciosVisibles);
+  window.addEventListener('currency-changed', actualizarPreciosVisibles);
+</script>

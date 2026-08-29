@@ -2,7 +2,12 @@
 nombre: "Fem Plus"
 subtitulo: "Nutrición especializada con fitoestrógenos de origen vegetal y micronutrientes para el equilibrio hormonal femenino"
 imagen: "../../../assets/productos/omnilife/fem-plus.png"
-puntos: 56
+nio:
+  puntos: 56
+  precio: 1405
+usa:
+  puntos: 56
+  precio: 42.74
 categorias:
   - "Salud Femenina"
   - "Antioxidantes"
