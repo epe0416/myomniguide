@@ -4,9 +4,14 @@ import TarjetaProducto from '../components/TarjetaProducto.astro';
 import { getCollection } from 'astro:content';
 
 const productos = await getCollection('productos');
+
+// Extraer categorías únicas
+const categoriasUnicas = Array.from(
+  new Set(productos.flatMap((p) => p.data.categorias))
+).sort();
 ---
 
-<LayoutBase titulo="Catálogo de Productos | OmniGrowth">
+<LayoutBase title="Catálogo de Productos | OmniGrowth">
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
     <!-- Encabezado -->
     <div class="mb-8">
@@ -18,28 +23,49 @@ const productos = await getCollection('productos');
       </p>
     </div>
 
-    <!-- Campo de Búsqueda -->
-    <div class="mb-8 max-w-xl">
-      <div class="relative">
+    <!-- Buscador y Filtro por Categorías -->
+    <div class="mb-8 space-y-4">
+      <!-- Buscador de Texto -->
+      <div class="relative max-w-xl">
         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
           🔍
         </div>
         <input 
           type="search" 
           id="buscador-productos" 
-          placeholder="Buscar por nombre, categoría o beneficio..."
+          placeholder="Buscar por nombre o beneficio..."
           class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all shadow-xs"
         />
       </div>
-      
+
+      <!-- Filtros por Categoría -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="contenedor-categorias">
+        <button
+          type="button"
+          class="btn-categoria active whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer bg-purple-950 text-white shadow-xs"
+          data-category="todas"
+        >
+          Todas ({productos.length})
+        </button>
+        {categoriasUnicas.map((cat) => (
+          <button
+            type="button"
+            class="btn-categoria whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer bg-white text-slate-600 border border-slate-200 hover:border-purple-300 hover:text-purple-900 shadow-xs"
+            data-category={cat.toLowerCase()}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
       <!-- Metadata de Búsqueda -->
-      <div class="mt-2 text-xs text-slate-500 flex justify-between items-center px-1">
-        <span id="contador-resultados">Mostrando {productos.length} productos</span>
+      <div class="text-xs text-slate-500 flex justify-between items-center px-1">
+        <span id="contador-resultados">Cargando productos...</span>
         <button 
           id="btn-limpiar" 
           class="text-purple-700 hover:text-purple-900 font-bold hidden cursor-pointer transition-colors"
         >
-          Limpiar búsqueda
+          Limpiar filtros
         </button>
       </div>
     </div>
@@ -47,9 +73,14 @@ const productos = await getCollection('productos');
     <!-- Grid de Productos -->
     <div id="grid-productos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {productos.map((item) => {
-        const searchText = `${item.data.nombre} ${item.data.categorias.join(' ')} ${item.data.beneficiosPrincipales.join(' ')}`.toLowerCase();
+        const searchText = `${item.data.nombre} ${item.data.beneficiosPrincipales.join(' ')}`.toLowerCase();
+        const categoriasAttr = item.data.categorias.map(c => c.toLowerCase()).join('|');
         return (
-          <div class="tarjeta-item transition-all duration-200" data-search={searchText}>
+          <div 
+            class="tarjeta-item hidden transition-all duration-300" 
+            data-search={searchText}
+            data-categories={categoriasAttr}
+          >
             <TarjetaProducto
               slug={item.id}
               nombre={item.data.nombre}
@@ -64,7 +95,14 @@ const productos = await getCollection('productos');
       })}
     </div>
 
-    <!-- Estado Vacío (Sin Resultados) -->
+    <!-- Centinela para Infinite Scroll -->
+    <div id="scroll-sentinel" class="h-12 flex items-center justify-center mt-6">
+      <div id="cargando-indicador" class="hidden text-xs text-slate-400 font-medium">
+        Cargando más productos...
+      </div>
+    </div>
+
+    <!-- Estado Vacío -->
     <div 
       id="sin-resultados" 
       class="hidden text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-xs mt-6"
@@ -72,7 +110,7 @@ const productos = await getCollection('productos');
       <div class="text-4xl mb-3">🔍</div>
       <h3 class="text-lg font-bold text-slate-900 mb-1">No se encontraron productos</h3>
       <p class="text-slate-500 text-sm max-w-md mx-auto mb-4">
-        No coinciden productos con el criterio de búsqueda. Intenta con otros términos como "Energía", "Digestivo" o "Omniplus".
+        No coinciden productos con el criterio seleccionado. Intenta cambiar de categoría o modificar el texto de búsqueda.
       </p>
     </div>
   </main>
@@ -80,54 +118,120 @@ const productos = await getCollection('productos');
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
+    const BATCH_SIZE = 6;
+    let limiteActual = BATCH_SIZE;
+
     const inputBuscador = document.getElementById('buscador-productos');
-    const tarjetas = document.querySelectorAll('.tarjeta-item');
+    const botonesCategoria = document.querySelectorAll('.btn-categoria');
+    const tarjetas = Array.from(document.querySelectorAll('.tarjeta-item'));
     const sinResultados = document.getElementById('sin-resultados');
     const contador = document.getElementById('contador-resultados');
     const btnLimpiar = document.getElementById('btn-limpiar');
+    const sentinel = document.getElementById('scroll-sentinel');
+    const indicador = document.getElementById('cargando-indicador');
 
-    if (!inputBuscador) return;
+    let categoriaSeleccionada = 'todas';
+    let tarjetasFiltradas = [];
 
-    function filtrarProductos() {
-      const query = inputBuscador.value.trim().toLowerCase();
-      let visibles = 0;
+    function actualizarVisibilidad() {
+      const query = inputBuscador ? inputBuscador.value.trim().toLowerCase() : '';
 
-      tarjetas.forEach((tarjeta) => {
+      // 1. Filtrar tarjetas por búsqueda y categoría
+      tarjetasFiltradas = tarjetas.filter((tarjeta) => {
         const searchData = tarjeta.getAttribute('data-search') || '';
-        const coincide = searchData.includes(query);
+        const categoriesData = (tarjeta.getAttribute('data-categories') || '').split('|');
 
-        if (coincide) {
-          tarjeta.classList.remove('hidden');
-          visibles++;
-        } else {
-          tarjeta.classList.add('hidden');
-        }
+        const coincideTexto = query === '' || searchData.includes(query);
+        const coincideCategoria = categoriaSeleccionada === 'todas' || categoriesData.includes(categoriaSeleccionada);
+
+        return coincideTexto && coincideCategoria;
       });
 
-      // Actualizar contador dinámico
+      // 2. Ocultar todas primero
+      tarjetas.forEach(t => t.classList.add('hidden'));
+
+      // 3. Mostrar solo la tanda visible según el limiteActual
+      const visiblesAhora = tarjetasFiltradas.slice(0, limiteActual);
+      visiblesAhora.forEach(t => t.classList.remove('hidden'));
+
+      // 4. Actualizar estado del indicador de scroll
+      const hayMas = limiteActual < tarjetasFiltradas.length;
+      if (indicador) {
+        indicador.classList.toggle('hidden', !hayMas);
+      }
+
+      // 5. Actualizar contador
       if (contador) {
-        contador.textContent = query === '' 
-          ? `Mostrando ${tarjetas.length} productos` 
-          : `${visibles} ${visibles === 1 ? 'producto encontrado' : 'productos encontrados'}`;
+        contador.textContent = `${tarjetasFiltradas.length} ${tarjetasFiltradas.length === 1 ? 'producto encontrado' : 'productos encontrados'}`;
       }
 
-      // Mostrar / ocultar botón de limpiar
-      if (btnLimpiar) {
-        btnLimpiar.classList.toggle('hidden', query === '');
-      }
+      // 6. Botón limpiar y estado vacío
+      const hayFiltrosActivos = query !== '' || categoriaSeleccionada !== 'todas';
+      if (btnLimpiar) btnLimpiar.classList.toggle('hidden', !hayFiltrosActivos);
+      if (sinResultados) sinResultados.classList.toggle('hidden', tarjetasFiltradas.length > 0);
+    }
 
-      // Mostrar estado vacío si no hay coincidencias
-      if (sinResultados) {
-        sinResultados.classList.toggle('hidden', visibles > 0);
+    function cargarMasTanda() {
+      if (limiteActual < tarjetasFiltradas.length) {
+        limiteActual += BATCH_SIZE;
+        actualizarVisibilidad();
       }
     }
 
-    inputBuscador.addEventListener('input', filtrarProductos);
+    // Configurar IntersectionObserver para Infinite Scroll
+    if (sentinel && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          cargarMasTanda();
+        }
+      }, { rootMargin: '100px' });
+
+      observer.observe(sentinel);
+    }
+
+    // Eventos de entrada
+    inputBuscador?.addEventListener('input', () => {
+      limiteActual = BATCH_SIZE;
+      actualizarVisibilidad();
+    });
+
+    botonesCategoria.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        botonesCategoria.forEach((b) => {
+          b.classList.remove('bg-purple-950', 'text-white');
+          b.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+        });
+
+        btn.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+        btn.classList.add('bg-purple-950', 'text-white');
+
+        categoriaSeleccionada = btn.getAttribute('data-category') || 'todas';
+        limiteActual = BATCH_SIZE;
+        actualizarVisibilidad();
+      });
+    });
 
     btnLimpiar?.addEventListener('click', () => {
-      inputBuscador.value = '';
-      filtrarProductos();
-      inputBuscador.focus();
+      if (inputBuscador) inputBuscador.value = '';
+      categoriaSeleccionada = 'todas';
+
+      botonesCategoria.forEach((b) => {
+        const esTodas = b.getAttribute('data-category') === 'todas';
+        if (esTodas) {
+          b.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+          b.classList.add('bg-purple-950', 'text-white');
+        } else {
+          b.classList.remove('bg-purple-950', 'text-white');
+          b.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+        }
+      });
+
+      limiteActual = BATCH_SIZE;
+      actualizarVisibilidad();
+      inputBuscador?.focus();
     });
+
+    // Carga inicial
+    actualizarVisibilidad();
   });
 </script>
