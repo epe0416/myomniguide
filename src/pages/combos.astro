@@ -1,0 +1,114 @@
+---
+import LayoutBase from '../layouts/LayoutBase.astro';
+import { getCollection, getEntries } from 'astro:content';
+import { Image } from 'astro:assets';
+
+const rawBaseUrl = import.meta.env.BASE_URL;
+const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
+
+const todosLosCombos = await getCollection('combos');
+
+// Resolver referencias cruzadas y calcular total de puntos acumulados
+const combosConProductos = await Promise.all(
+  todosLosCombos.map(async (combo) => {
+    const productosResueltos = await getEntries(combo.data.productos);
+    const puntosTotales = productosResueltos.reduce(
+      (acc, item) => acc + (item.data.puntos || 0),
+      0
+    );
+    return {
+      combo,
+      productos: productosResueltos,
+      puntosTotales,
+    };
+  })
+);
+---
+
+<LayoutBase titulo="Combos Sugeridos">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <!-- Encabezado -->
+    <div class="mb-10 text-center max-w-3xl mx-auto">
+      <span class="inline-block px-3 py-1 bg-purple-100 text-purple-900 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
+        Protocolos Integrales
+      </span>
+      <h1 class="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mb-3">
+        Combos y Paquetes Sugeridos
+      </h1>
+      <p class="text-slate-600 text-sm md:text-base">
+        Combinaciones estratégicas formuladas para potenciar resultados por objetivo de bienestar y optimizar tu volumen de puntos.
+      </p>
+    </div>
+
+    <!-- Grid de Combos -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {combosConProductos.map(({ combo, productos, puntosTotales }) => (
+        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
+          <div class="p-6 md:p-8 space-y-6">
+            
+            <!-- Cabecera -->
+            <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-5">
+              <div>
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-2xl">{combo.data.icono}</span>
+                  <h2 class="text-xl font-black text-slate-950">{combo.data.nombre}</h2>
+                </div>
+                <p class="text-xs text-slate-500 font-medium">{combo.data.subtitulo}</p>
+              </div>
+              <div class="bg-purple-950 text-white px-3 py-1.5 rounded-xl text-center shrink-0">
+                <span class="block text-[10px] uppercase font-bold text-purple-200 leading-none">Total</span>
+                <span class="text-sm font-black">{puntosTotales} pts</span>
+              </div>
+            </div>
+
+            <!-- Objetivo del Paquete -->
+            <div>
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Objetivo del Paquete</h3>
+              <p class="text-sm text-slate-700 font-medium leading-relaxed">{combo.data.objetivo}</p>
+            </div>
+
+            <!-- Productos Incluidos -->
+            <div>
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Productos Incluidos</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {productos.map((prod) => (
+                  <a 
+                    href={`${baseUrl}productos/${prod.id}`}
+                    class="group bg-slate-50 hover:bg-purple-50/50 p-3 rounded-2xl border border-slate-100 hover:border-purple-200 transition-all text-center flex flex-col items-center justify-between"
+                  >
+                    <div class="w-16 h-16 mb-2 flex items-center justify-center">
+                      {prod.data.imagen ? (
+                        <Image 
+                          src={prod.data.imagen} 
+                          alt={prod.data.nombre}
+                          width={80}
+                          height={80}
+                          class="max-h-full w-auto object-contain group-hover:scale-105 transition-transform"
+                        />
+                      ) : (
+                        <span class="text-2xl">📦</span>
+                      )}
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-slate-900 group-hover:text-purple-700 transition-colors line-clamp-1">
+                        {prod.data.nombre}
+                      </h4>
+                      <span class="text-[10px] text-slate-500 font-semibold">{prod.data.puntos || 0} pts</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <!-- Protocolo de Consumo -->
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-600">
+              <span class="font-bold text-slate-900 block mb-1">💡 Modo de Uso Sugerido:</span>
+              <p class="leading-relaxed">{combo.data.protocoloConsumo}</p>
+            </div>
+
+          </div>
+        </div>
+      ))}
+    </div>
+  </main>
+</LayoutBase>

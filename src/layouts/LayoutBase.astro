@@ -66,6 +66,17 @@ const currentPath = Astro.url.pathname;
           >
             Catálogo
           </a>
+
+          <a 
+            href={`${baseUrl}combos`} 
+            class={`px-3 sm:px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+              currentPath.includes('combos')
+                ? 'bg-purple-50 text-purple-700'
+                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/80'
+            }`}
+          >
+            Combos
+          </a>
         </nav>
 
       </div>
