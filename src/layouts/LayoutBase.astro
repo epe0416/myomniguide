@@ -20,14 +20,13 @@ const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 const currentPath = Astro.url.pathname;
 
-// URL absoluta requerida para previsualización en WhatsApp y redes sociales
 const imagenAbsoluta = imagen
   ? new URL(imagen, Astro.url.origin).href
   : new URL(`${baseUrl}favicon.svg`, Astro.url.origin).href;
 ---
 
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-50 scrollbar-gutter-stable">
+<html lang="es" class="h-full bg-slate-50 scrollbar-gutter-stable overflow-x-hidden">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -45,28 +44,28 @@ const imagenAbsoluta = imagen
     <!-- Favicon SVG -->
     <link rel="icon" type="image/svg+xml" href={`${baseUrl}favicon.svg`} />
   </head>
-  <body class="min-h-screen flex flex-col text-slate-900 antialiased font-sans">
+  <body class="min-h-screen flex flex-col text-slate-900 antialiased font-sans overflow-x-hidden max-w-full">
     
     <!-- Navbar Sticky -->
     <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2">
+      <div class="max-w-6xl mx-auto px-2.5 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-3">
         
-        <!-- Logo -->
-        <a href={`${baseUrl}`} class="flex items-center gap-2.5 group shrink-0">
-          <div class="w-9 h-9 bg-purple-800 text-white font-black rounded-xl flex items-center justify-center text-lg shadow-xs group-hover:bg-purple-900 transition-colors">
+        <!-- Logo (Compacto en móvil: solo icono "O", texto visible desde 'sm') -->
+        <a href={`${baseUrl}`} class="flex items-center gap-2 shrink-0">
+          <div class="w-8 h-8 sm:w-9 sm:h-9 bg-purple-800 text-white font-black rounded-xl flex items-center justify-center text-base sm:text-lg shadow-xs hover:bg-purple-900 transition-colors">
             O
           </div>
-          <span class="text-lg font-black text-slate-950 tracking-tight group-hover:text-purple-900 transition-colors">
+          <span class="hidden sm:inline text-lg font-black text-slate-950 tracking-tight hover:text-purple-900 transition-colors">
             MyOmniGuide
           </span>
         </a>
 
-        <!-- Bloque Derecho: Navegación + Buscador + Conmutador de Mercado -->
-        <div class="flex items-center gap-2 sm:gap-3">
-          <nav class="flex items-center gap-1">
+        <!-- Bloque Derecho: Navegación + Buscador + Conmutador -->
+        <div class="flex items-center gap-1 sm:gap-3 shrink-0">
+          <nav class="flex items-center gap-0.5 sm:gap-1">
             <a 
               href={baseUrl} 
-              class={`px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+              class={`px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all ${
                 currentPath === rawBaseUrl || currentPath === baseUrl
                   ? 'bg-purple-50 text-purple-700'
                   : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/80'
@@ -77,7 +76,7 @@ const imagenAbsoluta = imagen
 
             <a 
               href={`${baseUrl}productos`} 
-              class={`px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+              class={`px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all ${
                 currentPath.includes('productos')
                   ? 'bg-purple-50 text-purple-700'
                   : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/80'
@@ -88,7 +87,7 @@ const imagenAbsoluta = imagen
 
             <a 
               href={`${baseUrl}combos`} 
-              class={`px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+              class={`px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all ${
                 currentPath.includes('combos')
                   ? 'bg-purple-50 text-purple-700'
                   : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/80'
@@ -109,7 +108,7 @@ const imagenAbsoluta = imagen
     </header>
 
     <!-- Contenido Principal -->
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full">
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex-1 w-full overflow-x-hidden">
       <slot />
     </main>
 
