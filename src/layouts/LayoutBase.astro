@@ -11,11 +11,8 @@ interface Props {
 const { titulo, title } = Astro.props;
 const pageTitle = title || titulo || 'Catálogo';
 
-// Normalizamos BASE_URL para asegurar siempre la diagonal final '/'
 const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
-
-// Obtenemos la ruta actual para marcar el enlace activo
 const currentPath = Astro.url.pathname;
 ---
 
@@ -25,7 +22,7 @@ const currentPath = Astro.url.pathname;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <!-- Favicon SVG en recuadro morado -->
+    <!-- Favicon SVG -->
     <link rel="icon" type="image/svg+xml" href={`${baseUrl}favicon.svg`} />
 
     <title>{pageTitle} | MyOmniGuide</title>
@@ -79,24 +76,109 @@ const currentPath = Astro.url.pathname;
       <slot />
     </main>
 
+    <!-- Footer Compacto -->
     <footer class="border-t border-slate-200 bg-white py-6 mt-auto">
-      <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-700 font-medium space-y-1.5">
+      <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-medium">
+        
         <p>© {new Date().getFullYear()} MyOmniGuide. Guía independiente de consulta técnica.</p>
-        <p class="text-slate-600">
-          Desarrollado por{' '}
-          <a 
-            href="https://github.com/epe0416" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            class="text-purple-800 hover:text-purple-950 font-bold underline decoration-purple-300 underline-offset-2 transition-colors"
+
+        <div class="flex items-center gap-4">
+          <button 
+            id="btn-abrir-aviso-legal" 
+            type="button" 
+            class="text-slate-500 hover:text-purple-700 underline underline-offset-2 transition-colors cursor-pointer font-semibold"
           >
-            epedev
-          </a>
-        </p>
+            Aviso Legal & Deslinde
+          </button>
+          
+          <span class="text-slate-300">|</span>
+
+          <p class="text-slate-400">
+            Desarrollado por{' '}
+            <a 
+              href="https://github.com/epe0416" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="text-purple-700 hover:text-purple-900 font-bold underline decoration-purple-300 underline-offset-2 transition-colors"
+            >
+              epedev
+            </a>
+          </p>
+        </div>
+
       </div>
     </footer>
 
-    <GlosarioModal/>
+    <!-- Modal de Aviso Legal -->
+    <dialog 
+      id="modal-aviso-legal" 
+      class="backdrop:bg-slate-950/60 backdrop:backdrop-blur-xs rounded-2xl max-w-xl w-[90%] p-0 border border-slate-200 shadow-2xl m-auto"
+    >
+      <div class="p-6 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2">
+            ⚠️ Aviso Legal y Deslinde de Responsabilidad
+          </h3>
+          <button 
+            id="btn-cerrar-aviso-legal" 
+            type="button" 
+            class="text-slate-400 hover:text-slate-700 text-lg font-bold px-2 py-1 cursor-pointer transition-colors"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="text-xs text-slate-600 leading-relaxed space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+          <p>
+            <strong>MyOmniGuide</strong> es una herramienta de consulta técnica e informativa de carácter independiente, creada por un Distribuidor Independiente para la capacitación y apoyo de la comunidad de distribuidores y consumidores. <strong>No es un sitio web oficial ni está afiliado operativamente con Omnilife Inc.</strong>
+          </p>
+          <p>
+            Los productos presentados en este sitio son <strong>suplementos alimenticios y no medicamentos</strong>. No están diseñados para diagnosticar, tratar, curar ni prevenir ninguna enfermedad o padecimiento médico. Bajo ninguna circunstancia sustituyen una dieta equilibrada, hábitos de vida saludables ni la prescripción de un profesional de la salud facultado.
+          </p>
+          <p>
+            La información técnica, listas de ingredientes y puntuación oficial de volumen de los productos están referenciadas conforme a la <strong>actualización de 2026</strong>, recopilada de diversas fuentes públicas y material de entrenamiento de la marca.
+          </p>
+        </div>
+
+        <div class="pt-2 border-t border-slate-100 text-right">
+          <button 
+            id="btn-entendido-aviso-legal" 
+            type="button" 
+            class="px-4 py-2 bg-purple-950 text-white font-bold text-xs rounded-xl hover:bg-purple-900 transition-colors cursor-pointer"
+          >
+            Entendido
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <GlosarioModal />
+
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        const dialog = document.getElementById('modal-aviso-legal');
+        const btnAbrir = document.getElementById('btn-abrir-aviso-legal');
+        const btnCerrar = document.getElementById('btn-cerrar-aviso-legal');
+        const btnEntendido = document.getElementById('btn-entendido-aviso-legal');
+
+        if (!dialog) return;
+
+        btnAbrir?.addEventListener('click', () => dialog.showModal());
+        btnCerrar?.addEventListener('click', () => dialog.close());
+        btnEntendido?.addEventListener('click', () => dialog.close());
+
+        // Cerrar al hacer clic en el backdrop exterior
+        dialog.addEventListener('click', (e) => {
+          const rect = dialog.getBoundingClientRect();
+          const inDialog = 
+            rect.top <= e.clientY && 
+            e.clientY <= rect.bottom && 
+            rect.left <= e.clientX && 
+            e.clientX <= rect.right;
+          if (!inDialog) dialog.close();
+        });
+      });
+    </script>
 
   </body>
 </html>
