@@ -83,7 +83,7 @@ const combosConProductos = await Promise.all(
                 <div 
                   class="pts-badge bg-purple-950 text-white px-3 py-1.5 rounded-xl text-center w-full"
                   data-nio-pts={`${puntosNIOTotal} pts`}
-                  data-usd-pts={`${puntosUSDTotal} pts`}
+                  data-usa-pts={`${puntosUSDTotal} pts`}
                 >
                   <span class="block text-[10px] uppercase font-bold text-purple-200 leading-none">Total Puntos</span>
                   <span class="pts-value text-sm font-black">{puntosNIOTotal} pts</span>
@@ -144,7 +144,7 @@ const combosConProductos = await Promise.all(
                         <span 
                           class="pts-badge text-[10px] text-slate-500 font-semibold block"
                           data-nio-pts={`${ptsNIO} pts`}
-                          data-usd-pts={`${ptsUSD} pts`}
+                          data-usa-pts={`${ptsUSD} pts`}
                         >
                           <span class="pts-value">{ptsNIO} pts</span>
                         </span>
@@ -180,7 +180,8 @@ const combosConProductos = await Promise.all(
 
 <script is:inline>
   function actualizarPuntosCombos() {
-    const moneda = localStorage.getItem('moneda_pref') || 'NIO';
+    let moneda = localStorage.getItem('moneda_pref') || 'NIO';
+    if (moneda === 'USD') moneda = 'USA';
     const key = `data-${moneda.toLowerCase()}-pts`;
 
     document.querySelectorAll('.pts-badge').forEach((badge) => {

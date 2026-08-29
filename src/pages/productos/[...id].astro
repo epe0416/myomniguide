@@ -35,7 +35,6 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
     </a>
   </div>
 
-  <!-- Encabezado del Producto -->
   <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/80 shadow-xs mb-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center min-h-70">
     {data.imagen && (
       <div class="md:col-span-4 flex justify-center items-center bg-slate-50 p-6 rounded-2xl border border-slate-100 h-64 w-full aspect-square shrink-0">
@@ -61,12 +60,11 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
           ))}
         </div>
 
-        <!-- Puntuación de Volumen Reactiva al Mercado -->
         {(puntosNIO || puntosUSD) && (
           <span 
             class="pts-badge inline-flex items-center gap-1 text-xs font-black text-purple-950 bg-purple-100/80 px-3 py-1 rounded-xl border border-purple-200/60 shrink-0"
             data-nio-pts={puntosNIO ? `💎 ${puntosNIO} PTS` : ''}
-            data-usd-pts={puntosUSD ? `💎 ${puntosUSD} PTS` : ''}
+            data-usa-pts={puntosUSD ? `💎 ${puntosUSD} PTS` : ''}
           >
             <span class="pts-value">💎 {puntosIniciales} PTS</span>
           </span>
@@ -76,14 +74,12 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
       <h1 class="text-3xl md:text-4xl font-extrabold text-slate-950 mb-2">{data.nombre}</h1>
       <p class="text-slate-700 text-lg mb-4" set:html={data.subtitulo} />
 
-      <!-- Formato y Precio en Paralelo -->
       <div class="flex flex-wrap items-center gap-3">
         <div class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200/60">
           <span>📦 Formato:</span>
           <strong class="text-slate-900">{data.formato}</strong>
         </div>
 
-        {/* Badge de Precio Reactivo (NIO / USD) */}
         {(precioNIO || precioUSD) && (
           <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-emerald-50 border border-emerald-200/80 px-3 py-1.5 rounded-lg">
             <span class="text-emerald-800 font-bold">🏷️ Precio:</span>
@@ -94,7 +90,6 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
     </div>
   </div>
 
-  <!-- Conmutador de Perfiles (Tabs) -->
   <div class="flex border border-slate-200/80 mb-8 bg-slate-100 p-1.5 rounded-2xl max-w-md mx-auto">
     <button
       id="tab-consumidor"
@@ -112,7 +107,6 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
     </button>
   </div>
 
-  <!-- PANEL 1: CONSUMIDOR FINAL -->
   <div id="panel-consumidor" class="tab-panel space-y-8">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="bg-purple-50/70 border border-purple-200/80 p-6 rounded-2xl">
@@ -146,13 +140,11 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
       </div>
     </div>
 
-    <!-- Contenido enriquecido (Markdown) -->
     <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs prose prose-purple max-w-none">
       <Content />
     </div>
   </div>
 
-  <!-- PANEL 2: GUÍA COMERCIAL -->
   <div id="panel-empresario" class="tab-panel hidden space-y-6">
     {data.empresario ? (
       <>
@@ -168,7 +160,7 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
           <div 
             class="pts-badge bg-white text-purple-950 font-black text-2xl px-4 py-2 rounded-xl shadow-xs shrink-0 flex items-center gap-1"
             data-nio-pts={puntosNIO ? `${puntosNIO}` : ''}
-            data-usd-pts={puntosUSD ? `${puntosUSD}` : ''}
+            data-usa-pts={puntosUSD ? `${puntosUSD}` : ''}
           >
             <span>💎</span>
             <span class="pts-num">{puntosIniciales}</span>
@@ -206,7 +198,6 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
           </div>
         </div>
 
-        <!-- Tarjetas de Recomendaciones Comerciales -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="bg-slate-950 text-white p-6 rounded-2xl shadow-xs flex flex-col justify-between border border-slate-800">
             <div>
@@ -280,7 +271,8 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
   }
 
   function actualizarPuntosVisibles() {
-    const moneda = localStorage.getItem('moneda_pref') || 'NIO';
+    let moneda = localStorage.getItem('moneda_pref') || 'NIO';
+    if (moneda === 'USD') moneda = 'USA';
     const key = `data-${moneda.toLowerCase()}-pts`;
     
     document.querySelectorAll('.pts-badge').forEach((badge) => {
