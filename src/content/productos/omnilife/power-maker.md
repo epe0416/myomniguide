@@ -1,7 +1,7 @@
 ---
 nombre: "Power Maker"
 subtitulo: "Soporte a la regeneración tisular, aporte de aminoácidos clave (Arginina y Glicina) y firmeza muscular"
-imagen: "./power-maker.png"
+imagen: "../../../assets/productos/omnilife/power-maker.png"
 puntos: 110
 categorias:
   - "Regeneración Muscular"

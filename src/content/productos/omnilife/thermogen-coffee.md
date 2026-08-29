@@ -1,7 +1,7 @@
 ---
 nombre: "Thermogen Coffee"
 subtitulo: "Apoyo a la termogénesis celular, regulación de la glucosa y control de la ansiedad"
-imagen: "./thermogen-coffee.png"
+imagen: "../../../assets/productos/omnilife/thermogen-coffee.png"
 puntos: 39
 categorias:
   - "Control de Peso"

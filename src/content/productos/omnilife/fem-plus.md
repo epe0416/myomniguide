@@ -1,7 +1,7 @@
 ---
 nombre: "Fem Plus"
 subtitulo: "Nutrición especializada con fitoestrógenos de origen vegetal y micronutrientes para el equilibrio hormonal femenino"
-imagen: "./fem-plus.png"
+imagen: "../../../assets/productos/omnilife/fem-plus.png"
 puntos: 56
 categorias:
   - "Salud Femenina"

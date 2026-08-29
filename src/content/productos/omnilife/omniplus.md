@@ -1,7 +1,7 @@
 ---
 nombre: "Omniplus"
 subtitulo: 'Multivitamínico concentrado con tecnología de <dfn class="glosario-term" data-term="micelizacion">micelización</dfn> para el sistema inmunológico'
-imagen: "./omniplus.png"
+imagen: "../../../assets/productos/omnilife/omniplus.png"
 puntos: 87
 categorias:
   - "Sistema Inmune"

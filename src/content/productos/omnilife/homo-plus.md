@@ -1,7 +1,7 @@
 ---
 nombre: "Homo Plus"
 subtitulo: "Nutrición específica con licopeno, zinc y antioxidantes para la salud prostática y urinaria"
-imagen: "./homo-plus.png"
+imagen: "../../../assets/productos/omnilife/homo-plus.png"
 puntos: 55
 categorias:
   - "Salud Masculina"

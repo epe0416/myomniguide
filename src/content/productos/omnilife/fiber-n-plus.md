@@ -1,7 +1,7 @@
 ---
 nombre: "Fiber 'N Plus"
 subtitulo: "Aporte equilibrado de fibras solubles e insolubles, prebióticos y minerales para el tránsito intestinal"
-imagen: "./fiber-n-plus.png"
+imagen: "../../../assets/productos/omnilife/fiber-n-plus.png"
 puntos: 70
 categorias:
   - "Salud Digestiva"

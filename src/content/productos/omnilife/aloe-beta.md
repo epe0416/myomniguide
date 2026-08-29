@@ -1,7 +1,7 @@
 ---
 nombre: "Aloe Beta"
 subtitulo: "Aporte de gel de aloe vera purificado, Vitamina E micelizada y Vitamina C para el confort digestivo"
-imagen: "./aloe-beta.png"
+imagen: "../../../assets/productos/omnilife/aloe-beta.png"
 puntos: 26
 categorias:
   - "Salud Digestiva"
