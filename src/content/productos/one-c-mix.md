@@ -4,8 +4,8 @@ subtitulo: "Protección antioxidante de doble fase (hidro y liposoluble) y sopor
 imagen: "./one-c-mix.webp"
 puntos: 46
 categorias:
-  - "Sistema Inmunológico"
-  - "Nutrición General"
+  - "Sistema Inmune"
+  - "Antioxidantes"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - 'Sugerente aporte de antioxidantes de doble fase (Vitamina C y Glutatión en medio acuoso; Vitaminas A y E en fase lipídica).'

@@ -4,8 +4,8 @@ subtitulo: "Activación del metabolismo energético celular y soporte a la conce
 imagen: "./magnus.png"
 puntos: 51
 categorias:
-  - "Energía y Deporte"
-  - "Nutrición General"
+  - "Energía"
+  - "Rendimiento Mental"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - 'Estimulación natural de la producción de energía celular (ATP) mediante el Complejo B y <dfn class="glosario-term" data-term="cromo">Cromo</dfn>.'

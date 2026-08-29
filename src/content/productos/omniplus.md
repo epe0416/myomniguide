@@ -4,8 +4,9 @@ subtitulo: 'Multivitamínico concentrado con tecnología de <dfn class="glosario
 imagen: "./omniplus.png"
 puntos: 87
 categorias:
+  - "Sistema Inmune"
+  - "Antioxidantes"
   - "Nutrición General"
-  - "Sistema Inmunológico"
 formato: "Caja con 30 Sobres (Líquido concentrado)"
 beneficiosPrincipales:
   - "Soporte integral y fortalecimiento de los mecanismos naturales de defensa del organismo."

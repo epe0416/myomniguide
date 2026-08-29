@@ -5,7 +5,8 @@ imagen: "./homo-plus.png"
 puntos: 55
 categorias:
   - "Salud Masculina"
-  - "Nutrición General"
+  - "Salud Renal y Urinaria"
+  - "Antioxidantes"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - 'Protección antioxidante concentrada para el tejido prostático mediante <dfn class="glosario-term" data-term="licopeno">licopeno</dfn> y zinc biodisponible.'

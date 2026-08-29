@@ -5,7 +5,7 @@ imagen: "./thermogen-coffee.png"
 puntos: 39
 categorias:
   - "Control de Peso"
-  - "Nutrición General"
+  - "Control de Glucosa"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - 'Estimulación de la termogénesis celular y apoyo al metabolismo metabólico basal mediante <dfn class="glosario-term" data-term="cromo">Cromo</dfn> y extracto de café verde.'

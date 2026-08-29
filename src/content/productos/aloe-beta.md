@@ -4,7 +4,8 @@ subtitulo: "Aporte de gel de aloe vera purificado, Vitamina E micelizada y Vitam
 imagen: "./aloe-beta.png"
 puntos: 26
 categorias:
-  - "Nutrición General"
+  - "Salud Digestiva"
+  - "Antioxidantes"
 formato: "Botella 960 ml (26 pts) / Botellín 200 ml (5 pts)"
 beneficiosPrincipales:
   - "Gel de aloe vera purificado (libre de aloína) que ayuda a recubrir, refrescar y proteger las mucosas digestivas."

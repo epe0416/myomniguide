@@ -5,7 +5,7 @@ imagen: "./fem-plus.png"
 puntos: 56
 categorias:
   - "Salud Femenina"
-  - "Nutrición General"
+  - "Antioxidantes"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - 'Aporte de <dfn class="glosario-term" data-term="fitoestrogenos">fitoestrógenos</dfn> de origen vegetal (extracto de lúpulo) que favorecen la regulación y confort en las diferentes etapas hormonales.'

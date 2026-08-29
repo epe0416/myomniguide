@@ -4,7 +4,7 @@ subtitulo: "Aporte equilibrado de fibras solubles e insolubles, prebióticos y m
 imagen: "./fiber-n-plus.png"
 puntos: 70
 categorias:
-  - "Nutrición General"
+  - "Salud Digestiva"
   - "Control de Peso"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:

@@ -4,8 +4,9 @@ subtitulo: "Soporte a la regeneración tisular, aporte de aminoácidos clave (Ar
 imagen: "./power-maker.png"
 puntos: 110
 categorias:
-  - "Energía y Deporte"
-  - "Nutrición General"
+  - "Regeneración Muscular"
+  - "Salud Articular"
+  - "Salud Ósea"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - "Aporte concentrado de L-Arginina y Glicina, aminoácidos clave para la nutrición del tejido muscular, tendones y articulaciones."

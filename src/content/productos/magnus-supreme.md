@@ -4,8 +4,8 @@ subtitulo: "Activación del metabolismo energético de rápida asimilación sin 
 imagen: "./magnus-supreme.png"
 puntos: 54
 categorias:
-  - "Energía y Deporte"
-  - "Nutrición General"
+  - "Energía"
+  - "Rendimiento Mental"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - 'Optimización de la síntesis de energía celular (ATP) mediante el Complejo B concentrado y <dfn class="glosario-term" data-term="cromo">Cromo</dfn>.'
