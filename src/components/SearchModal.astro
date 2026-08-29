@@ -1,0 +1,214 @@
+---
+// src/components/SearchModal.astro
+import { getCollection } from 'astro:content';
+import PrecioBadge from './PrecioBadge.astro';
+
+const rawBaseUrl = import.meta.env.BASE_URL;
+const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
+
+const productos = await getCollection('productos');
+
+// Estructurar dataset indexado para el cliente
+const searchIndex = productos.map((p) => ({
+  id: p.id,
+  nombre: p.data.nombre,
+  subtitulo: p.data.subtitulo,
+  categorias: p.data.categorias,
+  beneficios: p.data.beneficiosPrincipales.join(' '),
+  paraQuien: p.data.paraQuienEs.join(' '),
+  nio: p.data.nio,
+  usa: p.data.usa,
+  imagenUrl: p.data.imagen ? p.data.imagen.src : null,
+  link: `${baseUrl}productos/${p.id}`,
+}));
+---
+
+<!-- Botón Activador en Header -->
+<button
+  type="button"
+  id="open-search-btn"
+  class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200/80 text-slate-500 hover:text-slate-800 text-xs font-semibold px-3 py-1.5 rounded-xl border border-slate-200/60 transition-colors cursor-pointer"
+  aria-label="Buscar productos"
+>
+  <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+  </svg>
+  <span class="hidden sm:inline">Buscar...</span>
+  <kbd class="hidden md:inline-block bg-white text-slate-400 border border-slate-200 px-1.5 py-0.5 rounded-md text-[10px] font-mono leading-none">
+    Ctrl K
+  </kbd>
+</button>
+
+<!-- Modal Nativo Dialog -->
+<dialog
+  id="search-dialog"
+  class="backdrop:bg-slate-950/60 backdrop:backdrop-blur-xs rounded-3xl p-0 w-full max-w-2xl bg-white shadow-2xl border border-slate-200/80 my-auto mx-auto overflow-hidden text-slate-900"
+>
+  <div class="flex flex-col max-h-[80vh]">
+    <!-- Input de Búsqueda -->
+    <div class="p-4 border-b border-slate-100 flex items-center gap-3">
+      <svg class="w-5 h-5 text-purple-700 shrink-0 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Busca por nombre, categoría o beneficio (ej: Inmune, Estrés, Fem)..."
+        class="w-full text-sm font-medium bg-transparent border-0 focus:outline-none focus:ring-0 text-slate-900 placeholder:text-slate-400"
+        autocomplete="off"
+      />
+      <button 
+        type="button" 
+        id="close-search-btn" 
+        class="text-xs font-bold text-slate-400 hover:text-slate-700 bg-slate-100 px-2 py-1 rounded-lg cursor-pointer shrink-0"
+      >
+        ESC
+      </button>
+    </div>
+
+    <!-- Lista de Resultados -->
+    <div id="search-results" class="p-4 overflow-y-auto space-y-2 divide-y divide-slate-100">
+      <p class="text-xs text-slate-400 text-center py-8 font-medium">Escribe algo para buscar en el catálogo...</p>
+    </div>
+
+    <!-- Footer Informativo -->
+    <div class="p-3 bg-slate-50 border-t border-slate-100 text-[11px] text-slate-500 flex justify-between items-center px-5">
+      <span>Navega con los resultados</span>
+      <span class="font-semibold text-purple-900">MyOmniGuide Search</span>
+    </div>
+  </div>
+</dialog>
+
+<script is:inline define:vars={{ searchIndex }}>
+  function initSearchModal() {
+    const dialog = document.getElementById('search-dialog');
+    const openBtn = document.getElementById('open-search-btn');
+    const closeBtn = document.getElementById('close-search-btn');
+    const input = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('search-results');
+
+    if (!dialog || !openBtn || !input || !resultsContainer) return;
+
+    function abrirModal() {
+      dialog.showModal();
+      input.value = '';
+      renderResultados('');
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function cerrarModal() {
+      dialog.close();
+    }
+
+    openBtn.addEventListener('click', abrirModal);
+    closeBtn?.addEventListener('click', cerrarModal);
+
+    // Cerrar al hacer clic en el backdrop
+    dialog.addEventListener('click', (e) => {
+      const rect = dialog.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        cerrarModal();
+      }
+    });
+
+    // Atajo de teclado (Ctrl + K o Cmd + K)
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        dialog.open ? cerrarModal() : abrirModal();
+      }
+    });
+
+    function normalizarTexto(texto) {
+      return texto
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function renderResultados(query) {
+      const q = normalizarTexto(query.trim());
+      
+      if (!q) {
+        resultsContainer.innerHTML = '<p class="text-xs text-slate-400 text-center py-8 font-medium">Escribe algo para buscar en el catálogo...</p>';
+        return;
+      }
+
+      const mercado = localStorage.getItem('moneda_pref') || 'NIO';
+
+      const filtrados = searchIndex.filter((item) => {
+        const target = normalizarTexto(`${item.nombre} ${item.subtitulo} ${item.categorias.join(' ')} ${item.beneficios} ${item.paraQuien}`);
+        return target.includes(q);
+      });
+
+      if (filtrados.length === 0) {
+        resultsContainer.innerHTML = '<p class="text-xs text-slate-400 text-center py-8 font-medium">No se encontraron productos coincidentes.</p>';
+        return;
+      }
+
+      resultsContainer.innerHTML = filtrados
+        .map((item) => {
+          const precioNIO = item.nio?.precio;
+          const precioUSD = item.usa?.precio;
+          const ptsNIO = item.nio?.puntos;
+          const ptsUSD = item.usa?.puntos;
+
+          const ptsVisibles = mercado === 'USA' ? (ptsUSD ?? ptsNIO) : (ptsNIO ?? ptsUSD);
+          
+          let precioTexto = '';
+          if (mercado === 'USA' && precioUSD) {
+            precioTexto = `$${precioUSD.toFixed(2)} USD`;
+          } else if (precioNIO) {
+            precioTexto = `C$ ${precioNIO.toLocaleString('es-NI', { minimumFractionDigits: 2 })}`;
+          }
+
+          return `
+            <a 
+              href="${item.link}?market=${mercado}" 
+              class="flex items-center justify-between gap-4 p-3 rounded-2xl hover:bg-purple-50/60 transition-colors group pt-3"
+            >
+              <div class="flex items-center gap-3 min-w-0">
+                ${
+                  item.imagenUrl
+                    ? `<img src="${item.imagenUrl}" alt="${item.nombre}" class="w-12 h-12 object-contain shrink-0 rounded-lg bg-slate-50 p-1 border border-slate-100"/>`
+                    : `<div class="w-12 h-12 bg-slate-100 rounded-lg shrink-0 flex items-center justify-center text-lg">📦</div>`
+                }
+                <div class="min-w-0">
+                  <h4 class="text-sm font-bold text-slate-900 group-hover:text-purple-900 transition-colors truncate">
+                    ${item.nombre}
+                  </h4>
+                  <p class="text-xs text-slate-500 truncate mb-1">${item.subtitulo}</p>
+                  <div class="flex flex-wrap gap-1">
+                    ${item.categorias.map(c => `<span class="text-[9px] font-bold text-purple-900 bg-purple-100 px-1.5 py-0.5 rounded">${c}</span>`).join('')}
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-right shrink-0">
+                ${ptsVisibles ? `<span class="block text-[10px] font-black text-purple-900">💎 ${ptsVisibles} PTS</span>` : ''}
+                ${precioTexto ? `<span class="block text-xs font-black text-emerald-950 mt-0.5">${precioTexto}</span>` : ''}
+              </div>
+            </a>
+          `;
+        })
+        .join('');
+    }
+
+    input.addEventListener('input', (e) => renderResultados(e.target.value));
+  }
+
+  document.addEventListener('DOMContentLoaded', initSearchModal);
+  window.addEventListener('currency-changed', () => {
+    const input = document.getElementById('search-input');
+    if (input && input.value) {
+      input.dispatchEvent(new Event('input'));
+    }
+  });
+</script>

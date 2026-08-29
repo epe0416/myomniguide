@@ -29,7 +29,11 @@ const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 ---
 
-<LayoutBase titulo={`${data.nombre} - Ficha Técnica`}>
+<LayoutBase 
+  titulo={`${data.nombre} - Ficha Técnica`}
+  descripcion={data.subtitulo}
+  imagen={data.imagen?.src}
+>
   <div class="mb-6">
     <a href={`${baseUrl}productos`} class="text-xs font-bold text-purple-800 hover:text-purple-950 transition-colors">
       ← Volver al catálogo
