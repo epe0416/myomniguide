@@ -8,7 +8,6 @@
     data-currency="NIO"
     class="currency-btn px-2 py-1 sm:px-2.5 rounded-md transition-colors cursor-pointer bg-white text-purple-900 shadow-xs text-[11px] sm:text-xs flex items-center gap-1.5"
   >
-    <!-- Bandera de Nicaragua (SVG) -->
     <svg class="w-4 h-3 rounded-xs shadow-2xs overflow-hidden shrink-0 border border-slate-300/60" viewBox="0 0 5 3" aria-hidden="true">
       <rect width="5" height="1" y="0" fill="#0067C6"/>
       <rect width="5" height="1" y="1" fill="#FFFFFF"/>
@@ -23,7 +22,6 @@
     data-currency="USA"
     class="currency-btn px-2 py-1 sm:px-2.5 rounded-md transition-colors cursor-pointer hover:text-slate-900 text-[11px] sm:text-xs flex items-center gap-1.5"
   >
-    <!-- Bandera de EE. UU. (SVG) -->
     <svg class="w-4 h-3 rounded-xs shadow-2xs overflow-hidden shrink-0 border border-slate-300/60" viewBox="0 0 19 10" aria-hidden="true">
       <rect width="19" height="10" fill="#B22234"/>
       <path d="M0,1.53H19M0,3.07H19M0,4.61H19M0,6.15H19M0,7.69H19M0,9.23H19" stroke="#FFFFFF" stroke-width="0.77"/>
@@ -39,12 +37,21 @@
     if (!container) return;
 
     const buttons = container.querySelectorAll('.currency-btn');
-    let savedCurrency = localStorage.getItem('moneda_pref') || 'NIO';
     
-    if (savedCurrency === 'USD') {
-      savedCurrency = 'USA';
-      localStorage.setItem('moneda_pref', 'USA');
-    }
+    // Prioridad 1: Leer parametro 'market' de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    let marketFromUrl = urlParams.get('market')?.toUpperCase();
+    if (marketFromUrl === 'USD') marketFromUrl = 'USA';
+
+    // Prioridad 2: Leer localStorage
+    let savedCurrency = localStorage.getItem('moneda_pref') || 'NIO';
+    if (savedCurrency === 'USD') savedCurrency = 'USA';
+
+    const activeMarket = (marketFromUrl === 'NIO' || marketFromUrl === 'USA') 
+      ? marketFromUrl 
+      : savedCurrency;
+
+    localStorage.setItem('moneda_pref', activeMarket);
 
     function setEstadoBotones(curr) {
       buttons.forEach((btn) => {
@@ -58,17 +65,26 @@
       });
     }
 
-    setEstadoBotones(savedCurrency);
+    function updateUrlAndEvent(curr) {
+      // Sincronizar URL sin recargar
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set('market', curr);
+      window.history.replaceState({}, '', currentUrl);
+
+      window.dispatchEvent(new CustomEvent('currency-changed', { detail: { currency: curr } }));
+    }
+
+    setEstadoBotones(activeMarket);
+    updateUrlAndEvent(activeMarket);
 
     buttons.forEach((btn) => {
       btn.addEventListener('click', () => {
         const selected = btn.getAttribute('data-currency');
         if (!selected) return;
-        
+
         localStorage.setItem('moneda_pref', selected);
         setEstadoBotones(selected);
-        
-        window.dispatchEvent(new CustomEvent('currency-changed', { detail: { currency: selected } }));
+        updateUrlAndEvent(selected);
       });
     });
   }

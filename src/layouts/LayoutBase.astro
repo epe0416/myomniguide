@@ -35,12 +35,12 @@ const currentPath = Astro.url.pathname;
       <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2">
         
         <!-- Logo -->
-        <a href={baseUrl} class="flex items-center gap-2 group shrink-0">
-          <div class="w-8 h-8 sm:w-9 sm:h-9 bg-purple-700 text-white font-extrabold rounded-xl flex items-center justify-center text-base sm:text-lg shadow-md shadow-purple-700/20 group-hover:scale-105 transition-transform">
+        <a href={`${baseUrl}`} class="flex items-center gap-2.5 group">
+          <div class="w-9 h-9 bg-purple-800 text-white font-black rounded-xl flex items-center justify-center text-lg shadow-xs group-hover:bg-purple-900 transition-colors">
             O
           </div>
-          <span class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-950 hidden xs:inline">
-            MyOmni<span class="text-purple-700">Guide</span>
+          <span class="text-lg font-black text-slate-950 tracking-tight group-hover:text-purple-900 transition-colors">
+            MyOmniGuide
           </span>
         </a>
 
