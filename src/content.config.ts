@@ -1,9 +1,8 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { z } from 'zod';
 import { glob } from 'astro/loaders';
 
 const productos = defineCollection({
-  // **/*.md rastrea automáticamente src/content/productos/omnilife/ y src/content/productos/seytu/
   loader: glob({ pattern: '**/*.md', base: './src/content/productos' }),
   schema: ({ image }) =>
     z.object({
@@ -13,7 +12,6 @@ const productos = defineCollection({
       puntos: z.number().min(0).optional(),
       categorias: z.array(
         z.enum([
-          // Categorías Nutrición (Omnilife)
           'Sistema Inmune',
           'Antioxidantes',
           'Salud Cardiovascular',
@@ -34,7 +32,6 @@ const productos = defineCollection({
           'Salud Renal y Urinaria',
           'Salud Hepática',
           'Hidratación',
-          // Categorías Cosmética (Seytú)
           'Cuidado Facial',
           'Cuidado Corporal',
           'Cuidado Capilar',
@@ -60,4 +57,17 @@ const productos = defineCollection({
     }),
 });
 
-export const collections = { productos };
+const combos = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/combos' }),
+  schema: z.object({
+    nombre: z.string(),
+    subtitulo: z.string(),
+    icono: z.string().default('🔥'),
+    objetivo: z.string(),
+    productos: z.array(reference('productos')),
+    protocoloConsumo: z.string(),
+    destacado: z.boolean().default(false),
+  }),
+});
+
+export const collections = { productos, combos };
