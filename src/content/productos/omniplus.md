@@ -8,12 +8,16 @@ categorias:
   - "Sistema Inmunológico"
 formato: "Caja con 30 Sobres (Líquido concentrado)"
 beneficiosPrincipales:
-  - "Soporte integral al sistema inmunológico y defensas naturales."
-  - 'Máxima absorción celular de nutrientes gracias a la tecnología de <dfn class="glosario-term" data-term="micelizacion">micelización</dfn>.'
-modoUso: "Disolver 1 sobre en 200 ml de agua fresca o jugo natural."
+  - "Soporte integral y fortalecimiento de los mecanismos naturales de defensa del organismo."
+  - 'Alta disponibilidad nutricional gracias a la tecnología de <dfn class="glosario-term" data-term="micelizacion">micelización</dfn>, optimizando la absorción de vitaminas A, D y E.'
+  - "Aporte balanceado de más de 84 micronutrientes, extractos herbales y minerales que ayudan a combatir el desgaste celular diario."
+  - "Nutrición de rápida asimilación que favorece la vitalidad diaria y el mantenimiento tisular sin recargar la digestión."
+modoUso: "Disolver 1 sobre en 200 ml de agua fresca o jugo natural. Tomar de 1 a 3 sobres al día según las necesidades nutricionales."
 paraQuienEs:
-  - "Niños, adultos y adultos mayores."
-destacado: false
+  - "Personas de todas las edades (niños, jóvenes, adultos y adultos mayores) que deseen reforzar su nutrición diaria y defensas naturales."
+  - "Individuos en etapas de convalecencia, cambios de estación o alto desgaste físico y mental que requieren un respaldo nutricional concentrado."
+  - "Toda persona que busque un suplemento multivitamínico de rápida absorción e ingesta amable sin irritación gástrica."
+destacado: true
 
 empresario:
   argumentosVenta:
@@ -38,4 +42,4 @@ empresario:
 
 ### Descripción Nutricional
 
-Omniplus es una formulación nutricional avanzada que combina extractos de plantas, frutas, vitaminas y minerales. Su principal atributo tecnológico radica en el proceso de <dfn class="glosario-term" data-term="micelizacion">micelización</dfn>, un desarrollo biotecnológico que permite que las vitaminas solubles en grasa se dividan en partículas microscópicas compatibles con el agua.
+Omniplus es la formulación nutricional insignia desarrollada para proporcionar un espectro completo de micronutrientes esenciales al organismo. Su matriz integra una sinergia de más de 84 elementos, incluyendo extractos herbales, jugos de frutas, vitaminas hidrosolubles y liposolubles, así como minerales traza biodisponibles. Su mayor diferenciador radica en la tecnología de <dfn class="glosario-term" data-term="micelizacion">micelización</dfn>, un proceso biotecnológico que fracciona las vitaminas solubles en grasa (A, D, E) en micropartículas afines al agua. Esto garantiza una absorción acelerada a nivel intestinal en cuestión de minutos, brindando una nutrición celular profunda sin requerir emulsión biliar ni causar digestión pesada.

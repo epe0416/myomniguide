@@ -17,7 +17,7 @@ paraQuienEs:
   - "Profesionales, emprendedores y estudiantes con altas jornadas de exigencia mental o física."
   - "Deportistas o personas activas que buscan un soporte energético previo a la actividad física."
   - "Personas que buscan sustituir las bebidas energizantes carbonatadas y azucaradas por una alternativa nutricional limpia."
-destacado: true
+destacado: false
 
 empresario:
   argumentosVenta:

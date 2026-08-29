@@ -8,12 +8,16 @@ categorias:
   - "Nutrición General"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
-  - 'Aporte de <dfn class="glosario-term" data-term="licopeno">licopeno</dfn> y zinc para la protección antioxidante del tejido prostático.'
-  - "Soporte al bienestar del tracto urinario mediante extracto de arándano rojo (cranberry)."
-modoUso: "Disolver 1 sobre en 200 a 250 ml de agua fresca o fría."
+  - 'Protección antioxidante concentrada para el tejido prostático mediante <dfn class="glosario-term" data-term="licopeno">licopeno</dfn> y zinc biodisponible.'
+  - "Soporte y confort al bienestar del tracto urinario mediante proantocianidinas de arándano rojo (cranberry)."
+  - "Contribuye al equilibrio nutricional y hormonal masculino gracias a la sinergia de selenio, vitamina C y vitamina E."
+  - "Favorece la protección celular frente al estrés oxidativo derivado del ritmo de vida exigente, sedentarismo o el paso de los años."
+modoUso: "Disolver 1 sobre en 200 a 250 ml de agua fresca o fría. Tomar de 1 a 3 sobres al día según las necesidades individuales."
 paraQuienEs:
-  - "Hombres de cualquier edad que buscan prevención y soporte para la salud prostática y urinaria."
-destacado: true
+  - "Hombres (especialmente a partir de los 30 años) que desean incorporar un hábito nutricional preventivo para el cuidado prostático y urinario."
+  - "Hombres expuestos a jornadas de alto estrés laboral, sedentarismo o desgaste físico que buscan protección contra el daño celular oxidativo."
+  - "Personas que requieren soporte nutricional específico sin aporte de azúcares añadidos (endulzado con estevia)."
+destacado: false
 
 empresario:
   argumentosVenta:
@@ -38,4 +42,4 @@ empresario:
 
 ### Descripción Nutricional
 
-Homo Plus es una formulación técnica diseñada para cubrir los requerimientos nutricionales del sistema reproductor y urinario masculino. Su matriz combina carotenoides liposolubles (<dfn class="glosario-term" data-term="licopeno">licopeno</dfn>), flavonoides de arándano rojo y zinc.
+Homo Plus es una formulación nutricional avanzada diseñada específicamente para responder a las exigencias fisiológicas del sistema reproductor y urinario masculino. Su matriz combina carotenoides de alta biodisponibilidad como el <dfn class="glosario-term" data-term="licopeno">licopeno</dfn>, flavonoides purificados de arándano rojo (proantocianidinas), minerales esenciales como el zinc y el selenio, junto con un complejo de vitaminas C y E. Esta sinergia actúa como un escudo antioxidante especializado que ayuda a neutralizar los radicales libres en la zona pélvica, apoyando la integridad tisular y el confort urinario sin alterar los procesos biológicos naturales.

@@ -1,6 +1,6 @@
 ---
 nombre: "Fem Plus"
-subtitulo: "Aporte de fitoestrógenos de origen vegetal y micronutrientes para el equilibrio hormonal femenino"
+subtitulo: "Nutrición especializada con fitoestrógenos de origen vegetal y micronutrientes para el equilibrio hormonal femenino"
 imagen: "./fem-plus.png"
 puntos: 56
 categorias:
@@ -8,12 +8,15 @@ categorias:
   - "Nutrición General"
 formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
-  - 'Aporte de <dfn class="glosario-term" data-term="fitoestrogenos">fitoestrógenos</dfn> (extracto de lúpulo) para amortiguar los cambios hormonales.'
-  - "Protección antioxidante vascular y cutánea mediante extracto de semilla de uva y vitamina E."
-  - "Soporte neuroendocrino con ácido fólico, zinc, magnesio y vitamina C."
+  - 'Aporte de <dfn class="glosario-term" data-term="fitoestrogenos">fitoestrógenos</dfn> de origen vegetal (extracto de lúpulo) que favorecen la regulación y confort en las diferentes etapas hormonales.'
+  - "Contribuye a atenuar las molestias asociadas al ciclo menstrual y los sofocos transitorios propios del climaterio."
+  - "Potente protección antioxidante para la piel y la microcirculación tisular mediante extracto de semilla de uva y vitamina E."
+  - "Soporte neuroendocrino y energético continuo con nutrición a base de ácido fólico, zinc, magnesio y vitamina C."
 modoUso: "Disolver 1 sobre en 200 a 250 ml de agua fresca o fría. Tomar de 1 a 3 sobres al día según las necesidades individuales."
 paraQuienEs:
-  - "Mujeres en edad fértil con molestias asociadas al ciclo menstrual."
+  - "Mujeres en edad fértil que buscan confort nutricional durante los días previos y posteriores a la menstruación."
+  - "Mujeres en transición hacia la perimenopausia o menopausia que desean apoyo nutricional para la regulación térmica y emocional."
+  - "Personas que requieren soporte antioxidante celular con una fórmula libre de azúcares añadidos (endulzada con estevia)."
 destacado: true
 
 empresario:
@@ -39,4 +42,4 @@ empresario:
 
 ### Descripción Nutricional
 
-Fem Plus es una formulación técnica diseñada para cubrir las necesidades nutricionales específicas de la mujer en sus diferentes etapas biológicas. Su matriz combina extracto de lúpulo (rico en <dfn class="glosario-term" data-term="fitoestrogenos">fitoestrógenos</dfn> 8-PN), semilla de uva, vitamina E y minerales esenciales.
+Fem Plus es una formulación nutricional desarrollada específicamente para acompañar los procesos fisiológicos y endocrinos de la mujer. Su matriz integra extracto de lúpulo rico en <dfn class="glosario-term" data-term="fitoestrogenos">fitoestrógenos</dfn> (8-Prenilnaringenina), extracto de semilla de uva, vitamina E y minerales esenciales como el zinc y el magnesio. Esta combinación promueve la modulación natural de los receptores estrogénicos, protegiendo las estructuras celulares frente al estrés oxidativo y contribuyendo al bienestar vascular y reproductivo sin alterar el sistema hormonal endógeno.
