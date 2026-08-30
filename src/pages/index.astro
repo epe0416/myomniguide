@@ -41,6 +41,8 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
             beneficioPrincipal={item.data.beneficiosPrincipales[0]}
             formato={item.data.formato}
             imagen={item.data.imagen}
+            loading="eager"
+            fetchpriority="high"
           />
         </div>
       ))}
