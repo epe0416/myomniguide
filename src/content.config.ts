@@ -47,7 +47,9 @@ const productos = defineCollection({
           'Cuidado Capilar',
           'Maquillaje',
           'Protección Solar',
-          'Anti-Edad'
+          'Anti-Edad',
+          'Perfil Lipídico',
+          'Estructura',
         ])
       ).min(1),
 

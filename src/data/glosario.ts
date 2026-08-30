@@ -41,4 +41,28 @@ export const GLOSARIO: Record<string, TerminoGlosario> = {
         titulo: "D-Ribosa",
         descripcion: "Monosacárido natural que actúa como precursor directo en la síntesis de ATP, acelerando la resíntesis de energía en tejidos con alta demanda metabólica como el corazón y los músculos.",
     },
+    glucosamina: {
+        titulo: "Glucosamina",
+        descripcion: "Aminazúcar precursor indispensable en la biosíntesis de proteoglicanos y glicosaminoglicanos, que favorece la formación del cartílago hialino y la producción de líquido sinovial.",
+    },
+    condroitina: {
+        titulo: "Sulfato de Condroitina",
+        descripcion: "Glicosaminoglicano estrutural que retiene agua dentro de la matriz articular, otorgando resistencia mecánica frente a impactos y compresión.",
+    },
+    msm: {
+        titulo: "MSM (Metilsulfonilmetano)",
+        descripcion: "Compuesto orgánico azufrado de alta biodisponibilidad que apoya la flexibilidad del tejido conectivo, ayudando a disminuir la rigidez y el discomfort físico.",
+    },
+    fitoesteroles: {
+        titulo: "Fitoesteroles (Esteroles Vegetales)",
+        descripcion: "Compuestos lipídicos de origen vegetal con una estructura similar al colesterol que compiten con él a nivel intestinal, reduciendo su absorción y favoreciendo su excreción.",
+    },
+    inulina: {
+        titulo: "Inulina",
+        descripcion: "Fibra dietética soluble que se une a los ácidos biliares en el tracto digestivo, promoviendo su excreción y apoyando la reducción del colesterol sistémico.",
+    },
+    niacina: {
+        titulo: "Niacina (Vitamina B3)",
+        descripcion: "Coenzima esencial en el metabolismo de lípidos y carbohidratos que contribuye a mantener niveles saludables de colesterol y apoya el control de triglicéridos.",
+    },
 };

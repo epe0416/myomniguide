@@ -23,7 +23,7 @@ paraQuienEs:
   - "Adultos interesados en cuidar su salud cardiovascular y el rendimiento del músculo cardíaco."
   - "Deportistas y personas expuestas a fatiga constante que buscan nutrición mitocondrial de alta asimilación."
   - "Adultos mayores que desean un soporte óptimo para su circulación y producción de energía celular."
-destacado: true
+destacado: false
 
 empresario:
   argumentosVenta:
