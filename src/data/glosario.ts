@@ -65,4 +65,12 @@ export const GLOSARIO: Record<string, TerminoGlosario> = {
         titulo: "Niacina (Vitamina B3)",
         descripcion: "Coenzima esencial en el metabolismo de lípidos y carbohidratos que contribuye a mantener niveles saludables de colesterol y apoya el control de triglicéridos.",
     },
+    "l-tirosina": {
+        titulo: "L-Tirosina",
+        descripcion: "Aminoácido precursor en la síntesis de catecolaminas y hormonas tiroideas (T3 y T4), que brinda soporte al ritmo metabólico basal y al estado de alerta.",
+    },
+    termogenesis: {
+        titulo: "Termogénesis",
+        descripcion: "Proceso mediante el cual el cuerpo quema calorías para generar calor corporal, incrementando el gasto energético y favoreciendo la movilización de grasas.",
+    },
 };

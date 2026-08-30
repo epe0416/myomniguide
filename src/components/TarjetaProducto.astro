@@ -12,6 +12,8 @@ interface Props {
   beneficioPrincipal?: string;
   formato: string;
   imagen?: ImageMetadata;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
 }
 
 const {
@@ -21,12 +23,13 @@ const {
   beneficioPrincipal = '',
   formato,
   imagen,
+  loading = 'lazy',
+  fetchpriority = 'auto',
 } = Astro.props;
 
 const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 
-// Limpiar etiquetas HTML (como <dfn>) para mostrar texto plano y limpio en la tarjeta
 const beneficioLimpio = beneficioPrincipal.replace(/<\/?[^>]+(>|$)/g, '');
 ---
 
@@ -35,7 +38,7 @@ const beneficioLimpio = beneficioPrincipal.replace(/<\/?[^>]+(>|$)/g, '');
   class="group bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-purple-200 transition-all flex flex-col justify-between h-full"
 >
   <div>
-    <!-- Imagen del producto -->
+    <!-- Contenedor con dimensiones fijas para evitar CLS -->
     <div class="bg-slate-50 rounded-2xl p-4 mb-4 flex justify-center items-center h-48 w-full overflow-hidden border border-slate-100">
       {imagen ? (
         <Image 
@@ -43,6 +46,8 @@ const beneficioLimpio = beneficioPrincipal.replace(/<\/?[^>]+(>|$)/g, '');
           alt={nombre} 
           width={240}
           height={240}
+          loading={loading}
+          fetchpriority={fetchpriority}
           class="max-h-40 w-auto object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-sm" 
         />
       ) : (
