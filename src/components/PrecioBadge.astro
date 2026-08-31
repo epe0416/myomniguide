@@ -7,19 +7,23 @@ interface Props {
 }
 
 const { precioNIO, precioUSD, clases = "" } = Astro.props;
+
+const nioVal = precioNIO ? `C$ ${precioNIO.toLocaleString('es-NI', { minimumFractionDigits: 2 })}` : 'Precio no disponible';
+const usaVal = precioUSD ? `$${precioUSD.toFixed(2)} USD` : 'No disponible en USA';
 ---
 
 {(precioNIO || precioUSD) && (
   <div class="relative group/tooltip inline-block">
     <span 
-      class={`precio-badge inline-flex items-center gap-1 font-extrabold text-slate-900 bg-slate-100 border border-slate-200/80 px-2.5 py-1 rounded-lg text-xs cursor-help ${clases}`}
-      data-nio-val={precioNIO ? `C$ ${precioNIO.toLocaleString('es-NI', { minimumFractionDigits: 2 })}` : ''}
-      data-usa-val={precioUSD ? `$${precioUSD.toFixed(2)} USD` : ''}
+      class={`precio-badge inline-flex items-center gap-1 font-extrabold text-slate-900 dark:text-slate-100 bg-slate-100 dark:bg-purple-950/40 border border-slate-200/80 dark:border-purple-900/40 px-2.5 py-1 rounded-lg text-xs cursor-help ${clases}`}
+      data-nio-val={nioVal}
+      data-usa-val={usaVal}
+      data-is-usa-available={precioUSD ? "true" : "false"}
       data-nio-tip="Este es el precio oficial en Nicaragua (NIO)"
-      data-usa-tip="Este es el precio oficial en Estados Unidos (USA)"
+      data-usa-tip={precioUSD ? "Este es el precio oficial en Estados Unidos (USA)" : "Producto no disponible para este mercado"}
     >
       <span class="precio-value">
-        {precioNIO ? `C$ ${precioNIO.toLocaleString('es-NI', { minimumFractionDigits: 2 })}` : `$${precioUSD?.toFixed(2)} USD`}
+        {nioVal}
       </span>
     </span>
 
@@ -46,6 +50,7 @@ const { precioNIO, precioUSD, clases = "" } = Astro.props;
     badges.forEach((badge) => {
       const val = badge.getAttribute(keyVal);
       const tip = badge.getAttribute(keyTip);
+      const isUsaAvailable = badge.getAttribute('data-is-usa-available') === 'true';
 
       const targetVal = badge.querySelector('.precio-value');
       const container = badge.closest('.group\\/tooltip');
@@ -53,6 +58,13 @@ const { precioNIO, precioUSD, clases = "" } = Astro.props;
 
       if (targetVal && val) {
         targetVal.textContent = val;
+        
+        // Si el usuario selecciona USA y el producto no cuenta con precio en ese mercado
+        if (mercado === 'USA' && !isUsaAvailable) {
+          badge.classList.add('text-amber-600', 'dark:text-amber-400', '!text-[10px]');
+        } else {
+          badge.classList.remove('text-amber-600', 'dark:text-amber-400', '!text-[10px]');
+        }
       }
       if (targetTip && tip) {
         targetTip.textContent = tip;

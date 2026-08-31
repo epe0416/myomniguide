@@ -2,12 +2,7 @@
 nombre: "Aloe Beta"
 subtitulo: "Aporte de gel de aloe vera purificado, Vitamina E micelizada y Vitamina C para el confort digestivo"
 imagen: "../../../assets/productos/omnilife/aloe-beta.png"
-nio:
-  puntos: 26
-  precio: 590
-usa:
-  puntos: 26
-  precio: 19.43
+
 categorias:
   - "Salud Digestiva"
   - "Antioxidantes"

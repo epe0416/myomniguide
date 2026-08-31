@@ -5,40 +5,50 @@ import { getCollection, getEntries } from 'astro:content';
 import { Image } from 'astro:assets';
 import PrecioBadge from '../components/PrecioBadge.astro';
 import ShareWhatsApp from '../components/ShareWhatsApp.astro';
+import { getProductoComercial } from '../data/inventario';
 
 const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 
 const todosLosCombos = await getCollection('combos');
 
-// Resolver referencias cruzadas y calcular acumulados por mercado
+// Resolver referencias cruzadas y calcular acumulados por mercado usando inventario.ts
 const combosConProductos = await Promise.all(
   todosLosCombos.map(async (combo) => {
     const productosResueltos = await getEntries(combo.data.productos);
 
-    const puntosNIOTotal = productosResueltos.reduce(
-      (acc, item) => acc + (item.data.nio?.puntos ?? 0),
-      0
-    );
+    // Enriquecer cada producto con sus datos comerciales centralizados y banderas
+    const productosConComercial = productosResueltos.map((prod) => {
+      const comercial = getProductoComercial(prod.id);
+      return {
+        ...prod,
+        comercial,
+        disponibleNIO: !!comercial?.nio,
+        disponibleUSA: !!comercial?.usa,
+      };
+    });
 
-    const puntosUSDTotal = productosResueltos.reduce(
-      (acc, item) => acc + (item.data.usa?.puntos ?? item.data.nio?.puntos ?? 0),
-      0
-    );
+    // Totales específicos para Nicaragua (solo productos disponibles en NIO)
+    const puntosNIOTotal = productosConComercial
+      .filter((item) => item.disponibleNIO)
+      .reduce((acc, item) => acc + (item.comercial?.nio?.puntos ?? 0), 0);
 
-    const precioNIOTotal = productosResueltos.reduce(
-      (acc, item) => acc + (item.data.nio?.precio ?? 0),
-      0
-    );
+    const precioNIOTotal = productosConComercial
+      .filter((item) => item.disponibleNIO)
+      .reduce((acc, item) => acc + (item.comercial?.nio?.precio ?? 0), 0);
 
-    const precioUSDTotal = productosResueltos.reduce(
-      (acc, item) => acc + (item.data.usa?.precio ?? 0),
-      0
-    );
+    // Totales específicos para Estados Unidos (solo productos disponibles en USA)
+    const puntosUSDTotal = productosConComercial
+      .filter((item) => item.disponibleUSA)
+      .reduce((acc, item) => acc + (item.comercial?.usa?.puntos ?? 0), 0);
+
+    const precioUSDTotal = productosConComercial
+      .filter((item) => item.disponibleUSA)
+      .reduce((acc, item) => acc + (item.comercial?.usa?.precio ?? 0), 0);
 
     return {
       combo,
-      productos: productosResueltos,
+      productos: productosConComercial,
       puntosNIOTotal,
       puntosUSDTotal,
       precioNIOTotal,
@@ -64,7 +74,7 @@ const combosConProductos = await Promise.all(
     </div>
 
     <!-- Grid de Combos -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8" id="grid-combos">
       {combosConProductos.map(({ combo, productos, puntosNIOTotal, puntosUSDTotal, precioNIOTotal, precioUSDTotal }) => (
         <div class="bg-white dark:bg-[#130f24] rounded-3xl border border-slate-200/80 dark:border-purple-950/60 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md dark:hover:shadow-[0_0_25px_rgba(147,51,235,0.15)] hover:border-purple-200 dark:hover:border-purple-500/45 transition-all">
           <div class="p-6 md:p-8 space-y-6">
@@ -114,53 +124,59 @@ const combosConProductos = await Promise.all(
               <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Productos Incluidos</h3>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {productos.map((prod) => {
-                  const ptsNIO = prod.data.nio?.puntos ?? 0;
-                  const ptsUSD = prod.data.usa?.puntos ?? ptsNIO;
-                  const prNIO = prod.data.nio?.precio;
-                  const prUSD = prod.data.usa?.precio;
+                  const ptsNIO = prod.comercial?.nio?.puntos ?? 0;
+                  const ptsUSD = prod.comercial?.usa?.puntos ?? 0;
+                  const prNIO = prod.comercial?.nio?.precio;
+                  const prUSD = prod.comercial?.usa?.precio;
 
                   return (
-                    <a 
-                      href={`${baseUrl}productos/${prod.id}`}
-                      class="group bg-slate-50 dark:bg-purple-950/20 hover:bg-purple-50/50 dark:hover:bg-purple-950/50 p-3 rounded-2xl border border-slate-100 dark:border-purple-950/40 hover:border-purple-200 dark:hover:border-purple-500/40 transition-all text-center flex flex-col items-center justify-between"
+                    <div 
+                      class="combo-product-item"
+                      data-has-nio={prod.disponibleNIO ? "true" : "false"}
+                      data-has-usa={prod.disponibleUSA ? "true" : "false"}
                     >
-                      <div class="w-16 h-16 mb-2 flex items-center justify-center">
-                        {prod.data.imagen ? (
-                          <Image 
-                            src={prod.data.imagen} 
-                            alt={prod.data.nombre}
-                            width={80}
-                            height={80}
-                            class="max-h-full w-auto object-contain group-hover:scale-105 transition-transform"
-                          />
-                        ) : (
-                          <span class="text-2xl">📦</span>
-                        )}
-                      </div>
-                      <div>
-                        <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors line-clamp-1">
-                          {prod.data.nombre}
-                        </h4>
-                        
-                        <span 
-                          class="pts-badge text-[10px] text-slate-500 dark:text-slate-400 font-semibold block"
-                          data-nio-pts={`${ptsNIO} pts`}
-                          data-usa-pts={`${ptsUSD} pts`}
-                        >
-                          <span class="pts-value">{ptsNIO} pts</span>
-                        </span>
-
-                        {(prNIO || prUSD) && (
-                          <div class="mt-1">
-                            <PrecioBadge 
-                              precioNIO={prNIO} 
-                              precioUSD={prUSD} 
-                              clases="!text-[10px] !py-0.5 !px-1.5" 
+                      <a 
+                        href={`${baseUrl}productos/${prod.id}`}
+                        class="group bg-slate-50 dark:bg-purple-950/20 hover:bg-purple-50/50 dark:hover:bg-purple-950/50 p-3 rounded-2xl border border-slate-100 dark:border-purple-950/40 hover:border-purple-200 dark:hover:border-purple-500/40 transition-all text-center flex flex-col items-center justify-between h-full"
+                      >
+                        <div class="w-16 h-16 mb-2 flex items-center justify-center">
+                          {prod.data.imagen ? (
+                            <Image 
+                              src={prod.data.imagen} 
+                              alt={prod.data.nombre}
+                              width={80}
+                              height={80}
+                              class="max-h-full w-auto object-contain group-hover:scale-105 transition-transform"
                             />
-                          </div>
-                        )}
-                      </div>
-                    </a>
+                          ) : (
+                            <span class="text-2xl">📦</span>
+                          )}
+                        </div>
+                        <div>
+                          <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors line-clamp-1">
+                            {prod.data.nombre}
+                          </h4>
+                          
+                          <span 
+                            class="pts-badge text-[10px] text-slate-500 dark:text-slate-400 font-semibold block"
+                            data-nio-pts={`${ptsNIO} pts`}
+                            data-usa-pts={`${ptsUSD} pts`}
+                          >
+                            <span class="pts-value">{ptsNIO} pts</span>
+                          </span>
+
+                          {(prNIO || prUSD) && (
+                            <div class="mt-1">
+                              <PrecioBadge 
+                                precioNIO={prNIO} 
+                                precioUSD={prUSD} 
+                                clases="!text-[10px] !py-0.5 !px-1.5" 
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </a>
+                    </div>
                   );
                 })}
               </div>
@@ -189,12 +205,19 @@ const combosConProductos = await Promise.all(
   </main>
 </LayoutBase>
 
+<style>
+  .combo-product-item.region-hidden {
+    display: none !important;
+  }
+</style>
+
 <script is:inline>
-  function actualizarPuntosCombos() {
+  function actualizarProductosEnCombos() {
     let moneda = localStorage.getItem('moneda_pref') || 'NIO';
     if (moneda === 'USD') moneda = 'USA';
     const key = `data-${moneda.toLowerCase()}-pts`;
 
+    // 1. Sincronizar puntos de los badges (tanto del combo general como de cada producto)
     document.querySelectorAll('.pts-badge').forEach((badge) => {
       const val = badge.getAttribute(key);
       const target = badge.querySelector('.pts-value');
@@ -202,8 +225,22 @@ const combosConProductos = await Promise.all(
         target.textContent = val;
       }
     });
+
+    // 2. Ocultar por completo los productos no disponibles en la región activa
+    document.querySelectorAll('.combo-product-item').forEach((item) => {
+      const hasNio = item.getAttribute('data-has-nio') === 'true';
+      const hasUsa = item.getAttribute('data-has-usa') === 'true';
+      
+      const disponible = moneda === 'USA' ? hasUsa : hasNio;
+
+      if (!disponible) {
+        item.classList.add('region-hidden');
+      } else {
+        item.classList.remove('region-hidden');
+      }
+    });
   }
 
-  document.addEventListener('DOMContentLoaded', actualizarPuntosCombos);
-  window.addEventListener('currency-changed', actualizarPuntosCombos);
+  document.addEventListener('DOMContentLoaded', actualizarProductosEnCombos);
+  window.addEventListener('currency-changed', actualizarProductosEnCombos);
 </script>

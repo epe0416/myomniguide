@@ -207,26 +207,48 @@ const imagenAbsoluta = imagen
 
     <script is:inline>
       document.addEventListener('DOMContentLoaded', () => {
+        // 1. Lógica del Modal de Aviso Legal
         const dialog = document.getElementById('modal-aviso-legal');
         const btnAbrir = document.getElementById('btn-abrir-aviso-legal');
         const btnCerrar = document.getElementById('btn-cerrar-aviso-legal');
         const btnEntendido = document.getElementById('btn-entendido-aviso-legal');
 
-        if (!dialog) return;
+        if (dialog) {
+          btnAbrir?.addEventListener('click', () => dialog.showModal());
+          btnCerrar?.addEventListener('click', () => dialog.close());
+          btnEntendido?.addEventListener('click', () => dialog.close());
 
-        btnAbrir?.addEventListener('click', () => dialog.showModal());
-        btnCerrar?.addEventListener('click', () => dialog.close());
-        btnEntendido?.addEventListener('click', () => dialog.close());
+          dialog.addEventListener('click', (e) => {
+            const rect = dialog.getBoundingClientRect();
+            const inDialog = 
+              rect.top <= e.clientY && 
+              e.clientY <= rect.bottom && 
+              rect.left <= e.clientX && 
+              e.clientX <= rect.right;
+            if (!inDialog) dialog.close();
+          });
+        }
 
-        dialog.addEventListener('click', (e) => {
-          const rect = dialog.getBoundingClientRect();
-          const inDialog = 
-            rect.top <= e.clientY && 
-            e.clientY <= rect.bottom && 
-            rect.left <= e.clientX && 
-            e.clientX <= rect.right;
-          if (!inDialog) dialog.close();
-        });
+        // 2. Sincronización Global de Puntos por Moneda/Región
+        function actualizarPuntosGlobal() {
+          let moneda = localStorage.getItem('moneda_pref') || 'NIO';
+          if (moneda === 'USD') moneda = 'USA';
+          const key = `data-${moneda.toLowerCase()}-pts`;
+          
+          document.querySelectorAll('.pts-badge').forEach((badge) => {
+            const val = badge.getAttribute(key);
+            const targetVal = badge.querySelector('.pts-value');
+            const targetNum = badge.querySelector('.pts-num');
+            
+            if (val) {
+              if (targetVal) targetVal.textContent = val;
+              if (targetNum) targetNum.textContent = val;
+            }
+          });
+        }
+
+        actualizarPuntosGlobal();
+        window.addEventListener('currency-changed', actualizarPuntosGlobal);
       });
     </script>
 

@@ -1,33 +1,38 @@
 ---
 // src/components/SearchModal.astro
 import { getCollection } from 'astro:content';
-import PrecioBadge from './PrecioBadge.astro';
+import { getProductoComercial } from '../data/inventario';
 
 const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 
 const productos = await getCollection('productos');
 
-// Estructurar dataset indexado para el cliente
-const searchIndex = productos.map((p) => ({
-  id: p.id,
-  nombre: p.data.nombre,
-  subtitulo: p.data.subtitulo,
-  categorias: p.data.categorias,
-  beneficios: p.data.beneficiosPrincipales.join(' '),
-  paraQuien: p.data.paraQuienEs.join(' '),
-  nio: p.data.nio,
-  usa: p.data.usa,
-  imagenUrl: p.data.imagen ? p.data.imagen.src : null,
-  link: `${baseUrl}productos/${p.id}`,
-}));
+// Estructurar dataset indexado con datos comerciales centralizados
+const searchIndex = productos.map((p) => {
+  const comercial = getProductoComercial(p.id);
+  return {
+    id: p.id,
+    nombre: p.data.nombre,
+    subtitulo: p.data.subtitulo,
+    categorias: p.data.categorias,
+    beneficios: p.data.beneficiosPrincipales.join(' '),
+    paraQuien: p.data.paraQuienEs.join(' '),
+    nio: comercial?.nio,
+    usa: comercial?.usa,
+    disponibleNIO: !!comercial?.nio,
+    disponibleUSA: !!comercial?.usa,
+    imagenUrl: p.data.imagen ? p.data.imagen.src : null,
+    link: `${baseUrl}productos/${p.id}`,
+  };
+});
 ---
 
 <!-- Botón Activador en Header -->
 <button
   type="button"
   id="open-search-btn"
-  class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200/80 text-slate-500 hover:text-slate-800 text-xs font-semibold px-3 py-1.5 rounded-xl border border-slate-200/60 transition-colors cursor-pointer"
+  class="inline-flex items-center gap-2 bg-slate-100 dark:bg-purple-950/40 hover:bg-slate-200/80 dark:hover:bg-purple-900/40 text-slate-500 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white text-xs font-semibold px-3 py-1.5 rounded-xl border border-slate-200/60 dark:border-purple-900/40 transition-colors cursor-pointer"
   aria-label="Buscar productos"
 >
   <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
@@ -35,7 +40,7 @@ const searchIndex = productos.map((p) => ({
     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
   </svg>
   <span class="hidden sm:inline">Buscar...</span>
-  <kbd class="hidden md:inline-block bg-white text-slate-400 border border-slate-200 px-1.5 py-0.5 rounded-md text-[10px] font-mono leading-none">
+  <kbd class="hidden md:inline-block bg-white dark:bg-purple-900 text-slate-400 dark:text-purple-300 border border-slate-200 dark:border-purple-800 px-1.5 py-0.5 rounded-md text-[10px] font-mono leading-none">
     Ctrl K
   </kbd>
 </button>
@@ -43,12 +48,12 @@ const searchIndex = productos.map((p) => ({
 <!-- Modal Nativo Dialog -->
 <dialog
   id="search-dialog"
-  class="backdrop:bg-slate-950/60 backdrop:backdrop-blur-xs rounded-3xl p-0 w-full max-w-2xl bg-white shadow-2xl border border-slate-200/80 my-auto mx-auto overflow-hidden text-slate-900"
+  class="backdrop:bg-slate-950/60 backdrop:backdrop-blur-xs rounded-3xl p-0 w-full max-w-2xl bg-white dark:bg-[#130f24] shadow-2xl border border-slate-200/80 dark:border-purple-950/60 my-auto mx-auto overflow-hidden text-slate-900 dark:text-slate-100"
 >
   <div class="flex flex-col max-h-[80vh]">
     <!-- Input de Búsqueda -->
-    <div class="p-4 border-b border-slate-100 flex items-center gap-3">
-      <svg class="w-5 h-5 text-purple-700 shrink-0 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+    <div class="p-4 border-b border-slate-100 dark:border-purple-950/60 flex items-center gap-3">
+      <svg class="w-5 h-5 text-purple-700 dark:text-purple-400 shrink-0 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
@@ -56,27 +61,27 @@ const searchIndex = productos.map((p) => ({
         type="text"
         id="search-input"
         placeholder="Busca por nombre, categoría o beneficio (ej: Inmune, Estrés, Fem)..."
-        class="w-full text-sm font-medium bg-transparent border-0 focus:outline-none focus:ring-0 text-slate-900 placeholder:text-slate-400"
+        class="w-full text-sm font-medium bg-transparent border-0 focus:outline-none focus:ring-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
         autocomplete="off"
       />
       <button 
         type="button" 
         id="close-search-btn" 
-        class="text-xs font-bold text-slate-400 hover:text-slate-700 bg-slate-100 px-2 py-1 rounded-lg cursor-pointer shrink-0"
+        class="text-xs font-bold text-slate-400 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white bg-slate-100 dark:bg-purple-950/60 px-2 py-1 rounded-lg cursor-pointer shrink-0 transition-colors"
       >
         ESC
       </button>
     </div>
 
     <!-- Lista de Resultados -->
-    <div id="search-results" class="p-4 overflow-y-auto space-y-2 divide-y divide-slate-100">
-      <p class="text-xs text-slate-400 text-center py-8 font-medium">Escribe algo para buscar en el catálogo...</p>
+    <div id="search-results" class="p-4 overflow-y-auto space-y-2 divide-y divide-slate-100 dark:divide-purple-950/40">
+      <p class="text-xs text-slate-400 dark:text-slate-500 text-center py-8 font-medium">Escribe algo para buscar en el catálogo...</p>
     </div>
 
     <!-- Footer Informativo -->
-    <div class="p-3 bg-slate-50 border-t border-slate-100 text-[11px] text-slate-500 flex justify-between items-center px-5">
+    <div class="p-3 bg-slate-50 dark:bg-purple-950/30 border-t border-slate-100 dark:border-purple-950/40 text-[11px] text-slate-500 dark:text-slate-400 flex justify-between items-center px-5">
       <span>Navega con los resultados</span>
-      <span class="font-semibold text-purple-900">MyOmniGuide Search</span>
+      <span class="font-semibold text-purple-900 dark:text-purple-300">MyOmniGuide Search</span>
     </div>
   </div>
 </dialog>
@@ -137,19 +142,24 @@ const searchIndex = productos.map((p) => ({
       const q = normalizarTexto(query.trim());
       
       if (!q) {
-        resultsContainer.innerHTML = '<p class="text-xs text-slate-400 text-center py-8 font-medium">Escribe algo para buscar en el catálogo...</p>';
+        resultsContainer.innerHTML = '<p class="text-xs text-slate-400 dark:text-slate-500 text-center py-8 font-medium">Escribe algo para buscar en el catálogo...</p>';
         return;
       }
 
-      const mercado = localStorage.getItem('moneda_pref') || 'NIO';
+      let mercado = localStorage.getItem('moneda_pref') || 'NIO';
+      if (mercado === 'USD') mercado = 'USA';
 
       const filtrados = searchIndex.filter((item) => {
+        // Filtrar según disponibilidad en la región activa
+        const disponible = mercado === 'USA' ? item.disponibleUSA : item.disponibleNIO;
+        if (!disponible) return false;
+
         const target = normalizarTexto(`${item.nombre} ${item.subtitulo} ${item.categorias.join(' ')} ${item.beneficios} ${item.paraQuien}`);
         return target.includes(q);
       });
 
       if (filtrados.length === 0) {
-        resultsContainer.innerHTML = '<p class="text-xs text-slate-400 text-center py-8 font-medium">No se encontraron productos coincidentes.</p>';
+        resultsContainer.innerHTML = '<p class="text-xs text-slate-400 dark:text-slate-500 text-center py-8 font-medium">No se encontraron productos coincidentes en esta región.</p>';
         return;
       }
 
@@ -171,29 +181,29 @@ const searchIndex = productos.map((p) => ({
 
           return `
             <a 
-              href="${item.link}?market=${mercado}" 
-              class="flex items-center justify-between gap-4 p-3 rounded-2xl hover:bg-purple-50/60 transition-colors group pt-3"
+              href="${item.link}" 
+              class="flex items-center justify-between gap-4 p-3 rounded-2xl hover:bg-purple-50/60 dark:hover:bg-purple-950/40 transition-colors group pt-3"
             >
               <div class="flex items-center gap-3 min-w-0">
                 ${
                   item.imagenUrl
-                    ? `<img src="${item.imagenUrl}" alt="${item.nombre}" class="w-12 h-12 object-contain shrink-0 rounded-lg bg-slate-50 p-1 border border-slate-100"/>`
-                    : `<div class="w-12 h-12 bg-slate-100 rounded-lg shrink-0 flex items-center justify-center text-lg">📦</div>`
+                    ? `<img src="${item.imagenUrl}" alt="${item.nombre}" class="w-12 h-12 object-contain shrink-0 rounded-lg bg-slate-50 dark:bg-purple-950/25 p-1 border border-slate-100 dark:border-purple-950/40"/>`
+                    : `<div class="w-12 h-12 bg-slate-100 dark:bg-purple-950/30 rounded-lg shrink-0 flex items-center justify-center text-lg">📦</div>`
                 }
                 <div class="min-w-0">
-                  <h4 class="text-sm font-bold text-slate-900 group-hover:text-purple-900 transition-colors truncate">
+                  <h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-purple-900 dark:group-hover:text-purple-300 transition-colors truncate">
                     ${item.nombre}
                   </h4>
-                  <p class="text-xs text-slate-500 truncate mb-1">${item.subtitulo}</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 truncate mb-1">${item.subtitulo}</p>
                   <div class="flex flex-wrap gap-1">
-                    ${item.categorias.map(c => `<span class="text-[9px] font-bold text-purple-900 bg-purple-100 px-1.5 py-0.5 rounded">${c}</span>`).join('')}
+                    ${item.categorias.map(c => `<span class="text-[9px] font-bold text-purple-900 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/80 px-1.5 py-0.5 rounded">${c}</span>`).join('')}
                   </div>
                 </div>
               </div>
 
               <div class="text-right shrink-0">
-                ${ptsVisibles ? `<span class="block text-[10px] font-black text-purple-900">💎 ${ptsVisibles} PTS</span>` : ''}
-                ${precioTexto ? `<span class="block text-xs font-black text-emerald-950 mt-0.5">${precioTexto}</span>` : ''}
+                ${ptsVisibles ? `<span class="block text-[10px] font-black text-purple-900 dark:text-purple-300">💎 ${ptsVisibles} PTS</span>` : ''}
+                ${precioTexto ? `<span class="block text-xs font-black text-emerald-950 dark:text-emerald-400 mt-0.5">${precioTexto}</span>` : ''}
               </div>
             </a>
           `;
@@ -208,7 +218,7 @@ const searchIndex = productos.map((p) => ({
   window.addEventListener('currency-changed', () => {
     const input = document.getElementById('search-input');
     if (input && input.value) {
-      input.dispatchEvent(new Event('input'));
+      input.dispatchEvent(new Event('input', { bubbles: true }));
     }
   });
 </script>

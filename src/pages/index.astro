@@ -4,9 +4,15 @@ import LayoutBase from '../layouts/LayoutBase.astro';
 import TarjetaProducto from '../components/TarjetaProducto.astro';
 import HeroCarousel from '../components/HeroCarousel.astro';
 import { getCollection } from 'astro:content';
+import { getProductoComercial } from '../data/inventario';
 
 const productos = await getCollection('productos');
-const productosDestacados = productos.filter((p) => p.data.destacado);
+
+// Filtrar los destacados consultando el inventario centralizado
+const productosDestacados = productos.filter((p) => {
+  const comercial = getProductoComercial(p.id);
+  return comercial?.destacado === true;
+});
 
 const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
@@ -17,44 +23,83 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
   <HeroCarousel />
 
   <!-- Sección de Productos Destacados -->
-  <section class="mb-12 mt-8">
+  <section class="mb-12 mt-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-end mb-6">
       <div>
-        <h2 class="text-2xl font-extrabold text-slate-950">Productos Destacados</h2>
-        <p class="text-slate-700 text-sm mt-1">Los suplementos de mayor impacto en el catálogo.</p>
+        <h2 class="text-2xl font-extrabold text-slate-950 dark:text-white">Productos Destacados</h2>
+        <p class="text-slate-600 dark:text-slate-300 text-sm mt-1">Los suplementos de mayor impacto en el catálogo.</p>
       </div>
       <a 
         href={`${baseUrl}productos`} 
-        class="text-xs font-bold text-purple-800 hover:text-purple-950 transition-colors hidden sm:inline-block"
+        class="text-xs font-bold text-purple-700 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 transition-colors hidden sm:inline-block"
       >
         Ver catálogo completo →
       </a>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {productosDestacados.map((item) => (
-        <div class="h-full flex flex-col">
-          <TarjetaProducto
-            slug={item.id}
-            nombre={item.data.nombre}
-            categorias={item.data.categorias}
-            beneficioPrincipal={item.data.beneficiosPrincipales[0]}
-            formato={item.data.formato}
-            imagen={item.data.imagen}
-            loading="eager"
-            fetchpriority="high"
-          />
-        </div>
-      ))}
+      {productosDestacados.map((item) => {
+        const comercial = getProductoComercial(item.id);
+        const disponibleNIO = !!comercial?.nio;
+        const disponibleUSA = !!comercial?.usa;
+
+        return (
+          <div 
+            class="tarjeta-item h-full flex flex-col transition-all duration-300"
+            data-has-nio={disponibleNIO ? "true" : "false"}
+            data-has-usa={disponibleUSA ? "true" : "false"}
+          >
+            <TarjetaProducto
+              slug={item.id}
+              nombre={item.data.nombre}
+              categorias={item.data.categorias}
+              beneficioPrincipal={item.data.beneficiosPrincipales[0]}
+              formato={item.data.formato}
+              imagen={item.data.imagen}
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+        );
+      })}
     </div>
 
     <div class="mt-8 text-center sm:hidden">
       <a 
         href={`${baseUrl}productos`} 
-        class="inline-block text-xs font-bold text-purple-800 hover:text-purple-950 transition-colors"
+        class="inline-block text-xs font-bold text-purple-700 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 transition-colors"
       >
         Ver catálogo completo →
       </a>
     </div>
   </section>
 </LayoutBase>
+
+<style>
+  .tarjeta-item.region-hidden {
+    display: none !important;
+  }
+</style>
+
+<script is:inline>
+  function filtrarDestacadosPorRegion() {
+    let moneda = localStorage.getItem('moneda_pref') || 'NIO';
+    if (moneda === 'USD') moneda = 'USA';
+
+    document.querySelectorAll('.tarjeta-item').forEach((item) => {
+      const hasNio = item.getAttribute('data-has-nio') === 'true';
+      const hasUsa = item.getAttribute('data-has-usa') === 'true';
+      
+      const disponible = moneda === 'USA' ? hasUsa : hasNio;
+
+      if (!disponible) {
+        item.classList.add('region-hidden');
+      } else {
+        item.classList.remove('region-hidden');
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', filtrarDestacadosPorRegion);
+  window.addEventListener('currency-changed', filtrarDestacadosPorRegion);
+</script>

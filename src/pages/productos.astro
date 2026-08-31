@@ -3,6 +3,7 @@
 import LayoutBase from '../layouts/LayoutBase.astro';
 import TarjetaProducto from '../components/TarjetaProducto.astro';
 import { getCollection } from 'astro:content';
+import { getProductoComercial } from '../data/inventario';
 
 const productos = await getCollection('productos');
 
@@ -70,6 +71,9 @@ const categoriasUnicas = Array.from(
     <!-- Grid de Productos -->
     <div id="grid-productos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {productos.map((item) => {
+        const comercial = getProductoComercial(item.id);
+        const disponibleNIO = !!comercial?.nio;
+        const disponibleUSA = !!comercial?.usa;
         const searchText = `${item.data.nombre} ${item.data.beneficiosPrincipales.join(' ')}`.toLowerCase();
         const categoriasAttr = item.data.categorias.map(c => c.toLowerCase()).join('|');
         return (
@@ -77,12 +81,12 @@ const categoriasUnicas = Array.from(
             class="tarjeta-item hidden transition-all duration-300" 
             data-search={searchText}
             data-categories={categoriasAttr}
+            data-has-nio={disponibleNIO ? "true" : "false"}
+            data-has-usa={disponibleUSA ? "true" : "false"}
           >
             <TarjetaProducto
               slug={item.id}
               nombre={item.data.nombre}
-              precioNIO={item.data.nio?.precio}
-              precioUSD={item.data.usa?.precio}
               categorias={item.data.categorias}
               beneficioPrincipal={item.data.beneficiosPrincipales[0]}
               formato={item.data.formato}
@@ -112,7 +116,53 @@ const categoriasUnicas = Array.from(
   </main>
 </LayoutBase>
 
+<style>
+  /* Regla estricta para asegurar que los productos no disponibles en la región se oculten */
+  .tarjeta-item.region-hidden {
+    display: none !important;
+  }
+</style>
+
 <script>
   import { initCatalogo } from '../scripts/catalogoFiltros';
-  document.addEventListener('DOMContentLoaded', initCatalogo);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initCatalogo();
+
+    function filtrarPorRegion() {
+      let moneda = localStorage.getItem('moneda_pref') || 'NIO';
+      if (moneda === 'USD') moneda = 'USA';
+
+      let disponiblesCount = 0;
+
+      document.querySelectorAll('.tarjeta-item').forEach((item) => {
+        const hasNio = item.getAttribute('data-has-nio') === 'true';
+        const hasUsa = item.getAttribute('data-has-usa') === 'true';
+        
+        const disponible = moneda === 'USA' ? hasUsa : hasNio;
+
+        if (!disponible) {
+          item.classList.add('region-hidden');
+        } else {
+          item.classList.remove('region-hidden');
+          disponiblesCount++;
+        }
+      });
+
+      // Actualizar dinámicamente el texto del botón "Todas" con el total real de la región
+      const btnTodas = document.querySelector('.btn-categoria[data-category="todas"]');
+      if (btnTodas) {
+        btnTodas.textContent = `Todas (${disponiblesCount})`;
+      }
+
+      // Forzar al script de filtros a recalcular resultados y contadores visuales
+      const buscador = document.getElementById('buscador-productos') as HTMLInputElement;
+      if (buscador) {
+        buscador.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
+
+    filtrarPorRegion();
+    window.addEventListener('currency-changed', filtrarPorRegion);
+  });
 </script>

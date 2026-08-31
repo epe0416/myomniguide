@@ -2,12 +2,14 @@
 // src/components/CurrencyToggle.astro
 ---
 
-<div id="currency-toggle" class="inline-flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 shrink-0">
-  <button 
-    type="button" 
-    data-currency="NIO"
-    class="currency-btn px-2 py-1 sm:px-2.5 rounded-md transition-colors cursor-pointer bg-white text-purple-900 shadow-xs text-[11px] sm:text-xs flex items-center gap-1.5"
-  >
+<button 
+  type="button" 
+  id="currency-toggle-btn"
+  class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 dark:bg-purple-950/40 hover:bg-slate-200/80 dark:hover:bg-purple-900/40 border border-slate-200/60 dark:border-purple-900/40 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors cursor-pointer shadow-2xs shrink-0"
+  aria-label="Cambiar moneda"
+>
+  <!-- Vista Nicaragua (NIO) -->
+  <span class="currency-view flex items-center gap-1.5" data-currency-view="NIO">
     <svg class="w-4 h-3 rounded-xs shadow-2xs overflow-hidden shrink-0 border border-slate-300/60" viewBox="0 0 5 3" aria-hidden="true">
       <rect width="5" height="1" y="0" fill="#0067C6"/>
       <rect width="5" height="1" y="1" fill="#FFFFFF"/>
@@ -15,30 +17,27 @@
       <polygon points="2.5,1.25 2.15,1.75 2.85,1.75" fill="none" stroke="#004C91" stroke-width="0.08"/>
     </svg>
     <span>NIO</span>
-  </button>
+  </span>
 
-  <button 
-    type="button" 
-    data-currency="USA"
-    class="currency-btn px-2 py-1 sm:px-2.5 rounded-md transition-colors cursor-pointer hover:text-slate-900 text-[11px] sm:text-xs flex items-center gap-1.5"
-  >
+  <!-- Vista Estados Unidos (USA) -->
+  <span class="currency-view hidden items-center gap-1.5" data-currency-view="USA">
     <svg class="w-4 h-3 rounded-xs shadow-2xs overflow-hidden shrink-0 border border-slate-300/60" viewBox="0 0 19 10" aria-hidden="true">
       <rect width="19" height="10" fill="#B22234"/>
       <path d="M0,1.53H19M0,3.07H19M0,4.61H19M0,6.15H19M0,7.69H19M0,9.23H19" stroke="#FFFFFF" stroke-width="0.77"/>
       <rect width="7.6" height="5.38" fill="#3C3B6E"/>
     </svg>
     <span>USA</span>
-  </button>
-</div>
+  </span>
+</button>
 
 <script is:inline>
   function initCurrencyToggle() {
-    const container = document.getElementById('currency-toggle');
-    if (!container) return;
+    const btn = document.getElementById('currency-toggle-btn');
+    if (!btn) return;
 
-    const buttons = container.querySelectorAll('.currency-btn');
-    
-    // Prioridad 1: Leer parametro 'market' de la URL
+    const views = btn.querySelectorAll('.currency-view');
+
+    // Prioridad 1: Leer parámetro 'market' de la URL
     const urlParams = new URLSearchParams(window.location.search);
     let marketFromUrl = urlParams.get('market')?.toUpperCase();
     if (marketFromUrl === 'USD') marketFromUrl = 'USA';
@@ -47,45 +46,41 @@
     let savedCurrency = localStorage.getItem('moneda_pref') || 'NIO';
     if (savedCurrency === 'USD') savedCurrency = 'USA';
 
-    const activeMarket = (marketFromUrl === 'NIO' || marketFromUrl === 'USA') 
+    let currentCurrency = (marketFromUrl === 'NIO' || marketFromUrl === 'USA') 
       ? marketFromUrl 
       : savedCurrency;
 
-    localStorage.setItem('moneda_pref', activeMarket);
+    function setMoneda(curr, dispatch = true) {
+      currentCurrency = curr;
+      localStorage.setItem('moneda_pref', curr);
 
-    function setEstadoBotones(curr) {
-      buttons.forEach((btn) => {
-        if (btn.getAttribute('data-currency') === curr) {
-          btn.classList.add('bg-white', 'text-purple-900', 'shadow-xs');
-          btn.classList.remove('hover:text-slate-900');
+      views.forEach((v) => {
+        if (v.getAttribute('data-currency-view') === curr) {
+          v.classList.remove('hidden');
+          v.classList.add('flex');
         } else {
-          btn.classList.remove('bg-white', 'text-purple-900', 'shadow-xs');
-          btn.classList.add('hover:text-slate-900');
+          v.classList.add('hidden');
+          v.classList.remove('flex');
         }
       });
+
+      if (dispatch) {
+        // Sincronizar URL sin recargar
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('market', curr);
+        window.history.replaceState({}, '', currentUrl);
+
+        window.dispatchEvent(new CustomEvent('currency-changed', { detail: { currency: curr } }));
+      }
     }
 
-    function updateUrlAndEvent(curr) {
-      // Sincronizar URL sin recargar
-      const currentUrl = new URL(window.location.href);
-      currentUrl.searchParams.set('market', curr);
-      window.history.replaceState({}, '', currentUrl);
+    // Inicializar estado sin disparar evento duplicado en el primer render
+    setMoneda(currentCurrency, false);
 
-      window.dispatchEvent(new CustomEvent('currency-changed', { detail: { currency: curr } }));
-    }
-
-    setEstadoBotones(activeMarket);
-    updateUrlAndEvent(activeMarket);
-
-    buttons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const selected = btn.getAttribute('data-currency');
-        if (!selected) return;
-
-        localStorage.setItem('moneda_pref', selected);
-        setEstadoBotones(selected);
-        updateUrlAndEvent(selected);
-      });
+    // Clic para alternar cíclicamente entre NIO y USA
+    btn.addEventListener('click', () => {
+      const nuevaMoneda = currentCurrency === 'NIO' ? 'USA' : 'NIO';
+      setMoneda(nuevaMoneda, true);
     });
   }
 
