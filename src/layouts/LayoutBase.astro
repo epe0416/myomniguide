@@ -59,10 +59,10 @@ const imagenAbsoluta = imagen
     
     <!-- Navbar Sticky -->
     <header class="sticky top-0 z-50 bg-white/85 dark:bg-[#0c0816]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-purple-950/60 shadow-xs">
-      <div class="max-w-6xl mx-auto px-2.5 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-3">
+      <div class="max-w-6xl mx-auto px-2 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-1 sm:gap-3">
         
-        <a href={baseUrl} class="flex items-center gap-2 group">
-          <div class="w-10 h-10 rounded-xl bg-purple-900 border border-purple-700/50 flex items-center justify-center text-white font-black text-lg shadow-xs group-hover:bg-purple-800 transition-colors">
+        <a href={baseUrl} class="flex items-center gap-2 group shrink-0">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-purple-900 border border-purple-700/50 flex items-center justify-center text-white font-black text-base sm:text-lg shadow-xs group-hover:bg-purple-800 transition-colors">
             O
           </div>
           <span class="hidden sm:inline text-lg font-extrabold tracking-tight text-slate-950 dark:text-white">
@@ -71,11 +71,12 @@ const imagenAbsoluta = imagen
         </a>
 
         <!-- Bloque Derecho: Navegación + Buscador + Conmutadores -->
-        <div class="flex items-center gap-1 sm:gap-3 shrink-0">
+        <div class="flex items-center gap-1 sm:gap-2.5 shrink-0">
           <nav class="flex items-center gap-0.5 sm:gap-1">
+            <!-- Oculto en móviles muy pequeños ya que el logo lleva al inicio -->
             <a 
               href={baseUrl} 
-              class={`px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all ${
+              class={`px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all hidden xs:inline-block sm:inline-block ${
                 currentPath === rawBaseUrl || currentPath === baseUrl
                   ? 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-purple-950/30'
@@ -231,11 +232,3 @@ const imagenAbsoluta = imagen
 
   </body>
 </html>
-
-<!-- <style is:global>
-  @import "tailwindcss";
-
-  .glosario-term {
-    @apply underline decoration-dotted decoration-purple-600 dark:decoration-purple-400 underline-offset-4 cursor-pointer font-semibold text-purple-900 dark:text-purple-300 hover:text-purple-700 dark:hover:text-purple-200 not-italic relative z-10;
-  }
-</style> -->

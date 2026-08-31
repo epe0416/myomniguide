@@ -15,10 +15,10 @@ const categoriasUnicas = Array.from(
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
     <!-- Encabezado -->
     <div class="mb-8">
-      <h1 class="text-3xl md:text-4xl font-black text-slate-950 tracking-tight mb-2">
+      <h1 class="text-3xl md:text-4xl font-black text-slate-950 dark:text-white tracking-tight mb-2">
         Catálogo Completo de Productos
       </h1>
-      <p class="text-slate-600 text-sm md:text-base max-w-2xl">
+      <p class="text-slate-600 dark:text-slate-300 text-sm md:text-base max-w-2xl">
         Explora las fichas técnicas, argumentos comerciales y puntuación oficial de volumen para potenciar tus ventas.
       </p>
     </div>
@@ -26,21 +26,21 @@ const categoriasUnicas = Array.from(
     <!-- Buscador y Filtro por Categorías -->
     <div class="mb-8 space-y-4">
       <div class="relative max-w-xl">
-        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
           🔍
         </div>
         <input 
           type="search" 
           id="buscador-productos" 
           placeholder="Buscar por nombre o beneficio..."
-          class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all shadow-xs"
+          class="w-full pl-10 pr-4 py-3 bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-600 dark:focus:ring-purple-500 focus:border-transparent transition-all shadow-xs"
         />
       </div>
 
       <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="contenedor-categorias">
         <button
           type="button"
-          class="btn-categoria active whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer bg-purple-950 text-white shadow-xs"
+          class="btn-categoria active whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer bg-purple-950 dark:bg-purple-900 text-white shadow-xs border border-transparent"
           data-category="todas"
         >
           Todas ({productos.length})
@@ -48,7 +48,7 @@ const categoriasUnicas = Array.from(
         {categoriasUnicas.map((cat) => (
           <button
             type="button"
-            class="btn-categoria whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer bg-white text-slate-600 border border-slate-200 hover:border-purple-300 hover:text-purple-900 shadow-xs"
+            class="btn-categoria whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer bg-white dark:bg-[#130f24] text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-purple-950/60 hover:border-purple-300 dark:hover:border-purple-500/50 hover:text-purple-900 dark:hover:text-purple-300 shadow-xs"
             data-category={cat.toLowerCase()}
           >
             {cat}
@@ -56,11 +56,11 @@ const categoriasUnicas = Array.from(
         ))}
       </div>
 
-      <div class="text-xs text-slate-500 flex justify-between items-center px-1">
+      <div class="text-xs text-slate-500 dark:text-slate-400 flex justify-between items-center px-1">
         <span id="contador-resultados">Cargando productos...</span>
         <button 
           id="btn-limpiar" 
-          class="text-purple-700 hover:text-purple-900 font-bold hidden cursor-pointer transition-colors"
+          class="text-purple-700 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 font-bold hidden cursor-pointer transition-colors"
         >
           Limpiar filtros
         </button>
@@ -94,18 +94,18 @@ const categoriasUnicas = Array.from(
     </div>
 
     <div id="scroll-sentinel" class="h-12 flex items-center justify-center mt-6">
-      <div id="cargando-indicador" class="hidden text-xs text-slate-400 font-medium">
+      <div id="cargando-indicador" class="hidden text-xs text-slate-400 dark:text-slate-500 font-medium">
         Cargando más productos...
       </div>
     </div>
 
     <div 
       id="sin-resultados" 
-      class="hidden text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-xs mt-6"
+      class="hidden text-center py-16 bg-white dark:bg-[#130f24] rounded-2xl border border-slate-200 dark:border-purple-950/60 shadow-xs mt-6"
     >
       <div class="text-4xl mb-3">🔍</div>
-      <h3 class="text-lg font-bold text-slate-900 mb-1">No se encontraron productos</h3>
-      <p class="text-slate-500 text-sm max-w-md mx-auto mb-4">
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">No se encontraron productos</h3>
+      <p class="text-slate-500 dark:text-slate-400 text-sm max-w-md mx-auto mb-4">
         No coinciden productos con el criterio seleccionado. Intenta cambiar de categoría o modificar el texto de búsqueda.
       </p>
     </div>
