@@ -1,2 +1,8 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.glosario-term {
+    @apply underline decoration-dotted decoration-purple-600 dark:decoration-purple-400 underline-offset-4 cursor-pointer font-semibold text-purple-900 dark:text-purple-300 hover:text-purple-700 dark:hover:text-purple-200 not-italic relative z-10;
+}

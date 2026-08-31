@@ -22,7 +22,7 @@ paraQuienEs:
   - "Adultos que buscan un apoyo nutricional avanzado para quemar grasa corporal y acelerar el metabolismo."
   - "Deportistas en fase de definición o personas con la percepción de un metabolismo pausado."
   - "Individuos que buscan una alternativa funcional y libre de azúcares a las bebidas azucaradas."
-destacado: true
+destacado: false
 
 empresario:
   argumentosVenta:

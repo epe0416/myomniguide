@@ -4,6 +4,7 @@ import '../styles/global.css';
 import GlosarioModal from '../components/GlosarioModal.astro';
 import CurrencyToggle from '../components/CurrencyToggle.astro';
 import SearchModal from '../components/SearchModal.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 interface Props {
   titulo?: string;
@@ -26,13 +27,23 @@ const imagenAbsoluta = imagen
 ---
 
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-50 scrollbar-gutter-stable overflow-x-hidden">
+<html lang="es" class="h-full bg-[#0c0816] scrollbar-gutter-stable overflow-x-hidden dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <title>{pageTitle} | MyOmniGuide</title>
     <meta name="description" content={descripcionFinal} />
+
+    <!-- Script antirrefresco de tema (Modo oscuro por defecto) -->
+    <script is:inline>
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
 
     <!-- OpenGraph / Tarjeta de WhatsApp -->
     <meta property="og:title" content={`${pageTitle} | MyOmniGuide`} />
@@ -44,30 +55,30 @@ const imagenAbsoluta = imagen
     <!-- Favicon SVG -->
     <link rel="icon" type="image/svg+xml" href={`${baseUrl}favicon.svg`} />
   </head>
-  <body class="min-h-screen flex flex-col text-slate-900 antialiased font-sans overflow-x-hidden max-w-full">
+  <body class="min-h-screen flex flex-col text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-[#0c0816] antialiased font-sans overflow-x-hidden max-w-full transition-colors duration-200">
     
     <!-- Navbar Sticky -->
-    <header class="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+    <header class="sticky top-0 z-50 bg-white/85 dark:bg-[#0c0816]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-purple-950/60 shadow-xs">
       <div class="max-w-6xl mx-auto px-2.5 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-3">
         
         <a href={baseUrl} class="flex items-center gap-2 group">
           <div class="w-10 h-10 rounded-xl bg-purple-900 border border-purple-700/50 flex items-center justify-center text-white font-black text-lg shadow-xs group-hover:bg-purple-800 transition-colors">
             O
           </div>
-          <span class="hidden sm:inline text-lg font-extrabold tracking-tight text-slate-950">
-            My<span class="text-purple-700">OmniGuide</span>
+          <span class="hidden sm:inline text-lg font-extrabold tracking-tight text-slate-950 dark:text-white">
+            My<span class="text-purple-600 dark:text-purple-400">OmniGuide</span>
           </span>
         </a>
 
-        <!-- Bloque Derecho: Navegación + Buscador + Conmutador -->
+        <!-- Bloque Derecho: Navegación + Buscador + Conmutadores -->
         <div class="flex items-center gap-1 sm:gap-3 shrink-0">
           <nav class="flex items-center gap-0.5 sm:gap-1">
             <a 
               href={baseUrl} 
               class={`px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all ${
                 currentPath === rawBaseUrl || currentPath === baseUrl
-                  ? 'bg-purple-50 text-purple-700'
-                  : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/80'
+                  ? 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-purple-950/30'
               }`}
             >
               Inicio
@@ -77,8 +88,8 @@ const imagenAbsoluta = imagen
               href={`${baseUrl}productos`} 
               class={`px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all ${
                 currentPath.includes('productos')
-                  ? 'bg-purple-50 text-purple-700'
-                  : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/80'
+                  ? 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-purple-950/30'
               }`}
             >
               Catálogo
@@ -88,8 +99,8 @@ const imagenAbsoluta = imagen
               href={`${baseUrl}combos`} 
               class={`px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all ${
                 currentPath.includes('combos')
-                  ? 'bg-purple-50 text-purple-700'
-                  : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/80'
+                  ? 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-purple-950/30'
               }`}
             >
               Combos
@@ -101,6 +112,9 @@ const imagenAbsoluta = imagen
 
           <!-- Conmutador NIO / USA -->
           <CurrencyToggle />
+
+          <!-- Interruptor Dark/Light Mode -->
+          <ThemeToggle />
         </div>
 
       </div>
@@ -112,8 +126,8 @@ const imagenAbsoluta = imagen
     </main>
 
     <!-- Footer Compacto -->
-    <footer class="border-t border-slate-200 bg-white py-6 mt-auto">
-      <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-medium">
+    <footer class="border-t border-slate-200 dark:border-purple-950/60 bg-white dark:bg-[#0c0816] py-6 mt-auto transition-colors">
+      <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400 font-medium">
         
         <p>© {new Date().getFullYear()} MyOmniGuide. Guía independiente de consulta técnica.</p>
 
@@ -121,20 +135,20 @@ const imagenAbsoluta = imagen
           <button 
             id="btn-abrir-aviso-legal" 
             type="button" 
-            class="text-slate-500 hover:text-purple-700 underline underline-offset-2 transition-colors cursor-pointer font-semibold"
+            class="text-slate-500 dark:text-slate-400 hover:text-purple-700 dark:hover:text-purple-300 underline underline-offset-2 transition-colors cursor-pointer font-semibold"
           >
             Aviso Legal & Deslinde
           </button>
           
-          <span class="text-slate-300">|</span>
+          <span class="text-slate-300 dark:text-purple-900">|</span>
 
-          <p class="text-slate-400">
+          <p class="text-slate-400 dark:text-slate-500">
             Desarrollado por{' '}
             <a 
               href="https://github.com/epe0416" 
               target="_blank" 
               rel="noopener noreferrer" 
-              class="text-purple-700 hover:text-purple-900 font-bold underline decoration-purple-300 underline-offset-2 transition-colors"
+              class="text-purple-700 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 font-bold underline decoration-purple-300 dark:decoration-purple-800 underline-offset-2 transition-colors"
             >
               epedev
             </a>
@@ -147,24 +161,24 @@ const imagenAbsoluta = imagen
     <!-- Modal de Aviso Legal -->
     <dialog 
       id="modal-aviso-legal" 
-      class="backdrop:bg-slate-950/60 backdrop:backdrop-blur-xs rounded-2xl max-w-xl w-[90%] p-0 border border-slate-200 shadow-2xl m-auto"
+      class="backdrop:bg-slate-950/70 backdrop:backdrop-blur-xs rounded-2xl max-w-xl w-[90%] p-0 border border-slate-200 dark:border-purple-900/50 bg-white dark:bg-[#130f24] text-slate-900 dark:text-slate-100 shadow-2xl m-auto"
     >
       <div class="p-6 space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2">
+        <div class="flex items-center justify-between border-b border-slate-100 dark:border-purple-950/60 pb-3">
+          <h3 class="font-extrabold text-slate-900 dark:text-white text-sm uppercase tracking-wider flex items-center gap-2">
             ⚠️ Aviso Legal y Deslinde de Responsabilidad
           </h3>
           <button 
             id="btn-cerrar-aviso-legal" 
             type="button" 
             aria-label="Cerrar aviso legal"
-            class="text-slate-400 hover:text-slate-700 text-lg font-bold px-2 py-1 cursor-pointer transition-colors"
+            class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-lg font-bold px-2 py-1 cursor-pointer transition-colors"
           >
             ✕
           </button>
         </div>
 
-        <div class="text-xs text-slate-600 leading-relaxed space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+        <div class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed space-y-3 max-h-[60vh] overflow-y-auto pr-1">
           <p>
             <strong>MyOmniGuide</strong> es una herramienta de consulta técnica e informativa de carácter independiente, creada por un Distribuidor Independiente para la capacitación y apoyo de la comunidad de distribuidores y consumidores. <strong>No es un sitio web oficial ni está afiliado operativamente con Omnilife Inc.</strong>
           </p>
@@ -176,11 +190,11 @@ const imagenAbsoluta = imagen
           </p>
         </div>
 
-        <div class="pt-2 border-t border-slate-100 text-right">
+        <div class="pt-2 border-t border-slate-100 dark:border-purple-950/60 text-right">
           <button 
             id="btn-entendido-aviso-legal" 
             type="button" 
-            class="px-4 py-2 bg-purple-950 text-white font-bold text-xs rounded-xl hover:bg-purple-900 transition-colors cursor-pointer"
+            class="px-4 py-2 bg-purple-900 dark:bg-purple-800 text-white font-bold text-xs rounded-xl hover:bg-purple-950 dark:hover:bg-purple-700 transition-colors cursor-pointer"
           >
             Entendido
           </button>
@@ -218,10 +232,10 @@ const imagenAbsoluta = imagen
   </body>
 </html>
 
-<style is:global>
+<!-- <style is:global>
   @import "tailwindcss";
 
   .glosario-term {
-    @apply underline decoration-dotted decoration-purple-600 underline-offset-4 cursor-pointer font-semibold text-purple-900 hover:text-purple-700 not-italic relative z-10;
+    @apply underline decoration-dotted decoration-purple-600 dark:decoration-purple-400 underline-offset-4 cursor-pointer font-semibold text-purple-900 dark:text-purple-300 hover:text-purple-700 dark:hover:text-purple-200 not-italic relative z-10;
   }
-</style>
+</style> -->
