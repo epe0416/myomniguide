@@ -1,0 +1,507 @@
+---
+// src/pages/empresarios.astro
+import LayoutBase from '../layouts/LayoutBase.astro';
+---
+
+<LayoutBase 
+  titulo="Guía para Empresarios - Plan de Compensación"
+  descripcion="Domina el Multidesarrollo Omnilife, los 5 Pasos de Oro y el Plan de Compensación con herramientas interactivas."
+>
+  <div class="mb-8 text-center max-w-3xl mx-auto">
+    <span class="text-xs font-bold tracking-wider text-purple-700 dark:text-purple-400 bg-purple-100 dark:bg-purple-950/80 px-3 py-1 rounded-md uppercase inline-block mb-3">
+      💼 Centro de Negocio y Liderazgo
+    </span>
+    <h1 class="text-3xl md:text-5xl font-extrabold text-slate-950 dark:text-white mb-4">
+      Multidesarrollo Omnilife
+    </h1>
+    <p class="text-slate-700 dark:text-slate-300 text-base md:text-lg">
+      Comprende de forma clara, interactiva y estratégica cómo funciona el plan de compensación, la escala de descuentos y los incentivos de crecimiento.
+    </p>
+  </div>
+
+  <!-- Pestañas de Navegación Interactiva -->
+  <div class="flex flex-wrap border border-slate-200/80 dark:border-purple-950/60 mb-8 bg-slate-100 dark:bg-purple-950/30 p-1.5 rounded-2xl max-w-2xl mx-auto gap-2">
+    <button
+      class="emp-tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer bg-white dark:bg-purple-900 text-purple-900 dark:text-white shadow-xs"
+      data-target="panel-pasos"
+    >
+      ⭐ 5 Pasos
+    </button>
+    <button
+      class="emp-tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer text-slate-700 dark:text-slate-400 hover:text-purple-900 dark:hover:text-white"
+      data-target="panel-calculadora"
+    >
+      📊 Descuento 40%
+    </button>
+    <button
+      class="emp-tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer text-slate-700 dark:text-slate-400 hover:text-purple-900 dark:hover:text-white"
+      data-target="panel-rangos"
+    >
+      🏆 Niveles
+    </button>
+    <button
+      class="emp-tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer text-slate-700 dark:text-slate-400 hover:text-purple-900 dark:hover:text-white"
+      data-target="panel-ganancias"
+    >
+      💰 Calculadora Red
+    </button>
+  </div>
+
+  <!-- Panel 1: Los 5 Pasos de Oro -->
+  <div id="panel-pasos" class="emp-panel space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 rounded-2xl shadow-xs">
+        <span class="text-2xl font-black text-purple-600 dark:text-purple-400 block mb-2">01</span>
+        <h3 class="font-bold text-slate-950 dark:text-white text-lg mb-2">Usar y Compartir</h3>
+        <p class="text-slate-700 dark:text-slate-300 text-sm">
+          Adquiere los productos con descuento para consumo personal y comercialización directa con Clientes Admirables.
+        </p>
+      </div>
+      <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 rounded-2xl shadow-xs">
+        <span class="text-2xl font-black text-purple-600 dark:text-purple-400 block mb-2">02</span>
+        <h3 class="font-bold text-slate-950 dark:text-white text-lg mb-2">Presentar</h3>
+        <p class="text-slate-700 dark:text-slate-300 text-sm">
+          Comparte la oportunidad del Negocio Independiente con personas interesadas para construir tu red.
+        </p>
+      </div>
+      <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 rounded-2xl shadow-xs">
+        <span class="text-2xl font-black text-purple-600 dark:text-purple-400 block mb-2">03</span>
+        <h3 class="font-bold text-slate-950 dark:text-white text-lg mb-2">Desarrollar Equipos</h3>
+        <p class="text-slate-700 dark:text-slate-300 text-sm">
+          Brinda soporte operativo y de liderazgo a tu red para potenciar el volumen y la retención.
+        </p>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+      <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 rounded-2xl shadow-xs">
+        <span class="text-2xl font-black text-purple-600 dark:text-purple-400 block mb-2">04</span>
+        <h3 class="font-bold text-slate-950 dark:text-white text-lg mb-2">Conservar / Fidelizar</h3>
+        <p class="text-slate-700 dark:text-slate-300 text-sm">
+          Asegura la recompra y consolida relaciones duraderas tanto con tu red como con tus clientes finales.
+        </p>
+      </div>
+      <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 rounded-2xl shadow-xs">
+        <span class="text-2xl font-black text-purple-600 dark:text-purple-400 block mb-2">05</span>
+        <h3 class="font-bold text-slate-950 dark:text-white text-lg mb-2">Liderar</h3>
+        <p class="text-slate-700 dark:text-slate-300 text-sm">
+          Alcanza los niveles superiores de carrera y consolida tu estabilidad financiera a largo plazo.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 2: Calculadora / Simulador del 40% -->
+  <div id="panel-calculadora" class="emp-panel hidden space-y-6 max-w-3xl mx-auto">
+    <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-8 rounded-3xl shadow-xs">
+      <h2 class="text-xl font-bold text-slate-950 dark:text-white mb-4">Simulador de Escala de Descuentos</h2>
+      <p class="text-slate-600 dark:text-slate-300 text-sm mb-6">
+        Ingresa tus puntos acumulados en el periodo para calcular tu nivel de descuento y conocer qué te falta para llegar al 40%.
+      </p>
+      
+      <div class="space-y-4 mb-6">
+        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+          Puntos Personales Acumulados: <span id="puntos-val" class="text-purple-600 dark:text-purple-400 text-base font-black">1000</span> PTS
+        </label>
+        <input 
+          type="range" 
+          id="puntos-slider" 
+          min="0" 
+          max="4000" 
+          step="100" 
+          value="1000" 
+          class="w-full accent-purple-600 cursor-pointer"
+        />
+      </div>
+
+      <div id="resultado-descuento" class="bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900/60 p-6 rounded-2xl text-center">
+        <span class="text-xs font-bold text-purple-800 dark:text-purple-300 uppercase tracking-wider block mb-1">Descuento Actual</span>
+        <div id="desc-porcentaje" class="text-4xl font-black text-purple-950 dark:text-white mb-2">30%</div>
+        <p id="desc-mensaje" class="text-xs text-slate-600 dark:text-slate-300 font-medium">
+          ¡Estás a un paso del siguiente nivel! Acumula 2,000 puntos para obtener el 35%.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 3: Inspector Interactivo de Niveles y Ganancias -->
+  <div id="panel-rangos" class="emp-panel hidden space-y-8 max-w-5xl mx-auto">
+    <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 sm:p-8 rounded-3xl shadow-xs">
+      
+      <div class="mb-8 text-center max-w-2xl mx-auto">
+        <span class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider block mb-1">Simulador de Carrera</span>
+        <h2 class="text-2xl font-extrabold text-slate-950 dark:text-white">Mapa de Ruta por Categoría</h2>
+        <p class="text-slate-600 dark:text-slate-300 text-sm mt-1">
+          Selecciona una categoría para desplegar sus niveles y consulta los requisitos y beneficios detallados.
+        </p>
+      </div>
+
+      {/* 1. Botones de Categoría (Escala) */}
+      <div id="category-buttons" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
+        <button data-category="bronce" class="category-btn group p-5 rounded-2xl text-left border transition-all cursor-pointer bg-purple-900 text-white border-purple-700 shadow-md">
+          <span class="text-3xl block mb-2 opacity-90">🥉</span>
+          <span class="font-black text-sm block">Escala</span>
+          <span class="font-extrabold text-lg block">Bronce</span>
+          <span class="text-xs opacity-75 mt-1 block">Niveles Iniciales</span>
+        </button>
+        
+        <button data-category="plata" class="category-btn group p-5 rounded-2xl text-left border transition-all cursor-pointer bg-slate-100 dark:bg-purple-950/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500 hover:shadow-sm">
+          <span class="text-3xl block mb-2 opacity-90 group-hover:scale-105 transition-transform">🥈</span>
+          <span class="font-black text-sm block">Escala</span>
+          <span class="font-extrabold text-lg block">Plata</span>
+          <span class="text-xs opacity-75 mt-1 block">Liderazgo y CCE</span>
+        </button>
+
+        <button data-category="oro" class="category-btn group p-5 rounded-2xl text-left border transition-all cursor-pointer bg-slate-100 dark:bg-purple-950/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500 hover:shadow-sm">
+          <span class="text-3xl block mb-2 opacity-90 group-hover:scale-105 transition-transform">🥇</span>
+          <span class="font-black text-sm block">Escala</span>
+          <span class="font-extrabold text-lg block">Oro</span>
+          <span class="text-xs opacity-75 mt-1 block">Consolidación</span>
+        </button>
+
+        <button data-category="diamante" class="category-btn group p-5 rounded-2xl text-left border transition-all cursor-pointer bg-slate-100 dark:bg-purple-950/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500 hover:shadow-sm">
+          <span class="text-3xl block mb-2 opacity-90 group-hover:scale-105 transition-transform">💎</span>
+          <span class="font-black text-sm block">Escala</span>
+          <span class="font-extrabold text-lg block">Diamante</span>
+          <span class="text-xs opacity-75 mt-1 block">Cúspide y Máximos Bonos</span>
+        </button>
+      </div>
+
+      {/* 2. Sub-selección de Niveles (Aparece dinámicamente) */}
+      <div id="sub-rank-selector" class="mb-8 border-t border-slate-100 dark:border-purple-950/60 pt-8 hidden transition-all duration-300 ease-in-out transform scale-95 opacity-0">
+         <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 text-center">Niveles dentro de la Escala <span id="category-title-span" class="text-purple-700 dark:text-purple-300">Bronce</span></h4>
+         <div id="sub-buttons-container" class="flex flex-wrap justify-center gap-3">
+            {/* Botones de sub-nivel insertados por JS */}
+         </div>
+      </div>
+
+      {/* 3. Tarjeta de Visualización de Requisitos (Detalle) */}
+      <div id="rank-display-card" class="bg-purple-50/70 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-900/50 p-6 sm:p-8 rounded-2xl transition-opacity duration-200 opacity-100">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-purple-200/60 dark:border-purple-900/40 mb-6">
+          <div>
+            <span id="card-badge" class="text-xs font-bold text-purple-700 dark:text-purple-300 bg-purple-200/60 dark:bg-purple-900/60 px-3 py-1 rounded-md uppercase">Nivel Inicial</span>
+            <h3 id="card-title" class="text-2xl font-black text-purple-950 dark:text-white mt-1">Bronce</h3>
+          </div>
+          <div class="text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-[#0c0816] px-4 py-2 rounded-xl border border-purple-100 dark:border-purple-950/60 shadow-xs">
+            🎯 Títulos Requeridos: <strong id="card-titles" class="text-purple-700 dark:text-purple-400">Ninguno</strong>
+          </div>
+        </div>
+
+        {/* Requisitos Clave */}
+        <div class="mb-6">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">📋 Requisitos de Calificación</h4>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="bg-white dark:bg-[#0c0816] p-4 rounded-xl border border-purple-100 dark:border-purple-950/60 text-center shadow-xs">
+              <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Puntos Personales (PP)</span>
+              <span id="req-pp" class="text-lg font-black text-purple-700 dark:text-purple-300">100</span>
+            </div>
+            <div class="bg-white dark:bg-[#0c0816] p-4 rounded-xl border border-purple-100 dark:border-purple-950/60 text-center shadow-xs">
+              <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Puntos Grupales (PG)</span>
+              <span id="req-pg" class="text-lg font-black text-purple-700 dark:text-purple-300">-</span>
+            </div>
+            <div class="bg-white dark:bg-[#0c0816] p-4 rounded-xl border border-purple-100 dark:border-purple-950/60 text-center shadow-xs">
+              <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Puntos de Línea (PLD)</span>
+              <span id="req-pld" class="text-lg font-black text-purple-700 dark:text-purple-300">-</span>
+            </div>
+            <div class="bg-white dark:bg-[#0c0816] p-4 rounded-xl border border-purple-100 dark:border-purple-950/60 text-center shadow-xs">
+              <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Líneas Activas (LA)</span>
+              <span id="req-la" class="text-lg font-black text-purple-700 dark:text-purple-300">-</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Ganancias Desbloqueadas */}
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">💰 Ganancias y Comisiones Desbloqueadas</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="bg-emerald-50/70 dark:bg-emerald-950/30 p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50">
+              <span class="text-xs font-bold text-emerald-800 dark:text-emerald-400 block mb-1">Comisión 1er Nivel</span>
+              <span id="gain-n1" class="text-base font-black text-emerald-950 dark:text-emerald-200">10%</span>
+            </div>
+            <div class="bg-purple-50/70 dark:bg-purple-950/30 p-4 rounded-xl border border-purple-200 dark:border-purple-900/50">
+              <span class="text-xs font-bold text-purple-800 dark:text-purple-300 block mb-1">Comisión 2º y 3º Nivel</span>
+              <span id="gain-n2n3" class="text-base font-black text-purple-950 dark:text-purple-200">No disponible</span>
+            </div>
+            <div class="bg-amber-50/70 dark:bg-amber-950/30 p-4 rounded-xl border border-amber-200 dark:border-amber-900/50">
+              <span class="text-xs font-bold text-amber-800 dark:text-amber-300 block mb-1">Constructor / Generaciones</span>
+              <span id="gain-extra" class="text-base font-black text-amber-950 dark:text-amber-200">No disponible</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- Panel 4: Calculadora Interactiva de Ganancias de Red -->
+  <div id="panel-ganancias" class="emp-panel hidden space-y-6 max-w-3xl mx-auto">
+    <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 sm:p-8 rounded-3xl shadow-xs">
+      
+      <div class="mb-6 text-center">
+        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block mb-1">Simulador Financiero</span>
+        <h2 class="text-2xl font-extrabold text-slate-950 dark:text-white">Calculadora de Comisiones por Red</h2>
+        <p class="text-slate-600 dark:text-slate-300 text-sm mt-1">
+          Estima tus ingresos mensuales proyectados en base al volumen de puntos generados por tu equipo en los primeros tres niveles.
+        </p>
+      </div>
+
+      <div class="space-y-6 mb-8">
+        {/* Slider 1er Nivel */}
+        <div class="bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-200 dark:border-purple-900/40">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">1er Nivel (10% Comisión)</span>
+            <span id="n1-val" class="text-purple-600 dark:text-purple-400 font-black text-sm">1,000 PTS</span>
+          </div>
+          <input type="range" id="n1-slider" min="0" max="10000" step="500" value="1000" class="w-full accent-purple-600 cursor-pointer" />
+        </div>
+
+        {/* Slider 2do Nivel */}
+        <div class="bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-200 dark:border-purple-900/40">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">2º Nivel (8% Comisión)</span>
+            <span id="n2-val" class="text-purple-600 dark:text-purple-400 font-black text-sm">2,500 PTS</span>
+          </div>
+          <input type="range" id="n2-slider" min="0" max="25000" step="500" value="2500" class="w-full accent-purple-600 cursor-pointer" />
+        </div>
+
+        {/* Slider 3er Nivel */}
+        <div class="bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-200 dark:border-purple-900/40">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">3er Nivel (6% Comisión)</span>
+            <span id="n3-val" class="text-purple-600 dark:text-purple-400 font-black text-sm">5,000 PTS</span>
+          </div>
+          <input type="range" id="n3-slider" min="0" max="50000" step="1000" value="5000" class="w-full accent-purple-600 cursor-pointer" />
+        </div>
+      </div>
+
+      {/* Tarjeta de Resultados Totales */}
+      <div class="bg-emerald-950/90 dark:bg-emerald-950/60 border border-emerald-500/30 p-6 rounded-2xl text-center text-white shadow-lg">
+        <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider block mb-1">Proyección Estimada de Comisiones</span>
+        <div id="total-comision" class="text-3xl sm:text-4xl font-black text-emerald-300 mb-2">$0.00 USD</div>
+        <p class="text-xs text-emerald-100/80 font-medium">
+          Calculado con base en los porcentajes estándar del plan de compensación de red.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</LayoutBase>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Pestañas de Navegación
+    const buttons = document.querySelectorAll('.emp-tab-btn');
+    const panels = document.querySelectorAll('.emp-panel');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+
+        buttons.forEach((b) => {
+          b.classList.remove('bg-white', 'dark:bg-purple-900', 'text-purple-900', 'dark:text-white', 'shadow-xs');
+          b.classList.add('text-slate-700', 'dark:text-slate-400', 'hover:text-purple-900', 'dark:hover:text-white');
+        });
+
+        btn.classList.add('bg-white', 'dark:bg-purple-900', 'text-purple-900', 'dark:text-white', 'shadow-xs');
+        btn.classList.remove('text-slate-700', 'dark:text-slate-400', 'hover:text-purple-900', 'dark:hover:text-white');
+
+        panels.forEach((p) => {
+          if (p.id === targetId) {
+            p.classList.remove('hidden');
+          } else {
+            p.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // 2. Simulador de Escala de Descuentos (40%)
+    const slider = document.getElementById('puntos-slider');
+    const puntosVal = document.getElementById('puntos-val');
+    const descPorcentaje = document.getElementById('desc-porcentaje');
+    const descMensaje = document.getElementById('desc-mensaje');
+
+    slider?.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value);
+      if (puntosVal) puntosVal.textContent = val;
+
+      let desc = '25%';
+      let msg = 'Acumula al menos 1,000 puntos para subir al 30% de descuento.';
+
+      if (val >= 4000) {
+        desc = '40%';
+        msg = '¡Felicidades! Has alcanzado el descuento máximo del 40% (aplicando reglas de múltiplos de mil).';
+      } else if (val >= 2000) {
+        desc = '35%';
+        msg = '¡Excelente! Estás muy cerca de la meta del 40%. Sigue sumando volumen.';
+      } else if (val >= 1000) {
+        desc = '30%';
+        msg = '¡Buen trabajo! Has escalado al 30%. Tu siguiente meta es llegar a 2,000 puntos.';
+      }
+
+      if (descPorcentaje) descPorcentaje.textContent = desc;
+      if (descMensaje) descMensaje.textContent = msg;
+    });
+
+    // 3. Inspector Interactivo Agrupado por Categorías y Sub-niveles
+    const categoryData = {
+      bronce: [
+        { key: "b", title: "Bronce", badge: "Nivel Inicial", titles: "Ninguno", pp: "100", pg: "-", pld: "-", la: "-", n1: "10%", n2n3: "No disponible", extra: "No disponible" },
+        { key: "ba", title: "Bronce Activo", badge: "Nivel 1", titles: "Ninguno", pp: "300", pg: "-", pld: "-", la: "-", n1: "10% (5% Inicio)", n2n3: "No disponible", extra: "No disponible" },
+        { key: "bp", title: "Bronce Premier", badge: "Nivel 2", titles: "Ninguno", pp: "300", pg: "1,500", pld: "-", la: "1 Línea", n1: "10% (8% N1)", n2n3: "No disponible", extra: "No disponible" },
+        { key: "be", title: "Bronce Elite", badge: "Nivel 3", titles: "Ninguno", pp: "500", pg: "2,000", pld: "-", la: "1 Línea", n1: "10%", n2n3: "No disponible", extra: "No disponible" },
+        { key: "bs", title: "Bronce Supreme", badge: "Nivel 4", titles: "Ninguno", pp: "1,000", pg: "4,000", pld: "-", la: "3 Líneas", n1: "10%", n2n3: "N2: 5%", extra: "No disponible" }
+      ],
+      plata: [
+        { key: "pp", title: "Plata Premier", badge: "Liderazgo Inicial", titles: "2 BA + 2 BP", pp: "1,500", pg: "7,000", pld: "-", la: "4 Líneas", n1: "10%", n2n3: "N2: 8%", extra: "No disponible" },
+        { key: "pe", title: "Plata Elite", badge: "Liderazgo Intermedio", titles: "2 BP + 2 BE", pp: "2,000", pg: "10,000", pld: "-", la: "4 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 4%", extra: "No disponible" },
+        { key: "ps", title: "Plata Supreme", badge: "Liderazgo Avanzado", titles: "4 BE", pp: "2,500", pg: "10,000", pld: "12,000", la: "4 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 6%", extra: "CCE (Constructor): 2%" }
+      ],
+      oro: [
+        { key: "op", title: "Oro Premier", badge: "Oro 1", titles: "2 BS + 2 PP", pp: "2,500", pg: "10,000", pld: "34,000", la: "4 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 6%", extra: "CCE: 2% | Gen G1: 3%" },
+        { key: "oe", title: "Oro Elite", badge: "Oro 2", titles: "2 PE + 2 PS", pp: "2,500", pg: "10,000", pld: "80,000", la: "4 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 6%", extra: "CCE: 2% | Gen G1-G2 (3%-4%)" },
+        { key: "os", title: "Oro Supreme", badge: "Oro Máximo", titles: "2 PS + 2 OP", pp: "2,500", pg: "10,000", pld: "200,000", la: "4 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 6%", extra: "CCE: 2% | Gen G1-G3 (3%-5%)" }
+      ],
+      diamante: [
+        { key: "dp", title: "Diamante Premier", badge: "Diamante 1", titles: "3 PS + 2 OE", pp: "2,500", pg: "10,000", pld: "500,000", la: "5 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 6%", extra: "CCE: 2% | Gen G1-G4" },
+        { key: "de", title: "Diamante Elite", badge: "Diamante 2", titles: "4 PS + 2 OS", pp: "2,500", pg: "10,000", pld: "1,200,000", la: "6 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 6%", extra: "CCE: 2% | Gen G1-G5" },
+        { key: "ds", title: "Diamante Supreme", badge: "Diamante Máximo", titles: "4 PS + 2 DP", pp: "2,500", pg: "10,000", pld: "3,000,000", la: "6 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 6%", extra: "CCE: 2% | Gen G1-G6 + Diamantes" },
+        { key: "ddp", title: "Doble Diamante Premier", badge: "Doble Diamante 1", titles: "4 PS + 1 OE + 2 DE", pp: "2,500", pg: "10,000", pld: "8,000,000", la: "7 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 6%", extra: "CCE: 2% | Gen G1-G6 + Diamantes G1-G2" },
+        { key: "dde", title: "Doble Diamante Elite", badge: "Doble Diamante 2", titles: "4 PS + 2 OS + 2 DS", pp: "2,500", pg: "10,000", pld: "20,000,000", la: "8 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 6%", extra: "CCE: 2% | Gen G1-G6 + Diamantes G1-G3" },
+        { key: "dds", title: "Doble Diamante Supreme", badge: "Doble Diamante Máx", titles: "4 PS + 3 DP + 2 DDP", pp: "2,500", pg: "10,000", pld: "50,000,000", la: "9 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 6%", extra: "CCE: 2% | Gen G1-G6 + Diamantes" },
+        { key: "td", title: "Triple Diamante", badge: "Cúspide del Negocio", titles: "4 PS + 4 DE + 2 DDE", pp: "2,500", pg: "10,000", pld: "50,000,000+", la: "10 Líneas", n1: "10%", n2n3: "N2: 8% | N3: 6%", extra: "CCE: 2% | Gen G1-G6 (3%) + Diamantes" }
+      ]
+    };
+
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const subRankSelector = document.getElementById('sub-rank-selector');
+    const subButtonsContainer = document.getElementById('sub-buttons-container');
+    const categoryTitleSpan = document.getElementById('category-title-span');
+    
+    const rankDisplayCard = document.getElementById('rank-display-card');
+    const cardBadge = document.getElementById('card-badge');
+    const cardTitle = document.getElementById('card-title');
+    const cardTitles = document.getElementById('card-titles');
+    const reqPp = document.getElementById('req-pp');
+    const reqPg = document.getElementById('req-pg');
+    const reqPld = document.getElementById('req-pld');
+    const reqLa = document.getElementById('req-la');
+    const gainN1 = document.getElementById('gain-n1');
+    const gainN2N3 = document.getElementById('gain-n2n3');
+    const gainExtra = document.getElementById('gain-extra');
+
+    function updateCardData(data) {
+      if (!rankDisplayCard) return;
+      rankDisplayCard.style.opacity = '0';
+      setTimeout(() => {
+        if (cardBadge) cardBadge.textContent = data.badge;
+        if (cardTitle) cardTitle.textContent = data.title;
+        if (cardTitles) cardTitles.textContent = data.titles;
+        if (reqPp) reqPp.textContent = data.pp;
+        if (reqPg) reqPg.textContent = data.pg;
+        if (reqPld) reqPld.textContent = data.pld;
+        if (reqLa) reqLa.textContent = data.la;
+        if (gainN1) gainN1.textContent = data.n1;
+        if (gainN2N3) gainN2N3.textContent = data.n2n3;
+        if (gainExtra) gainExtra.textContent = data.extra;
+        rankDisplayCard.style.opacity = '1';
+      }, 150);
+    }
+
+    function loadCategory(categoryKey, categoryDisplayName) {
+      const items = categoryData[categoryKey];
+      if (!items) return;
+
+      if (categoryTitleSpan) categoryTitleSpan.textContent = categoryDisplayName;
+      subButtonsContainer.innerHTML = '';
+
+      items.forEach((item, index) => {
+        const btn = document.createElement('button');
+        btn.className = `sub-rank-btn px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+          index === 0 
+            ? 'bg-purple-900 text-white border-purple-700 shadow-xs' 
+            : 'bg-slate-100 dark:bg-purple-950/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500'
+        }`;
+        btn.textContent = item.title;
+
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.sub-rank-btn').forEach((b) => {
+            b.classList.remove('bg-purple-900', 'text-white', 'border-purple-700', 'shadow-xs');
+            b.classList.add('bg-slate-100', 'dark:bg-purple-950/40', 'text-slate-700', 'dark:text-slate-300', 'border-slate-200', 'dark:border-purple-900/50');
+          });
+          btn.classList.add('bg-purple-900', 'text-white', 'border-purple-700', 'shadow-xs');
+          btn.classList.remove('bg-slate-100', 'dark:bg-purple-950/40', 'text-slate-700', 'dark:text-slate-300', 'border-slate-200', 'dark:border-purple-900/50');
+
+          updateCardData(item);
+        });
+
+        subButtonsContainer.appendChild(btn);
+      });
+
+      subRankSelector.classList.remove('hidden');
+      setTimeout(() => {
+        subRankSelector.classList.remove('scale-95', 'opacity-0');
+        subRankSelector.classList.add('scale-100', 'opacity-100');
+      }, 10);
+
+      // Cargar el primer subnivel por defecto
+      updateCardData(items[0]);
+    }
+
+    categoryBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const cat = btn.getAttribute('data-category');
+        const displayName = btn.querySelector('.font-extrabold').textContent;
+
+        categoryBtns.forEach((b) => {
+          b.classList.remove('bg-purple-900', 'text-white', 'border-purple-700', 'shadow-md');
+          b.classList.add('bg-slate-100', 'dark:bg-purple-950/40', 'text-slate-700', 'dark:text-slate-300', 'border-slate-200', 'dark:border-purple-900/50', 'hover:border-purple-500', 'hover:shadow-sm');
+        });
+        btn.classList.add('bg-purple-900', 'text-white', 'border-purple-700', 'shadow-md');
+        btn.classList.remove('bg-slate-100', 'dark:bg-purple-950/40', 'text-slate-700', 'dark:text-slate-300', 'border-slate-200', 'dark:border-purple-900/50', 'hover:border-purple-500', 'hover:shadow-sm');
+
+        loadCategory(cat, displayName);
+      });
+    });
+
+    // Inicializar con la categoría Bronce cargada por defecto
+    loadCategory('bronce', 'Bronce');
+  });
+
+  // 4. Calculadora de Comisiones de Red
+    const n1Slider = document.getElementById('n1-slider');
+    const n2Slider = document.getElementById('n2-slider');
+    const n3Slider = document.getElementById('n3-slider');
+    const n1Val = document.getElementById('n1-val');
+    const n2Val = document.getElementById('n2-val');
+    const n3Val = document.getElementById('n3-val');
+    const totalComision = document.getElementById('total-comision');
+
+    function calcularRed() {
+      const p1 = parseInt(n1Slider?.value || 0);
+      const p2 = parseInt(n2Slider?.value || 0);
+      const p3 = parseInt(n3Slider?.value || 0);
+
+      if (n1Val) n1Val.textContent = `${p1.toLocaleString()} PTS`;
+      if (n2Val) n2Val.textContent = `${p2.toLocaleString()} PTS`;
+      if (n3Val) n3Val.textContent = `${p3.toLocaleString()} PTS`;
+
+      // Simulación de valor monetario aproximado por punto (ej. factor base estimado o volumen equivalente)
+      // Ajustable según la moneda local, aquí usamos una representación estándar basada en volumen
+      const comisionN1 = p1 * 0.10 * 1.25; // Factor referencial de conversión
+      const comisionN2 = p2 * 0.08 * 1.25;
+      const comisionN3 = p3 * 0.06 * 1.25;
+
+      const total = comisionN1 + comisionN2 + comisionN3;
+
+      if (totalComision) {
+        totalComision.textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
+      }
+    }
+
+    n1Slider?.addEventListener('input', calcularRed);
+    n2Slider?.addEventListener('input', calcularRed);
+    n3Slider?.addEventListener('input', calcularRed);
+
+    // Inicializar cálculo al cargar
+    calcularRed();
+</script>

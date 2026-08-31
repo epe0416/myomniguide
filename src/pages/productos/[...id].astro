@@ -30,6 +30,9 @@ const puntosIniciales = puntosNIO ?? puntosUSD ?? 0;
 
 const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
+
+// Verificamos si este producto en particular tiene imagen de catálogo configurada
+const tieneCatalogo = Boolean(data.imagenCatalogo);
 ---
 
 <LayoutBase 
@@ -50,16 +53,25 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 
   <div class="bg-white dark:bg-[#130f24] p-6 md:p-8 rounded-3xl border border-slate-200/80 dark:border-purple-950/60 shadow-xs dark:shadow-[0_0_25px_rgba(147,51,235,0.15)] mb-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center min-h-70">
     {data.imagen && (
-      <div class="md:col-span-4 flex justify-center items-center bg-slate-50 dark:bg-purple-950/25 p-6 rounded-2xl border border-slate-100 dark:border-purple-950/40 h-64 w-full aspect-square shrink-0">
+      <div class={`md:col-span-4 flex justify-center items-center bg-slate-50 dark:bg-purple-950/25 p-6 rounded-2xl border border-slate-100 dark:border-purple-950/40 h-64 w-full aspect-square shrink-0 relative ${tieneCatalogo ? 'group cursor-pointer' : ''}`}
+           {...(tieneCatalogo ? { id: 'open-catalog-modal' } : {})}>
+        
         <Image 
           src={data.imagen} 
           alt={`Imagen del producto ${data.nombre}`} 
-          class="max-h-52 w-auto object-contain drop-shadow-md"
+          class="max-h-52 w-auto object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-[1.02]"
           width={400}
           height={400}
           loading="eager"
           fetchpriority="high"
         />
+
+        {/* Overlay indicador solo si existe el catálogo para este producto */}
+        {tieneCatalogo && (
+          <div class="absolute inset-0 bg-purple-950/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-2xl text-white font-bold text-xs gap-1.5 backdrop-blur-[2px] shadow-lg">
+            <span>🔍 Ver ficha oficial</span>
+          </div>
+        )}
       </div>
     )}
     
@@ -100,7 +112,6 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
           </div>
         )}
 
-        {/* Botón de Compartir por WhatsApp */}
         <ShareWhatsApp 
           nombre={data.nombre}
           subtitulo={data.subtitulo}
@@ -111,6 +122,7 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
     </div>
   </div>
 
+  {/* Resto de pestañas y contenido de consumo/empresario (sin cambios) */}
   <div class="flex border border-slate-200/80 dark:border-purple-950/60 mb-8 bg-slate-100 dark:bg-purple-950/30 p-1.5 rounded-2xl max-w-md mx-auto">
     <button
       id="tab-consumidor"
@@ -261,6 +273,52 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
       </div>
     )}
   </div>
+
+  {/* Modal Nativo Opcional para la Ficha del Catálogo */}
+  {tieneCatalogo && (
+    <dialog id="catalog-modal" class="p-0 bg-transparent rounded-2xl backdrop:bg-black/80 max-w-4xl w-[92%] outline-none shadow-2xl m-auto">
+      <div class="bg-white dark:bg-[#120e26] rounded-2xl overflow-hidden border border-slate-200 dark:border-purple-900/50 flex flex-col max-h-[90vh]">
+        
+        {/* Header del Modal */}
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-purple-950/60 bg-slate-50 dark:bg-[#0c0816]">
+          <div class="flex items-center gap-2">
+            <span class="text-purple-600 dark:text-purple-400 font-bold">📄</span>
+            <h3 class="font-bold text-slate-800 dark:text-slate-100 text-sm sm:text-base">
+              Ficha Oficial - {data.nombre}
+            </h3>
+          </div>
+          <button 
+            id="close-catalog-modal" 
+            class="text-slate-400 hover:text-slate-700 dark:hover:text-white text-xl font-bold cursor-pointer p-1 transition-colors"
+            aria-label="Cerrar modal"
+          >
+            ✕
+          </button>
+        </div>
+        
+        {/* Contenedor de la imagen */}
+        <div class="relative p-4 overflow-hidden max-h-[75vh] flex items-center justify-center bg-slate-950/5 dark:bg-black/40 select-none">
+          
+          {/* Indicador flotante de Zoom */}
+          <div class="absolute top-6 right-6 z-20 flex items-center gap-1 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-purple-900/50 text-white text-xs shadow-lg pointer-events-none">
+            <span class="text-slate-400">Zoom:</span>
+            <span id="zoom-level" class="font-mono text-purple-300 font-bold">100%</span>
+          </div>
+
+          {/* Imagen interactiva */}
+          <div class="w-full flex justify-center py-6 overflow-hidden">
+            <Image 
+              id="catalog-img"
+              src={data.imagenCatalogo!} 
+              alt={`Catálogo oficial de ${data.nombre}`} 
+              class="max-h-[70vh] w-auto object-contain rounded-lg shadow-md transition-transform duration-100 origin-center cursor-zoom-in" 
+            />
+          </div>
+        </div>
+
+      </div>
+    </dialog>
+  )}
 </LayoutBase>
 
 <script is:inline>
@@ -291,7 +349,116 @@ const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
     });
   }
 
+  function initModal() {
+    const modal = document.getElementById('catalog-modal');
+    const openBtn = document.getElementById('open-catalog-modal');
+    const closeBtn = document.getElementById('close-catalog-modal');
+    const img = document.getElementById('catalog-img');
+    const zoomLevelText = document.getElementById('zoom-level');
+
+    if (!modal || !openBtn || !img) return;
+
+    let currentScale = 1;
+    let translateX = 0;
+    let translateY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let hasMoved = false;
+
+    // Niveles de zoom cíclicos requeridos: 100% -> 125% -> 150% -> 100%
+    const scaleSteps = [1, 1.25, 1.5, 2.0];
+    let currentStepIndex = 0;
+
+    function updateTransform() {
+      img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
+      
+      if (currentScale > 1) {
+        img.style.cursor = isDragging ? 'grabbing' : 'grab';
+      } else {
+        img.style.cursor = 'zoom-in';
+      }
+
+      if (zoomLevelText) {
+        zoomLevelText.textContent = `${Math.round(currentScale * 100)}%`;
+      }
+    }
+
+    function resetZoomState() {
+      currentStepIndex = 0;
+      currentScale = scaleSteps[currentStepIndex];
+      translateX = 0;
+      translateY = 0;
+      isDragging = false;
+      updateTransform();
+    }
+
+    openBtn.addEventListener('click', () => {
+      resetZoomState();
+      modal.showModal();
+    });
+
+    closeBtn?.addEventListener('click', () => {
+      modal.close();
+    });
+
+    modal.addEventListener('click', (e) => {
+      const rect = modal.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        modal.close();
+      }
+    });
+
+    // Clic en la imagen para cambiar el zoom cíclicamente
+    img.addEventListener('click', (e) => {
+      if (hasMoved) return; // Evita hacer zoom si el usuario estaba arrastrando la imagen
+
+      currentStepIndex = (currentStepIndex + 1) % scaleSteps.length;
+      currentScale = scaleSteps[currentStepIndex];
+
+      // Si vuelve al estado original (100%), reseteamos la posición
+      if (currentScale === 1) {
+        translateX = 0;
+        translateY = 0;
+      }
+
+      updateTransform();
+    });
+
+    // Eventos para desplazamiento con clic sostenido (Pan/Drag)
+    img.addEventListener('mousedown', (e) => {
+      if (currentScale === 1) return;
+      isDragging = true;
+      hasMoved = false;
+      startX = e.clientX - translateX;
+      startY = e.clientY - translateY;
+      img.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      hasMoved = true;
+      translateX = e.clientX - startX;
+      translateY = e.clientY - startY;
+      updateTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        updateTransform();
+      }
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     initTabs();
+    initModal();
   });
 </script>

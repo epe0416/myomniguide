@@ -14,6 +14,7 @@ const productos = defineCollection({
       nombre: z.string(),
       subtitulo: z.string(),
       imagen: image().optional(),
+      imagenCatalogo: image().optional(),
 
       // Estructura regional simétrica por mercado
       nio: mercadoSchema.optional(),

@@ -2,6 +2,7 @@
 nombre: "Aqtua Evolución"
 subtitulo: "Nutrición cardiovascular avanzada y soporte de energía mitocondrial"
 imagen: "../../../assets/productos/omnilife/aqtua_evolution.webp"
+imagenCatalogo: "../../../assets/productos/catalogo/aqtua.png"
 nio:
   puntos: 58
   precio: 1450

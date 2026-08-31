@@ -2,6 +2,7 @@
 nombre: "Omniplus"
 subtitulo: 'Multivitamínico concentrado con tecnología de <dfn class="glosario-term" data-term="micelizacion">micelización</dfn> para el sistema inmunológico'
 imagen: "../../../assets/productos/omnilife/omniplus.png"
+imagenCatalogo: "../../../assets/productos/catalogo/omniplus.png"
 nio:
   puntos: 87
   precio: 1740

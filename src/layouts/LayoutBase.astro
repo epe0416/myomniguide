@@ -121,6 +121,19 @@ const imagenAbsoluta = imagen
             >
               Combos
             </a>
+
+            {CONFIG_NEGOCIO.mostrarNegocios && (
+              <a 
+                href={`${baseUrl}empresarios`} 
+                class={`px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all ${
+                  currentPath.includes('empresarios')
+                    ? 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-purple-950/30'
+                }`}
+              >
+                Negocios
+              </a>
+            )}
           </nav>
 
           <!-- Modal de Búsqueda Global -->
