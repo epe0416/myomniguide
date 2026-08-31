@@ -40,7 +40,9 @@ const imagenAbsoluta = imagen
     <!-- Script antirrefresco de tema (Modo oscuro por defecto) -->
     <script is:inline>
       const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'light') {
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      if (savedTheme === 'light' || (!savedTheme && !systemPrefersDark)) {
         document.documentElement.classList.remove('dark');
       } else {
         document.documentElement.classList.add('dark');

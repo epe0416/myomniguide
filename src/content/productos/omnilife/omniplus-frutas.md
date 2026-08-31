@@ -1,7 +1,7 @@
 ---
-nombre: "Omniplus"
+nombre: "Omniplus Frutas"
 subtitulo: 'Multivitamínico concentrado con tecnología de <dfn class="glosario-term" data-term="micelizacion">micelización</dfn> para el sistema inmunológico'
-imagen: "../../../assets/productos/omnilife/omniplus.png"
+imagen: "../../../assets/productos/omnilife/omniplus_frutas.png"
 imagenCatalogo: "../../../assets/productos/catalogo/omniplus.png"
 nio:
   puntos: 87

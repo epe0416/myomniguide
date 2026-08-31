@@ -212,7 +212,7 @@ export const INVENTARIO_GLOBAL: Record<string, ProductoComercial> = {
 const EQUIVALENCIAS_SLUGS: Record<string, string> = {
     'fem-plus': 'fem-evolucion',
     'thermogen-coffee': 'tmgn-coffee',
-    'omniplus': 'omniplus-frutas'
+    'omniplus-frutas': 'omniplus-frutas'
 };
 
 /**
