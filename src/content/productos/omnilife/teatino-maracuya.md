@@ -11,13 +11,13 @@ usa:
 categorias:
   - "Control de Peso"
   - "Energía"
-formato: "Caja con 30 Sachets (Polvo)"
+formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - 'Aporte de <dfn class="glosario-term" data-term="l-carnitina">L-Carnitina</dfn> que facilita la beta-oxidación de las grasas para su conversión en energía.'
   - 'Incorpora <dfn class="glosario-term" data-term="l-tirosina">L-Tirosina</dfn> para apoyar el ritmo metabólico basal y la síntesis natural de hormonas tiroideas.'
   - 'Estimulación de la <dfn class="glosario-term" data-term="termogenesis">termogénesis</dfn> y protección antioxidante mediante extracto de té negro.'
   - 'Optimiza la sensibilidad a la insulina y reduce los antojos de azúcar gracias al <dfn class="glosario-term" data-term="cromo">Cromo</dfn>.'
-modoUso: "Disolver el contenido de 1 sobre (sachet) en 200 a 250 ml de agua (puede tomarse muy frío con hielo o caliente como infusión). Tomar de 2 a 3 sobres al día, preferiblemente 20-30 minutos antes de las comidas principales o antes de realizar actividad física."
+modoUso: "Disolver el contenido de 1 sobre  en 200 a 250 ml de agua (puede tomarse muy frío con hielo o caliente como infusión). Tomar de 2 a 3 sobres al día, preferiblemente 20-30 minutos antes de las comidas principales o antes de realizar actividad física."
 paraQuienEs:
   - "Adultos que buscan un apoyo nutricional avanzado para quemar grasa corporal y acelerar el metabolismo."
   - "Deportistas en fase de definición o personas con la percepción de un metabolismo pausado."

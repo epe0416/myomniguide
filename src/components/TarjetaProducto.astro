@@ -47,13 +47,24 @@ const disponibleUSA = !!comercial?.usa;
 
 <a 
   href={`${baseUrl}productos/${slug}`}
-  class="group bg-white dark:bg-[#130f24] rounded-3xl p-5 border border-slate-200/80 dark:border-purple-950/60 shadow-xs hover:shadow-md dark:hover:shadow-[0_0_25px_rgba(147,51,235,0.15)] hover:border-purple-200 dark:hover:border-purple-500/40 transition-all flex flex-col justify-between h-full"
+  class="group bg-white dark:bg-[#130f24] rounded-3xl p-5 border border-slate-200/80 dark:border-purple-950/60 shadow-xs hover:shadow-md dark:hover:shadow-[0_0_25px_rgba(147,51,235,0.15)] hover:border-purple-200 dark:hover:border-purple-500/45 transition-all flex flex-col justify-between h-full relative"
   data-has-nio={disponibleNIO ? "true" : "false"}
   data-has-usa={disponibleUSA ? "true" : "false"}
 >
+  {/* Badge de Puntos Flotante en la esquina superior derecha de la tarjeta */}
+  {puntosIniciales > 0 && (
+    <span 
+      class="pts-badge text-xs font-black text-purple-950 dark:text-purple-200 bg-white/95 dark:bg-purple-950/95 px-3 py-1.5 rounded-xl border border-purple-200 dark:border-purple-900/50 shadow-md absolute top-3 right-3 z-20 backdrop-blur-xs"
+      data-nio-pts={puntosNIO ? `💎 ${puntosNIO} PTS` : ''}
+      data-usa-pts={puntosUSD ? `💎 ${puntosUSD} PTS` : ''}
+    >
+      <span class="pts-value">💎 {puntosIniciales} PTS</span>
+    </span>
+  )}
+
   <div>
-    <!-- Contenedor con dimensiones fijas para evitar CLS -->
-    <div class="bg-slate-50 dark:bg-purple-950/20 rounded-2xl p-4 mb-4 flex justify-center items-center h-48 w-full overflow-hidden border border-slate-100 dark:border-purple-950/40">
+    <!-- Contenedor de la Imagen -->
+    <div class="bg-slate-50 dark:bg-purple-950/20 rounded-2xl p-4 mb-4 flex justify-center items-center h-48 w-full overflow-hidden border border-slate-100 dark:border-purple-950/40 relative">
       {imagen ? (
         <Image 
           src={imagen} 
@@ -69,25 +80,13 @@ const disponibleUSA = !!comercial?.usa;
       )}
     </div>
 
-    <!-- Categorías y Puntos -->
-    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-      <div class="flex flex-wrap gap-1">
-        {(categorias ?? []).slice(0, 2).map((cat) => (
-          <span class="text-[10px] font-bold text-purple-900 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/80 px-2 py-0.5 rounded uppercase tracking-wider">
-            {cat}
-          </span>
-        ))}
-      </div>
-
-      {puntosIniciales > 0 && (
-        <span 
-          class="pts-badge text-[10px] font-black text-purple-900 dark:text-purple-300 bg-purple-100/90 dark:bg-purple-950/90 px-2 py-0.5 rounded-lg border border-purple-200 dark:border-purple-900/50 shrink-0"
-          data-nio-pts={puntosNIO ? `💎 ${puntosNIO} PTS` : ''}
-          data-usa-pts={puntosUSD ? `💎 ${puntosUSD} PTS` : ''}
-        >
-          <span class="pts-value">💎 {puntosIniciales} PTS</span>
+    <!-- Categorías -->
+    <div class="flex flex-wrap gap-1 mb-2">
+      {(categorias ?? []).slice(0, 2).map((cat) => (
+        <span class="text-[10px] font-bold text-purple-900 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/80 px-2 py-0.5 rounded uppercase tracking-wider">
+          {cat}
         </span>
-      )}
+      ))}
     </div>
 
     <!-- Nombre y Beneficio -->

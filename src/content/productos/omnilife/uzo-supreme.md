@@ -11,13 +11,13 @@ usa:
 categorias:
   - "Sistema Inmune"
   - "Antioxidantes"
-formato: "Caja con 30 Sachets (Polvo)"
+formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - 'Aporte de salvado de arroz procesado enzimáticamente (<dfn class="glosario-term" data-term="arabinoxilano">arabinoxilano</dfn>) que optimiza la respuesta inmunitaria.'
   - 'Estimula de forma fisiológica la actividad y proliferación de las <dfn class="glosario-term" data-term="celulas-nk">células Natural Killer (NK)</dfn>, macrófagos y linfocitos.'
   - 'Potente protección antioxidante celular gracias a la sinergia de Vitamina E y Selenio.'
   - 'Formulación Supreme libre de azúcares, endulzada con estevia para un consumo seguro y de bajo índice glucémico.'
-modoUso: "Disolver el contenido de 1 sobre (sachet) en 200 a 250 ml de agua fresca o tibia. Agitar bien hasta lograr una consistencia cremosa y homogénea. Tomar de 1 a 2 sobres al día, preferiblemente por la mañana o entre comidas."
+modoUso: "Disolver el contenido de 1 sobre  en 200 a 250 ml de agua fresca o tibia. Agitar bien hasta lograr una consistencia cremosa y homogénea. Tomar de 1 a 2 sobres al día, preferiblemente por la mañana o entre comidas."
 paraQuienEs:
   - "Adultos que buscan un refuerzo avanzado y especializado de su sistema inmunitario frente al desgaste diario."
   - "Personas expuestas a alta contaminación, estrés oxidativo o periodos de alta demanda física y convalecencia."

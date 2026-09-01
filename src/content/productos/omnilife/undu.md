@@ -11,13 +11,13 @@ usa:
 categorias:
   - "Salud Articular"
   - "Estructura"
-formato: "Caja con 30 Sachets (Polvo)"
+formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - 'Aporte sinérgico de <dfn class="glosario-term" data-term="glucosamina">glucosamina</dfn> y <dfn class="glosario-term" data-term="condroitina">condroitina</dfn> que favorecen la formación del cartílago y líquido sinovial.'
   - 'Incorpora <dfn class="glosario-term" data-term="msm">MSM</dfn> (metilsulfonilmetano) para apoyar la flexibilidad del tejido conectivo y atenuar el discomfort físico.'
   - 'Protección antioxidante de la matriz tisular y soporte en la reticulación de fibras de colágeno.'
   - 'Formulación libre de azúcares añadidos, endulzada exclusivamente con estevia.'
-modoUso: "Disolver el contenido de 1 sobre (sachet) en 200 a 250 ml de agua fresca o fría. Agitar bien hasta disolver completamente. Tomar de 1 a 2 sobres al día, preferiblemente junto a un tiempo de comida principal."
+modoUso: "Disolver el contenido de 1 sobre  en 200 a 250 ml de agua fresca o fría. Agitar bien hasta disolver completamente. Tomar de 1 a 2 sobres al día, preferiblemente junto a un tiempo de comida principal."
 paraQuienEs:
   - "Adultos mayores y personas que buscan mantener la flexibilidad y movilidad cómoda en sus articulaciones."
   - "Deportistas de alto impacto o personas con trabajos de alta exigencia física y fuerza."

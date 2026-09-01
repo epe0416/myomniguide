@@ -3,23 +3,18 @@ nombre: "Aqtua Evolución"
 subtitulo: "Nutrición cardiovascular avanzada y soporte de energía mitocondrial"
 imagen: "../../../assets/productos/omnilife/aqtua_evolution.webp"
 imagenCatalogo: "../../../assets/productos/catalogo/aqtua.png"
-nio:
-  puntos: 58
-  precio: 1450
-usa:
-  puntos: 58
-  precio: 44.50
+
 categorias:
   - "Salud Cardiovascular"
   - "Energía"
   - "Antioxidantes"
-formato: "Caja con 30 Sachets (Polvo)"
+formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - 'Aporte de <dfn class="glosario-term" data-term="coenzima-q10">Coenzima Q10</dfn> que optimiza la producción de energía mitocondrial (ATP) y protege el tejido cardíaco.'
   - 'Facilita la beta-oxidación de grasas gracias a la <dfn class="glosario-term" data-term="l-carnitina">L-Carnitina</dfn> para su conversión en energía celular.'
   - 'Acelera la resíntesis de energía con <dfn class="glosario-term" data-term="d-ribosa">D-Ribosa</dfn> en tejidos de alta demanda metabólica.'
   - 'Magnesio y extracto de piel de uva que apoyan la relajación muscular, vascular y la protección antioxidante.'
-modoUso: "Disolver el contenido de 1 sobre (sachet) en 200 a 250 ml de agua fresca o fría. Agitar bien hasta obtener una mezcla homogénea. Tomar de 1 a 2 sobres al día, preferiblemente por la mañana o antes de realizar actividad física."
+modoUso: "Disolver el contenido de 1 sobre  en 200 a 250 ml de agua fresca o fría. Agitar bien hasta obtener una mezcla homogénea. Tomar de 1 a 2 sobres al día, preferiblemente por la mañana o antes de realizar actividad física."
 paraQuienEs:
   - "Adultos interesados en cuidar su salud cardiovascular y el rendimiento del músculo cardíaco."
   - "Deportistas y personas expuestas a fatiga constante que buscan nutrición mitocondrial de alta asimilación."

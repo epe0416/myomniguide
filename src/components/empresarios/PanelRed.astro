@@ -1,0 +1,50 @@
+---
+// Panel 4: Calculadora de Red
+---
+<div id="panel-ganancias" class="emp-panel hidden space-y-6 max-w-3xl mx-auto">
+  <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 sm:p-8 rounded-3xl shadow-xs">
+
+    <div class="mb-6 text-center">
+      <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block mb-1">Simulador Financiero</span>
+      <h2 class="text-2xl font-extrabold text-slate-950 dark:text-white">Calculadora de Comisiones por Red</h2>
+      <p class="text-slate-600 dark:text-slate-300 text-sm mt-1">
+        Estima tus ingresos mensuales proyectados en base al volumen de puntos generados por tu equipo en los primeros tres niveles.
+      </p>
+    </div>
+
+    <div class="space-y-6 mb-8">
+      <div class="bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-200 dark:border-purple-900/40">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">1er Nivel (10% Comisión)</span>
+          <span id="n1-val" class="text-purple-600 dark:text-purple-400 font-black text-sm">1,000 PTS</span>
+        </div>
+        <input type="range" id="n1-slider" min="0" max="10000" step="500" value="1000" class="w-full accent-purple-600 cursor-pointer" />
+      </div>
+
+      <div class="bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-200 dark:border-purple-900/40">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">2º Nivel (8% Comisión)</span>
+          <span id="n2-val" class="text-purple-600 dark:text-purple-400 font-black text-sm">2,500 PTS</span>
+        </div>
+        <input type="range" id="n2-slider" min="0" max="25000" step="500" value="2500" class="w-full accent-purple-600 cursor-pointer" />
+      </div>
+
+      <div class="bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-200 dark:border-purple-900/40">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">3er Nivel (6% Comisión)</span>
+          <span id="n3-val" class="text-purple-600 dark:text-purple-400 font-black text-sm">5,000 PTS</span>
+        </div>
+        <input type="range" id="n3-slider" min="0" max="50000" step="1000" value="5000" class="w-full accent-purple-600 cursor-pointer" />
+      </div>
+    </div>
+
+    <div class="bg-emerald-950/90 dark:bg-emerald-950/60 border border-emerald-500/30 p-6 rounded-2xl text-center text-white shadow-lg">
+      <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider block mb-1">Proyección Estimada de Comisiones</span>
+      <div id="total-comision" class="text-3xl sm:text-4xl font-black text-emerald-300 mb-2">$0.00 USD</div>
+      <p class="text-xs text-emerald-100/80 font-medium">
+        Calculado con base en los porcentajes estándar del plan de compensación de red.
+      </p>
+    </div>
+
+  </div>
+</div>

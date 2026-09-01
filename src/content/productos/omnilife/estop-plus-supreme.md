@@ -11,13 +11,13 @@ usa:
 categorias:
   - "Salud Cardiovascular"
   - "Perfil Lipídico"
-formato: "Caja con 30 Sachets (Polvo)"
+formato: "Caja con 30 Sobres (Polvo)"
 beneficiosPrincipales:
   - 'Aporte de <dfn class="glosario-term" data-term="fitoesteroles">fitoesteroles</dfn> vegetales que compiten con el colesterol en el intestino reduciendo su absorción.'
   - 'Incorpora <dfn class="glosario-term" data-term="inulina">inulina</dfn> de agave como fibra soluble que favorece el arrastre y excreción de ácidos biliares.'
   - 'Protección antioxidante con Vitamina E para prevenir la oxidación del colesterol LDL y cuidar las arterias.'
   - 'Formulación Supreme libre de azúcares y grasas trans, endulzada exclusivamente con estevia.'
-modoUso: "Disolver el contenido de 1 sobre (sachet) en 200 a 250 ml de agua a temperatura ambiente o ligeramente fresca. Agitar bien hasta disolver. Tomar de 1 a 2 sobres al día, preferiblemente 15 a 30 minutos antes o inmediatamente después de una comida principal rica en grasas."
+modoUso: "Disolver el contenido de 1 sobre  en 200 a 250 ml de agua a temperatura ambiente o ligeramente fresca. Agitar bien hasta disolver. Tomar de 1 a 2 sobres al día, preferiblemente 15 a 30 minutos antes o inmediatamente después de una comida principal rica en grasas."
 paraQuienEs:
   - "Adultos interesados en el cuidado preventivo y mantenimiento de su sistema cardiovascular y perfil lipídico."
   - "Personas con dietas ricas en grasas, sedentarismo o predisposición a desequilibrios en colesterol y triglicéridos."

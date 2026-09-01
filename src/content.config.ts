@@ -51,6 +51,7 @@ const productos = defineCollection({
           'Anti-Edad',
           'Perfil Lipídico',
           'Estructura',
+          'Proteína',
         ])
       ).min(1),
 
