@@ -1,0 +1,112 @@
+---
+// src/components/producto/GuiaComercialPanel.astro
+import type { CollectionEntry } from 'astro:content';
+import type { ProductoComercial } from '../../data/inventario';
+
+interface Props {
+  data: CollectionEntry<'productos'>['data'];
+  comercial: ProductoComercial | undefined;
+}
+
+const { data, comercial } = Astro.props;
+
+const puntosNIO = comercial?.nio?.puntos;
+const puntosUSD = comercial?.usa?.puntos;
+const puntosIniciales = puntosNIO ?? puntosUSD ?? 0;
+---
+
+<div>
+  {data.empresario ? (
+    <>
+      <div class="bg-purple-900 dark:bg-purple-950 text-white p-5 rounded-2xl mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-xs border border-purple-800/50">
+        <div>
+          <span class="text-xs font-bold text-purple-200 uppercase tracking-wider block mb-0.5">
+            Puntuación de Volumen Oficial
+          </span>
+          <p class="text-xs text-purple-100">
+            Utiliza este valor para calcular metas de descuento (25% al 40%) y listas de calificación.
+          </p>
+        </div>
+        <div 
+          class="pts-badge bg-white dark:bg-purple-900 text-purple-950 dark:text-white font-black text-sm sm:text-base md:text-2xl px-4 py-2.5 rounded-xl shadow-xs shrink-0 flex items-center justify-center gap-1.5 border border-purple-700/35 text-center"
+          data-nio-pts={puntosNIO ? `${puntosNIO}` : ''}
+          data-usa-pts={puntosUSD ? `${puntosUSD}` : 'No disponible en USA'}
+        >
+          <span>💎</span>
+          <span class="pts-num">{puntosIniciales}</span>
+          <span class="text-xs font-bold text-purple-800 dark:text-purple-300">PTS</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-50/70 dark:bg-emerald-950/25 border border-emerald-200/80 dark:border-emerald-900/50 p-6 rounded-2xl">
+          <h2 class="font-bold text-emerald-950 dark:text-emerald-300 mb-3 flex items-center gap-2 text-base">
+            <span>✅</span> Lo que SÍ hace el producto
+          </h2>
+          <ul class="space-y-2 text-emerald-950 dark:text-emerald-200 text-sm">
+            {data.empresario.loQueHace.map((item) => (
+              <li class="flex items-start gap-2">
+                <span class="font-bold text-emerald-700 dark:text-emerald-400">✓</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="bg-amber-50/70 dark:bg-amber-950/25 border border-amber-200/80 dark:border-amber-900/50 p-6 rounded-2xl">
+          <h2 class="font-bold text-amber-950 dark:text-amber-300 mb-3 flex items-center gap-2 text-base">
+            <span>🛡️</span> Alcance Nutricional y Límites Técnicos
+          </h2>
+          <ul class="space-y-2.5 text-slate-800 dark:text-slate-200 text-sm">
+            {data.empresario.loQueNoHace.map((b) => (
+              <li class="flex items-start gap-2">
+                <span class="text-purple-700 dark:text-purple-400 font-bold">•</span>
+                <span set:html={b} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-950 dark:bg-[#130f24] text-white p-6 rounded-2xl shadow-xs flex flex-col justify-between border border-slate-800 dark:border-purple-950/60">
+          <div>
+            <h2 class="text-base font-bold text-purple-300 mb-4 flex items-center gap-2">
+              🎯 Enfoque Recomendado
+            </h2>
+            <ul class="space-y-3 text-slate-100 text-sm">
+              {data.empresario.argumentosVenta.map((arg) => (
+                <li class="flex items-start gap-2.5">
+                  <span class="text-purple-400 font-bold">➔</span>
+                  <span class="leading-relaxed">{arg}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {data.empresario.tipsDemostra && (
+          <div class="bg-purple-950 dark:bg-[#130f24] text-white p-6 rounded-2xl shadow-xs flex flex-col justify-between border border-purple-900 dark:border-purple-950/60">
+            <div>
+              <h2 class="text-base font-bold text-amber-300 mb-4 flex items-center gap-2">
+                ✨ Tips de Experiencia
+              </h2>
+              <ul class="space-y-3 text-purple-100 text-sm">
+                {data.empresario.tipsDemostra.map((tip) => (
+                  <li class="flex items-start gap-2.5">
+                    <span class="text-amber-400 font-bold">★</span>
+                    <span class="leading-relaxed">{tip}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  ) : (
+    <div class="bg-slate-100 dark:bg-purple-950/30 p-8 rounded-2xl text-center text-slate-700 dark:text-slate-300 text-sm font-medium border border-slate-200 dark:border-purple-900/50">
+      Este producto aún no cuenta con información en la guía comercial.
+    </div>
+  )}
+</div>

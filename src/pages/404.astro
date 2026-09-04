@@ -1,0 +1,40 @@
+---
+// src/pages/404.astro
+import LayoutBase from '../layouts/LayoutBase.astro';
+
+const rawBaseUrl = import.meta.env.BASE_URL;
+const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
+---
+
+<LayoutBase titulo="Página no encontrada - 404">
+  <main class="max-w-xl mx-auto px-4 py-20 text-center flex flex-col items-center justify-center min-h-[60vh]">
+    
+    <div class="bg-purple-100 dark:bg-purple-950/50 p-6 rounded-3xl border border-purple-200 dark:border-purple-900/55 mb-6 text-5xl shadow-xs">
+      🧭
+    </div>
+    
+    <h1 class="text-4xl md:text-5xl font-black text-slate-950 dark:text-white tracking-tight mb-3">
+      Página no encontrada
+    </h1>
+    
+    <p class="text-slate-600 dark:text-slate-300 text-sm md:text-base mb-8 leading-relaxed">
+      Parece que la ruta que buscas no existe, se ha movido o el enlace está desactualizado. Vuelve al catálogo para continuar explorando los productos y combos de la red.
+    </p>
+
+    <div class="flex flex-wrap items-center justify-center gap-4 w-full sm:w-auto">
+      <a 
+        href={`${baseUrl}productos`} 
+        class="bg-purple-800 hover:bg-purple-900 dark:bg-purple-700 dark:hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-xl text-sm transition-colors shadow-xs"
+      >
+        Ir al Catálogo
+      </a>
+      <a 
+        href={`${baseUrl}`} 
+        class="bg-slate-100 dark:bg-purple-950/40 hover:bg-slate-200 dark:hover:bg-purple-950/70 text-slate-800 dark:text-slate-200 font-bold py-3 px-6 rounded-xl text-sm transition-colors border border-slate-200 dark:border-purple-900/40"
+      >
+        Volver al Inicio
+      </a>
+    </div>
+
+  </main>
+</LayoutBase>

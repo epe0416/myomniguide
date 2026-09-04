@@ -2,10 +2,12 @@
 // src/pages/productos/[...id].astro
 import LayoutBase from '../../layouts/LayoutBase.astro';
 import { getCollection, render } from 'astro:content';
-import { Image } from 'astro:assets';
-import PrecioBadge from '../../components/PrecioBadge.astro';
 import { getProductoComercial } from '../../data/inventario';
 import { getDirectContactUrl, getShareUrl } from '../../utils/whatsapp';
+import HeroProducto from '../../components/producto/HeroProducto.astro';
+import GuiaConsumoPanel from '../../components/producto/GuiaConsumoPanel.astro';
+import GuiaComercialPanel from '../../components/producto/GuiaComercialPanel.astro';
+import ModalCatalogo from '../../components/producto/ModalCatalogo.astro';
 
 export async function getStaticPaths() {
   const productos = await getCollection('productos');
@@ -19,22 +21,10 @@ const { producto } = Astro.props;
 const { Content } = await render(producto);
 const { data } = producto;
 
-// Consulta limpia y centralizada
-const infoComercial = getProductoComercial(producto.id);
-const codigoSKU = infoComercial?.codigo;
-const precioNIO = infoComercial?.nio?.precio;
-const precioUSD = infoComercial?.usa?.precio;
-const puntosNIO = infoComercial?.nio?.puntos;
-const puntosUSD = infoComercial?.usa?.puntos;
-const puntosIniciales = puntosNIO ?? puntosUSD ?? 0;
-
+const comercial = getProductoComercial(producto.id);
 const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 
-// Verificamos si este producto en particular tiene imagen de catálogo configurada
-const tieneCatalogo = Boolean(data.imagenCatalogo);
-
-// Enlaces dinámicos de WhatsApp para la red
 const productName = data.nombre;
 const currentUrl = Astro.url.href;
 const whatsappContactUrl = getDirectContactUrl(productName);
@@ -50,104 +40,21 @@ const whatsappShareUrl = getShareUrl(productName, currentUrl);
     <a href={`${baseUrl}productos`} class="text-xs font-bold text-purple-700 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 transition-colors">
       ← Volver al catálogo
     </a>
-    {codigoSKU && (
+    {comercial?.codigo && (
       <span class="text-xs font-mono bg-slate-100 dark:bg-purple-950/60 px-2 py-1 rounded text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-purple-900/40">
-        SKU: {codigoSKU}
+        SKU: {comercial.codigo}
       </span>
     )}
   </div>
 
-  <div class="bg-white dark:bg-[#130f24] p-6 md:p-8 rounded-3xl border border-slate-200/80 dark:border-purple-950/60 shadow-xs dark:shadow-[0_0_25px_rgba(147,51,235,0.15)] mb-8 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center min-h-70">
-    {data.imagen && (
-      <div class={`md:col-span-4 flex justify-center items-center bg-slate-50 dark:bg-purple-950/25 p-6 rounded-2xl border border-slate-100 dark:border-purple-950/40 h-64 w-full aspect-square shrink-0 relative ${tieneCatalogo ? 'group cursor-pointer' : ''}`}
-           {...(tieneCatalogo ? { id: 'open-catalog-modal' } : {})}>
-        
-        <Image 
-          src={data.imagen} 
-          alt={`Imagen del producto ${data.nombre}`} 
-          class="max-h-52 w-auto object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-[1.02]"
-          width={400}
-          height={400}
-          loading="eager"
-          fetchpriority="high"
-        />
+  <HeroProducto 
+    producto={producto} 
+    comercial={comercial} 
+    whatsappContactUrl={whatsappContactUrl} 
+    whatsappShareUrl={whatsappShareUrl} 
+  />
 
-        {/* Overlay indicador solo si existe el catálogo para este producto */}
-        {tieneCatalogo && (
-          <div class="absolute inset-0 bg-purple-950/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-2xl text-white font-bold text-xs gap-1.5 backdrop-blur-[2px] shadow-lg">
-            <span>🔍 Ver ficha oficial</span>
-          </div>
-        )}
-      </div>
-    )}
-    
-    <div class={data.imagen ? "md:col-span-8" : "md:col-span-12"}>
-      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-        <div class="flex flex-wrap gap-1.5">
-          {data.categorias.map((cat) => (
-            <span class="inline-block text-xs font-bold tracking-wider text-purple-900 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/80 px-3 py-1 rounded-md uppercase">
-              {cat}
-            </span>
-          ))}
-        </div>
-
-        {puntosIniciales > 0 && (
-          <span 
-            class="pts-badge inline-flex items-center gap-1 text-xs font-black text-purple-950 dark:text-purple-200 bg-purple-100/80 dark:bg-purple-950/80 px-3 py-1 rounded-xl border border-purple-200/60 dark:border-purple-900/50 shrink-0"
-            data-nio-pts={puntosNIO ? `💎 ${puntosNIO} PTS` : ''}
-            data-usa-pts={puntosUSD ? `💎 ${puntosUSD} PTS` : 'No disponible en USA'}
-          >
-            <span class="pts-value">💎 {puntosIniciales} PTS</span>
-          </span>
-        )}
-      </div>
-
-      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-950 dark:text-white mb-2">{data.nombre}</h1>
-      <p class="text-slate-700 dark:text-slate-300 text-lg mb-4" set:html={data.subtitulo} />
-
-      <div class="flex flex-wrap items-center gap-3 mt-4">
-        <div class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-purple-950/40 px-3 py-1.5 rounded-lg border border-slate-200/60 dark:border-purple-900/40">
-          <span>📦 Formato:</span>
-          <strong class="text-slate-900 dark:text-white">{data.formato}</strong>
-        </div>
-
-        {(precioNIO || precioUSD) && (
-          <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-900/50 px-3 py-1.5 rounded-lg">
-            <span class="text-emerald-800 dark:text-emerald-400 font-bold">🏷️ Precio:</span>
-            <PrecioBadge precioNIO={precioNIO} precioUSD={precioUSD} />
-          </div>
-        )}
-      </div>
-
-      {/* Botones de Acción de WhatsApp (Contacto Directo y Compartir con Red) */}
-      <div class="flex flex-wrap items-center gap-3 mt-5 pt-4 border-t border-slate-200/60 dark:border-purple-950/60">
-        <a 
-          id="whatsapp-contact-btn"
-          href={whatsappContactUrl} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          data-product-name={data.nombre}
-          class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
-        >
-          <span>💬 Consultar Asesoría</span>
-        </a>
-
-        <a 
-          id="whatsapp-share-btn"
-          href={whatsappShareUrl} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          data-product-name={data.nombre}
-          class="inline-flex items-center gap-2 bg-purple-900 hover:bg-purple-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
-        >
-          <span>🔗 Compartir con mi Red</span>
-        </a>
-      </div>
-
-    </div>
-  </div>
-
-  {/* Resto de pestañas y contenido de consumo/empresario */}
+  {/* Pestañas de Navegación */}
   <div class="flex border border-slate-200/80 dark:border-purple-950/60 mb-8 bg-slate-100 dark:bg-purple-950/30 p-1.5 rounded-2xl max-w-md mx-auto">
     <button
       id="tab-consumidor"
@@ -165,185 +72,17 @@ const whatsappShareUrl = getShareUrl(productName, currentUrl);
     </button>
   </div>
 
-  <div id="panel-consumidor" class="tab-panel space-y-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200/80 dark:border-purple-900/50 p-6 rounded-2xl">
-        <h2 class="font-bold text-purple-950 dark:text-purple-300 mb-4 flex items-center gap-2 text-base">
-          <span class="text-purple-700 dark:text-purple-400">✨</span> Beneficios Clave
-        </h2>
-        <ul class="space-y-2.5 text-slate-800 dark:text-slate-200 text-sm">
-          {data.beneficiosPrincipales.map((b) => (
-            <li class="flex items-start gap-2">
-              <span class="text-purple-700 dark:text-purple-400 font-bold">•</span>
-              <span set:html={b} />
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 rounded-2xl shadow-xs">
-        <h2 class="font-bold text-slate-950 dark:text-white mb-4 flex items-center gap-2 text-base">
-          <span class="text-purple-700 dark:text-purple-400">⚡</span> Modo de Uso Recomendado
-        </h2>
-        <p class="text-slate-800 dark:text-slate-300 text-sm leading-relaxed mb-6">{data.modoUso}</p>
-
-        <h3 class="font-bold text-slate-900 dark:text-slate-200 text-xs uppercase tracking-wider mb-2">Ideal para:</h3>
-        <div class="flex flex-wrap gap-2">
-          {data.paraQuienEs.map((p) => (
-            <span class="text-xs bg-slate-100 dark:bg-purple-950/60 text-slate-800 dark:text-slate-300 px-3 py-1 rounded-md font-semibold border border-slate-200 dark:border-purple-900/50">
-              {p}
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-white dark:bg-[#130f24] p-8 rounded-2xl border border-slate-200 dark:border-purple-950/60 shadow-xs prose prose-purple dark:prose-invert max-w-none">
+  <div id="panel-consumidor" class="tab-panel">
+    <GuiaConsumoPanel data={data}>
       <Content />
-    </div>
+    </GuiaConsumoPanel>
   </div>
 
-  <div id="panel-empresario" class="tab-panel hidden space-y-6">
-    {data.empresario ? (
-      <>
-        <div class="bg-purple-900 dark:bg-purple-950 text-white p-5 rounded-2xl mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-xs border border-purple-800/50">
-          <div>
-            <span class="text-xs font-bold text-purple-200 uppercase tracking-wider block mb-0.5">
-              Puntuación de Volumen Oficial
-            </span>
-            <p class="text-xs text-purple-100">
-              Utiliza este valor para calcular metas de descuento (25% al 40%) y listas de calificación.
-            </p>
-          </div>
-          <div 
-            class="pts-badge bg-white dark:bg-purple-900 text-purple-950 dark:text-white font-black text-sm sm:text-base md:text-2xl px-4 py-2.5 rounded-xl shadow-xs shrink-0 flex items-center justify-center gap-1.5 border border-purple-700/35 text-center"
-            data-nio-pts={puntosNIO ? `${puntosNIO}` : ''}
-            data-usa-pts={puntosUSD ? `${puntosUSD}` : 'No disponible en USA'}
-          >
-            <span>💎</span>
-            <span class="pts-num">{puntosIniciales}</span>
-            <span class="text-xs font-bold text-purple-800 dark:text-purple-300">PTS</span>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-emerald-50/70 dark:bg-emerald-950/25 border border-emerald-200/80 dark:border-emerald-900/50 p-6 rounded-2xl">
-            <h2 class="font-bold text-emerald-950 dark:text-emerald-300 mb-3 flex items-center gap-2 text-base">
-              <span>✅</span> Lo que SÍ hace el producto
-            </h2>
-            <ul class="space-y-2 text-emerald-950 dark:text-emerald-200 text-sm">
-              {data.empresario.loQueHace.map((item) => (
-                <li class="flex items-start gap-2">
-                  <span class="font-bold text-emerald-700 dark:text-emerald-400">✓</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div class="bg-amber-50/70 dark:bg-amber-950/25 border border-amber-200/80 dark:border-amber-900/50 p-6 rounded-2xl">
-            <h2 class="font-bold text-amber-950 dark:text-amber-300 mb-3 flex items-center gap-2 text-base">
-              <span>🛡️</span> Alcance Nutricional y Límites Técnicos
-            </h2>
-            <ul class="space-y-2.5 text-slate-800 dark:text-slate-200 text-sm">
-              {data.empresario.loQueNoHace.map((b) => (
-                <li class="flex items-start gap-2">
-                  <span class="text-purple-700 dark:text-purple-400 font-bold">•</span>
-                  <span set:html={b} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-slate-950 dark:bg-[#130f24] text-white p-6 rounded-2xl shadow-xs flex flex-col justify-between border border-slate-800 dark:border-purple-950/60">
-            <div>
-              <h2 class="text-base font-bold text-purple-300 mb-4 flex items-center gap-2">
-                🎯 Enfoque Recomendado
-              </h2>
-              <ul class="space-y-3 text-slate-100 text-sm">
-                {data.empresario.argumentosVenta.map((arg) => (
-                  <li class="flex items-start gap-2.5">
-                    <span class="text-purple-400 font-bold">➔</span>
-                    <span class="leading-relaxed">{arg}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {data.empresario.tipsDemostra && (
-            <div class="bg-purple-950 dark:bg-[#130f24] text-white p-6 rounded-2xl shadow-xs flex flex-col justify-between border border-purple-900 dark:border-purple-950/60">
-              <div>
-                <h2 class="text-base font-bold text-amber-300 mb-4 flex items-center gap-2">
-                  ✨ Tips de Experiencia
-                </h2>
-                <ul class="space-y-3 text-purple-100 text-sm">
-                  {data.empresario.tipsDemostra.map((tip) => (
-                    <li class="flex items-start gap-2.5">
-                      <span class="text-amber-400 font-bold">★</span>
-                      <span class="leading-relaxed">{tip}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
-        </div>
-      </>
-    ) : (
-      <div class="bg-slate-100 dark:bg-purple-950/30 p-8 rounded-2xl text-center text-slate-700 dark:text-slate-300 text-sm font-medium border border-slate-200 dark:border-purple-900/50">
-        Este producto aún no cuenta con información en la guía comercial.
-      </div>
-    )}
+  <div id="panel-empresario" class="tab-panel hidden">
+    <GuiaComercialPanel data={data} comercial={comercial} />
   </div>
 
-  {/* Modal Nativo Opcional para la Ficha del Catálogo */}
-  {tieneCatalogo && (
-    <dialog id="catalog-modal" class="p-0 bg-transparent rounded-2xl backdrop:bg-black/80 max-w-4xl w-[92%] outline-none shadow-2xl m-auto">
-      <div class="bg-white dark:bg-[#120e26] rounded-2xl overflow-hidden border border-slate-200 dark:border-purple-900/50 flex flex-col max-h-[90vh]">
-        
-        {/* Header del Modal */}
-        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-purple-950/60 bg-slate-50 dark:bg-[#0c0816]">
-          <div class="flex items-center gap-2">
-            <span class="text-purple-600 dark:text-purple-400 font-bold">📄</span>
-            <h3 class="font-bold text-slate-800 dark:text-slate-100 text-sm sm:text-base">
-              Ficha Oficial - {data.nombre}
-            </h3>
-          </div>
-          <button 
-            id="close-catalog-modal" 
-            class="text-slate-400 hover:text-slate-700 dark:hover:text-white text-xl font-bold cursor-pointer p-1 transition-colors"
-            aria-label="Cerrar modal"
-          >
-            ✕
-          </button>
-        </div>
-        
-        {/* Contenedor de la imagen */}
-        <div class="relative p-4 overflow-hidden max-h-[75vh] flex items-center justify-center bg-slate-950/5 dark:bg-black/40 select-none">
-          
-          {/* Indicador flotante de Zoom */}
-          <div class="absolute top-6 right-6 z-20 flex items-center gap-1 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-purple-900/50 text-white text-xs shadow-lg pointer-events-none">
-            <span class="text-slate-400">Zoom:</span>
-            <span id="zoom-level" class="font-mono text-purple-300 font-bold">100%</span>
-          </div>
-
-          {/* Imagen interactiva */}
-          <div class="w-full flex justify-center py-6 overflow-hidden">
-            <Image 
-              id="catalog-img"
-              src={data.imagenCatalogo!} 
-              alt={`Catálogo oficial de ${data.nombre}`} 
-              class="max-h-[70vh] w-auto object-contain rounded-lg shadow-md transition-transform duration-100 origin-center cursor-zoom-in" 
-            />
-          </div>
-        </div>
-
-      </div>
-    </dialog>
-  )}
+  <ModalCatalogo data={data} />
 </LayoutBase>
 
 <script is:inline>
@@ -396,13 +135,11 @@ const whatsappShareUrl = getShareUrl(productName, currentUrl);
 
     function updateTransform() {
       img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
-      
       if (currentScale > 1) {
         img.style.cursor = isDragging ? 'grabbing' : 'grab';
       } else {
         img.style.cursor = 'zoom-in';
       }
-
       if (zoomLevelText) {
         zoomLevelText.textContent = `${Math.round(currentScale * 100)}%`;
       }
@@ -428,27 +165,19 @@ const whatsappShareUrl = getShareUrl(productName, currentUrl);
 
     modal.addEventListener('click', (e) => {
       const rect = modal.getBoundingClientRect();
-      if (
-        e.clientX < rect.left ||
-        e.clientX > rect.right ||
-        e.clientY < rect.top ||
-        e.clientY > rect.bottom
-      ) {
+      if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
         modal.close();
       }
     });
 
-    img.addEventListener('click', (e) => {
+    img.addEventListener('click', () => {
       if (hasMoved) return;
-
       currentStepIndex = (currentStepIndex + 1) % scaleSteps.length;
       currentScale = scaleSteps[currentStepIndex];
-
       if (currentScale === 1) {
         translateX = 0;
         translateY = 0;
       }
-
       updateTransform();
     });
 
@@ -483,17 +212,14 @@ const whatsappShareUrl = getShareUrl(productName, currentUrl);
     initModal();
   });
 
-  // 6. Actualización Dinámica de Enlaces de WhatsApp (Soporte para Afiliados y LocalStorage)
   document.addEventListener('DOMContentLoaded', () => {
-    const defaultPhone = "50587291404"; // Tu número base por defecto
+    const defaultPhone = "50587291404";
     const urlParams = new URLSearchParams(window.location.search);
     const refPhone = urlParams.get('w') || urlParams.get('ref');
     const savedMyPhone = localStorage.getItem('my_whatsapp_phone');
 
-    // Jerarquía de prioridad: 1. Lo que guardó el afiliado en su navegador, 2. El parámetro w= de la URL, 3. Tu número por defecto
     const activePhone = (savedMyPhone || refPhone || defaultPhone).replace(/\D/g, '');
 
-    // 1. Botón de Contacto Directo
     const contactBtn = document.getElementById('whatsapp-contact-btn');
     if (contactBtn) {
       const productName = contactBtn.getAttribute('data-product-name') || '';
@@ -501,7 +227,6 @@ const whatsappShareUrl = getShareUrl(productName, currentUrl);
       contactBtn.href = `https://wa.me/${activePhone}?text=${encodeURIComponent(message)}`;
     }
 
-    // 2. Botón de Compartir con la Red
     const shareBtn = document.getElementById('whatsapp-share-btn');
     if (shareBtn) {
       const productName = shareBtn.getAttribute('data-product-name') || '';
