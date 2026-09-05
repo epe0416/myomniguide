@@ -2,7 +2,7 @@
 nombre: "Omniviu Supreme"
 subtitulo: "Suplemento nutricional avanzado para la salud visual, protección ocular y soporte antioxidante"
 imagen: "../../../assets/productos/omnilife/omniviu.png"
-
+imagenCatalogo: "../../../assets/productos/catalogo/omniviu.png"
 categorias:
   - "Salud Visual"
   - "Antioxidantes"

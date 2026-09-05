@@ -2,7 +2,7 @@
 nombre: "Kolina"
 subtitulo: "Suplemento alimenticio líquido en botella con vitamina C y extractos herbales para el soporte digestivo e intestinal"
 imagen: "../../../assets/productos/omnilife/kolina.png"
-
+imagenCatalogo: "../../../assets/productos/catalogo/ego-f-plan-kolina.png"
 categorias:
   - "Salud Digestiva"
   - "Nutrición General"

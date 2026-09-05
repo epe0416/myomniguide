@@ -2,6 +2,7 @@
 nombre: "Undú"
 subtitulo: "Nutrición específica para la flexibilidad, cartílagos y salud articular"
 imagen: "../../../assets/productos/omnilife/undu.png"
+imagenCatalogo: "../../../assets/productos/catalogo/undu.png"
 nio:
   puntos: 107
   precio: 2050

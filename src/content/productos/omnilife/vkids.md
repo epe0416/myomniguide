@@ -2,7 +2,7 @@
 nombre: "VKIDS"
 subtitulo: "Suplemento nutricional avanzado para el crecimiento y desarrollo infantil"
 imagen: "../../../assets/productos/omnilife/vkids.png"
-
+imagenCatalogo: "../../../assets/productos/catalogo/vkids.png"
 categorias:
   - "Nutrición Infantil"
   - "Nutrición General"

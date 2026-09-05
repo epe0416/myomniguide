@@ -2,6 +2,7 @@
 nombre: "IQU"
 subtitulo: "Bebida energizante lista para beber en lata con cafeína, taurina y complejo B para energía y enfoque"
 imagen: "../../../assets/productos/omnilife/iqu.webp"
+imagenCatalogo: "../../../assets/productos/catalogo/iqu.png"
 
 categorias:
   - "Energía"

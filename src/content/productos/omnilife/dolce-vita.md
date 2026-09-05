@@ -2,6 +2,7 @@
 nombre: "Dolce Vita"
 subtitulo: "Soporte nutricional avanzado para el control de glucosa y metabolismo de carbohidratos"
 imagen: "../../../assets/productos/omnilife/dolce-vita.png"
+imagenCatalogo: "../../../assets/productos/catalogo/dolce-vita.png"
 categorias:
   - "Control de Glucosa"
   - "Control de Peso"

@@ -2,7 +2,7 @@
 nombre: "Super Mix Sabor Vainilla"
 subtitulo: "Malteada nutricional avanzada libre de lácteos con proteína de soya, fibra, DHA y vitaminas"
 imagen: "../../../assets/productos/omnilife/supermix.png"
-
+imagenCatalogo: "../../../assets/productos/catalogo/super-mix.png"
 categorias:
   - "Nutrición General"
   - "Proteína"

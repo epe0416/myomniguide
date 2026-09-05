@@ -2,7 +2,7 @@
 nombre: "Omniost"
 subtitulo: "Suplemento nutricional avanzado con calcio, vitaminas D y K para la salud ósea y estructura esquelética"
 imagen: "../../../assets/productos/omnilife/omniost.png"
-
+imagenCatalogo: "../../../assets/productos/catalogo/omniost.png"
 categorias:
   - "Salud Ósea"
   - "Estructura"

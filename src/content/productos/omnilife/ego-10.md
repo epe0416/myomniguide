@@ -2,7 +2,7 @@
 nombre: "Ego 10"
 subtitulo: "Bebida energizante líquida en botella de 200 ml con D-ribosa, taurina, inositol y complejo B"
 imagen: "../../../assets/productos/omnilife/ego-10.png"
-
+imagenCatalogo: "../../../assets/productos/catalogo/ego-10.png"
 categorias:
   - "Energía"
   - "Rendimiento Mental"

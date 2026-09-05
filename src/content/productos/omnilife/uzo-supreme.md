@@ -2,6 +2,7 @@
 nombre: "Uzo Supreme"
 subtitulo: "Nutrición celular avanzada y soporte especializado para el sistema inmunológico"
 imagen: "../../../assets/productos/omnilife/uzo_supreme.png"
+imagenCatalogo: "../../../assets/productos/catalogo/uzo.png"
 nio:
   puntos: 166
   precio: 3350

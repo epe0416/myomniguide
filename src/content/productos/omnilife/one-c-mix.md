@@ -2,6 +2,7 @@
 nombre: "One C Mix"
 subtitulo: "Protección antioxidante de doble fase (hidro y liposoluble) y soporte a las defensas y piel"
 imagen: "../../../assets/productos/omnilife/one-c-mix.webp"
+imagenCatalogo: "../../../assets/productos/catalogo/one-c-mix.png"
 puntos: 46
 nio:
   puntos: 46

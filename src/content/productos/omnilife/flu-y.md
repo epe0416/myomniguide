@@ -2,7 +2,7 @@
 nombre: "Flu-Y"
 subtitulo: "Suplemento nutricional en cápsulas con L-triptófano y complejo B para el equilibrio emocional y control de estrés"
 imagen: "../../../assets/productos/omnilife/flu-y.png"
-
+imagenCatalogo: "../../../assets/productos/catalogo/flu-y.png"
 categorias:
   - "Control de Estrés"
   - "Rendimiento Mental"

@@ -2,7 +2,7 @@
 nombre: "Teatino Limón"
 subtitulo: "Suplemento nutricional de té negro con cromo para el control de peso y metabolismo"
 imagen: "../../../assets/productos/omnilife/teatino-limon.png"
-
+imagenCatalogo: "../../../assets/productos/catalogo/teatino.png"
 categorias:
   - "Control de Peso"
   - "Nutrición General"

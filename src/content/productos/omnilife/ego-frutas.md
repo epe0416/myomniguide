@@ -2,6 +2,7 @@
 nombre: "Ego Frutas del Bosque"
 subtitulo: "Bebida refrescante en lata con complejo B y nutrientes especializados para el soporte de la salud hepática"
 imagen: "../../../assets/productos/omnilife/ego-fruta.png"
+imagenCatalogo: "../../../assets/productos/catalogo/ego-f-plan-kolina.png"
 
 categorias:
   - "Salud Hepática"

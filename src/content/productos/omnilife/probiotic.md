@@ -2,7 +2,7 @@
 nombre: "Probiotic Evolución"
 subtitulo: "Fórmula avanzada con probióticos, fibra prebiótica, té blanco, zinc y selenio para la salud digestiva e inmune"
 imagen: "../../../assets/productos/omnilife/probiotic.webp"
-
+imagenCatalogo: "../../../assets/productos/catalogo/probiotic.png"
 categorias:
   - "Salud Digestiva"
   - "Sistema Inmune"

@@ -2,6 +2,7 @@
 nombre: "Optimus"
 subtitulo: "Soporte nutricional avanzado para el rendimiento mental, concentración y función cognitiva"
 imagen: "../../../assets/productos/omnilife/optimus.png"
+imagenCatalogo: "../../../assets/productos/catalogo/optimus.png"
 categorias:
   - "Rendimiento Mental"
   - "Control de Estrés"

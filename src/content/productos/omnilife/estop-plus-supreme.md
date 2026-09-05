@@ -2,6 +2,7 @@
 nombre: "Estop Plus Supreme"
 subtitulo: "Nutrición para el sistema cardiovascular y mantenimiento del perfil lipídico"
 imagen: "../../../assets/productos/omnilife/estop_plus_supreme.png"
+imagenCatalogo: "../../../assets/productos/catalogo/estop.png"
 nio:
   puntos: 102
   precio: 2550

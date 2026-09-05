@@ -2,6 +2,7 @@
 nombre: "Magnus"
 subtitulo: "Activación del metabolismo energético celular y soporte a la concentración"
 imagen: "../../../assets/productos/omnilife/magnus.png"
+imagenCatalogo: "../../../assets/productos/catalogo/magnus.png"
 nio:
   puntos: 51
   precio: 1125

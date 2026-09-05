@@ -2,6 +2,7 @@
 nombre: "Teatino Maracuyá Evolución"
 subtitulo: "Apoyo especializado a la termogénesis y aceleración del metabolismo de los lípidos"
 imagen: "../../../assets/productos/omnilife/teatino_maracuya.png"
+imagenCatalogo: "../../../assets/productos/catalogo/teatino.png"
 nio:
   puntos: 93
   precio: 2170

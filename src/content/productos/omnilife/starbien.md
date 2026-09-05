@@ -2,7 +2,7 @@
 nombre: "Starbien"
 subtitulo: "Suplemento nutricional con complejo B y glicina para el control del estrés y la energía diaria"
 imagen: "../../../assets/productos/omnilife/starbien.png"
-
+imagenCatalogo: "../../../assets/productos/catalogo/starbien.png"
 categorias:
   - "Control de Estrés"
   - "Energía"

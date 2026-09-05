@@ -2,6 +2,7 @@
 nombre: "Thermogen Coffee"
 subtitulo: "Apoyo a la termogénesis celular, regulación de la glucosa y control de la ansiedad"
 imagen: "../../../assets/productos/omnilife/thermogen-coffee.png"
+imagenCatalogo: "../../../assets/productos/catalogo/coffe.png"
 nio:
   puntos: 39
   precio: 1075

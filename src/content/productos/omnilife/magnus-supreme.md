@@ -2,6 +2,7 @@
 nombre: "Magnus Supreme"
 subtitulo: "Activación del metabolismo energético de rápida asimilación sin azúcar refinado y con cromo"
 imagen: "../../../assets/productos/omnilife/magnus-supreme.png"
+imagenCatalogo: "../../../assets/productos/catalogo/magnus.png"
 nio:
   puntos: 54
   precio: 1185

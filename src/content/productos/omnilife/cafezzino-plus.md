@@ -2,6 +2,7 @@
 nombre: "Cafezzino E"
 subtitulo: "Café colombiano soluble enriquecido con extracto de café verde y fibra para el control de peso"
 imagen: "../../../assets/productos/omnilife/cafezzino.png"
+imagenCatalogo: "../../../assets/productos/catalogo/cafezzino.png"
 
 categorias:
   - "Control de Peso"

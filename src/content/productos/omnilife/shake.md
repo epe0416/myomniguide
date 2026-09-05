@@ -2,6 +2,7 @@
 nombre: "Shake Supreme Cookies & Cream"
 subtitulo: "Malteada nutricional con proteína de soya, fibra y bajo contenido calórico"
 imagen: "../../../assets/productos/omnilife/shake.png"
+imagenCatalogo: "../../../assets/productos/catalogo/shake.png"
 categorias:
   - "Control de Peso"
   - "Nutrición General"

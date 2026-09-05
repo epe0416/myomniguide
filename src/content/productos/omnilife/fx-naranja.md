@@ -2,7 +2,7 @@
 nombre: "FX Naranja Evolución"
 subtitulo: "Bebida refrescante carbonatada con vitaminas del complejo B y vitamina C para la energía y vitalidad diaria"
 imagen: "../../../assets/productos/omnilife/fx-naranja.png"
-
+imagenCatalogo: "../../../assets/productos/catalogo/fx.png"
 categorias:
   - "Energía"
   - "Sistema Inmune"
