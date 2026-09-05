@@ -7,5 +7,5 @@ export const CONFIG_NEGOCIO = {
     mensajeBase: "Hola, vi la información en MyOmniGuide y me interesa asesoría sobre",
 
 
-    mostrarNegocios: true,
+    mostrarNegocios: false,
 };
