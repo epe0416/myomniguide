@@ -52,6 +52,8 @@ const productos = defineCollection({
           'Perfil Lipídico',
           'Estructura',
           'Proteína',
+          'Rendimiento Deportivo',
+          'Electrólitos'
         ])
       ).min(1),
 

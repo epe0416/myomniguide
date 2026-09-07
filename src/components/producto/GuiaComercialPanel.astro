@@ -47,7 +47,7 @@ const puntosIniciales = puntosNIO ?? puntosUSD ?? 0;
             {data.empresario.loQueHace.map((item) => (
               <li class="flex items-start gap-2">
                 <span class="font-bold text-emerald-700 dark:text-emerald-400">✓</span>
-                <span>{item}</span>
+                <span set:html={item} />
               </li>
             ))}
           </ul>
@@ -78,7 +78,7 @@ const puntosIniciales = puntosNIO ?? puntosUSD ?? 0;
               {data.empresario.argumentosVenta.map((arg) => (
                 <li class="flex items-start gap-2.5">
                   <span class="text-purple-400 font-bold">➔</span>
-                  <span class="leading-relaxed">{arg}</span>
+                  <span class="leading-relaxed" set:html={arg} />
                 </li>
               ))}
             </ul>
@@ -95,7 +95,7 @@ const puntosIniciales = puntosNIO ?? puntosUSD ?? 0;
                 {data.empresario.tipsDemostra.map((tip) => (
                   <li class="flex items-start gap-2.5">
                     <span class="text-amber-400 font-bold">★</span>
-                    <span class="leading-relaxed">{tip}</span>
+                    <span class="leading-relaxed" set:html={tip} />
                   </li>
                 ))}
               </ul>

@@ -8,7 +8,7 @@ export interface MercadoData {
 export interface ProductoComercial {
     codigo: string;
     destacado?: boolean;
-    nio: MercadoData;
+    nio?: MercadoData;
     usa?: MercadoData;
 }
 
@@ -34,11 +34,19 @@ export const INVENTARIO_GLOBAL: Record<string, ProductoComercial> = {
         destacado: false,
         nio: { precio: 2480, puntos: 118 }
     },
+    "aqtua-supreme": {
+        codigo: "3924734",
+        usa: { precio: 63.27, puntos: 112 }
+    },
     "cafezzino-plus": {
         codigo: "5105932",
         destacado: false,
         nio: { precio: 1640, puntos: 57 },
         usa: { precio: 41.07, puntos: 52 }
+    },
+    "cafezzino-sin-endulzar": {
+        codigo: "5177632",
+        usa: { precio: 46.07, puntos: 58 }
     },
     "dolce-vita": {
         codigo: "4404710",
@@ -54,6 +62,10 @@ export const INVENTARIO_GLOBAL: Record<string, ProductoComercial> = {
         codigo: "4850500",
         nio: { precio: 843, puntos: 27 },
         usa: { precio: 25.45, puntos: 27 }
+    },
+    "ego-life": {
+        codigo: "4903204",
+        usa: { precio: 31.64, puntos: 33 }
     },
     "ego-plant": {
         codigo: "1260600",
@@ -88,6 +100,18 @@ export const INVENTARIO_GLOBAL: Record<string, ProductoComercial> = {
         codigo: "5350595",
         nio: { precio: 56, puntos: 2 }
     },
+    "gomitas-omniplus-naranja": {
+        codigo: "2395901",
+        usa: { precio: 53.28, puntos: 79 }
+    },
+    "gummies-mimis": {
+        codigo: "4095921",
+        usa: { precio: 39.41, puntos: 50 }
+    },
+    "gummies-vit-d": {
+        codigo: "5695922",
+        usa: { precio: 32.19, puntos: 42 }
+    },
     "homo-plus": {
         codigo: "1729752",
         destacado: true,
@@ -114,9 +138,29 @@ export const INVENTARIO_GLOBAL: Record<string, ProductoComercial> = {
         nio: { precio: 1185, puntos: 54 },
         usa: { precio: 37.19, puntos: 57 }
     },
+    "malteada-oml-vainilla": {
+        codigo: "3125316",
+        usa: { precio: 48.84, puntos: 75 }
+    },
+    "oml-cola": {
+        codigo: "4350406",
+        usa: { precio: 2.55, puntos: 2 }
+    },
+    "oml-focus-jamaica": {
+        codigo: "2550614",
+        usa: { precio: 4.32, puntos: 5 }
+    },
+    "oml-zen-cbd": {
+        codigo: "6942101",
+        usa: { precio: 53.86, puntos: 69 }
+    },
     "omliqu": {
         codigo: "3659295",
         nio: { precio: 214, puntos: 7 }
+    },
+    "omnilife-umarina": {
+        codigo: "6254500",
+        usa: { precio: 33.30, puntos: 55 }
     },
     "omniplus-frutas": {
         codigo: "2350430",
@@ -160,9 +204,17 @@ export const INVENTARIO_GLOBAL: Record<string, ProductoComercial> = {
         nio: { precio: 1570, puntos: 66 },
         usa: { precio: 44.40, puntos: 66 }
     },
+    "pump-supreme": {
+        codigo: "5479243",
+        usa: { precio: 44.96, puntos: 69 }
+    },
     "shake-supreme": {
         codigo: "7170943",
         nio: { precio: 1775, puntos: 76 },
+        usa: { precio: 47.73, puntos: 76 }
+    },
+    "shake-supreme-fresa": {
+        codigo: "7170921",
         usa: { precio: 47.73, puntos: 76 }
     },
     "starbien": {
@@ -191,15 +243,27 @@ export const INVENTARIO_GLOBAL: Record<string, ProductoComercial> = {
         codigo: "3304732",
         nio: { precio: 1075, puntos: 39 }
     },
+    "tmgn-coffee-de-olla": {
+        codigo: "2904727",
+        usa: { precio: 32.19, puntos: 39 }
+    },
     "undu": {
         codigo: "3705934",
         nio: { precio: 2050, puntos: 107 },
         usa: { precio: 67.16, puntos: 107 }
     },
+    "uzo-evolucion": {
+        codigo: "3806816",
+        usa: { precio: 113.22, puntos: 167 }
+    },
     "uzo-supreme": {
         codigo: "3875700",
         destacado: true,
         nio: { precio: 3350, puntos: 166 }
+    },
+    "via-dulce": {
+        codigo: "4432900",
+        usa: { precio: 30.53, puntos: 45 }
     },
     "vkids": {
         codigo: "5025516",
@@ -214,7 +278,7 @@ const EQUIVALENCIAS_SLUGS: Record<string, string> = {
     'thermogen-coffee': 'tmgn-coffee',
     'omniplus-frutas': 'omniplus-frutas',
     'shake': 'shake-supreme',
-    'cafezzino-e': 'cafezzino-plus' // <- Vital para enlazar correctamente el .md con el inventario
+    'cafezzino-e': 'cafezzino-plus'
 };
 
 /**

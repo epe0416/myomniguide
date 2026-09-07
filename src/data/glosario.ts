@@ -213,4 +213,20 @@ export const GLOSARIO: Record<string, TerminoGlosario> = {
         titulo: "Extracto de Romero",
         descripcion: "Ingrediente botánico con propiedades antioxidantes y digestivas que apoya el bienestar gastrointestinal y hepático.",
     },
+    "electrolitos": {
+    titulo: "Electrólitos",
+    descripcion: "Minerales con carga eléctrica (como sodio, potasio, magnesio y calcio) esenciales para regular la hidratación celular, mantener el equilibrio hídrico, controlar el pH sanguíneo y permitir la contracción muscular y conducción nerviosa."
+  },
+  "isotonica": {
+    titulo: "Osmolalidad Isotónica",
+    descripcion: "Propiedad de una solución que posee una concentración de solutos igual a la del plasma sanguíneo. Esta presión osmótica equilibrada permite un vaciado gástrico acelerado y una absorción hídrica ultrarrápida a nivel intestinal sin generar pesadez."
+  },
+  "complejo-b": {
+    titulo: "Complejo B",
+    descripcion: "Grupo de vitaminas hidrosolubles (B1, B2, B3, B5, B6, B7, B9, B12) indispensables para el metabolismo energético, la síntesis de glóbulos rojos, la función del sistema nervioso y la conversión de alimentos en energía celular disponible (ATP)."
+  },
+  "bomba-sodio-potasio": {
+    titulo: "Bomba Sodio-Potasio (Na⁺/K⁺-ATPase)",
+    descripcion: "Enzima transmembrana que consume ATP para expulsar 3 iones de sodio (Na⁺) e introducir 2 iones de potasio (K⁺) a la célula. Es fundamental para mantener el equilibrio de carga eléctrica, regular el volumen celular y prevenir la fatiga o los calambres neuromusculares durante el desgaste físico."
+  },
 };
