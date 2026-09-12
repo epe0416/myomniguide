@@ -1,44 +1,292 @@
 ---
-// Panel 1: Los 5 Pasos de Oro
+// src/components/empresarios/PanelPasos.astro
+
+const pasos = [
+  {
+    num: "1",
+    icono: "🥤",
+    titulo: "Usar y Compartir",
+    subtitulo: "La base de la confianza y el menudeo diario",
+    concepto: "Tu testimonio personal con el producto es tu herramienta comercial más poderosa. Cuando usas el producto con constancia en tu día a día, la gente nota tu energía y resultados de forma natural.",
+    objetivo: "Generar ingresos diarios inmediatos mediante el autoconsumo consciente y la venta directa.",
+    acciones: [
+      "Consume el producto diariamente en tu botella mezcladora visible (ejemplo: Magnus, Omniplus, Power Maker o tu producto favorito).",
+      "Identifica necesidades de bienestar en tu entorno y comparte tus resultados reales de salud de forma transparente.",
+      "Atiende clientes directos y conecta a tus clientes en otras ciudades o países mediante la figura oficial de **Cliente Admirable**."
+    ],
+    tip: "Omnilife elabora suplementos nutricionales de alta tecnología con micelización, no medicamentos. Habla siempre de nutrición, energía y bienestar integral, jamás de curaciones ni diagnósticos médicos."
+  },
+  {
+    num: "2",
+    icono: "🎤",
+    titulo: "Presentar la Oportunidad",
+    subtitulo: "El motor de expansión de tu Negocio Independiente",
+    concepto: "No te limites únicamente al menudeo. Comparte el modelo de negocio con personas que buscan libertad financiera, ingresos extra o un proyecto propio.",
+    objetivo: "Atraer prospectos calificados para construir una red de distribución duplicable a nivel local e internacional.",
+    acciones: [
+      "Agenda e imparte Juntas de Oportunidad periódicas (presenciales 1 a 1, reuniones caseras o por videollamada).",
+      "Estructura tu testimonio en 2 minutos: Salud obtenida + Ingresos generados + Visión de crecimiento.",
+      "Apóyate en los catálogos digitales, fichas de producto y herramientas de MyOmniGuide para dar claridad a tu prospecto."
+    ],
+    tip: "Tu meta no es convencer a nadie, sino identificar a personas con actitud de aprendizaje, deseo de superación y ganas de emprender."
+  },
+  {
+    num: "3",
+    icono: "👥",
+    titulo: "Desarrollar Equipos",
+    subtitulo: "Acompañamiento estratégico a tus primeros socios",
+    concepto: "El éxito en Multidesarrollo se logra en equipo. Guía a tus nuevos afiliados en sus primeros pasos para que obtengan sus primeros resultados rápidamente.",
+    objetivo: "Estructurar tu organización base alcanzando la meta clave de **Bronce Supreme** en tus primeros meses.",
+    acciones: [
+      "Capacita a tus nuevos Empresarios en su primera semana para que realicen sus primeros pedidos y generen ventas inmediatas.",
+      "Planifica con cada nuevo socio su ruta directa hacia el **40% de descuento** máximo en el menor tiempo posible.",
+      "Enseña el manejo operativo de las plataformas oficiales (App Mi Negocio, portal web de Omnilife y compras en línea)."
+    ],
+    tip: "Sé un patrocinador presente que enseña con el ejemplo y el trabajo de campo, no un supervisor que solo da órdenes."
+  },
+  {
+    num: "4",
+    icono: "🔄",
+    titulo: "Conservar y Fidelizar",
+    subtitulo: "El secreto de la retención y el ingreso pasivo residual",
+    concepto: "Asegurar la satisfacción de un cliente o distribuidor existente construye estabilidad a largo plazo. El seguimiento genuino crea relaciones sólidas.",
+    objetivo: "Construir una base de clientes frecuentes y consolidar la recompra continua dentro de tu organización.",
+    acciones: [
+      "Aplica la regla de seguimiento a clientes (Días 1, 3, 7, 15 y 30) para validar la correcta toma del producto y sus avances.",
+      "Mantén contacto estrecho con tu red para resolver dudas sobre puntos, calificaciones a viajes y cierre de mes.",
+      "Promueve el registro automatizado de Clientes Admirables para que la empresa facture y despache los pedidos directamente."
+    ],
+    tip: "Un cliente bien atendido se convierte en consumidor permanente o en tu próximo Empresario socio de red."
+  },
+  {
+    num: "5",
+    icono: "👑",
+    titulo: "Liderar con el Ejemplo",
+    subtitulo: "Duplicación masiva y libertad financiera",
+    concepto: "Forma líderes independientes capaces de promover y desarrollar sus propios equipos sin depender de tu supervisión constante.",
+    objetivo: "Consolidar los niveles superiores de carrera (**Plata Supreme, Oro y Diamante**) para lograr estabilidad financiera duradera.",
+    acciones: [
+      "Califica a bonos en efectivo, incentivos de producción y viajes internacionales para demostrar con hechos que el sistema funciona.",
+      "Promueve e impulsa la asistencia de tu equipo a los eventos oficiales de la empresa (Rallys y Extravaganas).",
+      "Desarrolla la mentalidad de liderazgo: enseña a tus líderes a formar y acompañar a sus propios equipos independientes."
+    ],
+    tip: "El liderazgo verdadero no se exige con palabras; se demuestra con volumen de red, coherencia personal y resultados visibles."
+  }
+];
 ---
-<div id="panel-pasos" class="emp-panel space-y-6">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 rounded-2xl shadow-xs">
-      <span class="text-2xl font-black text-purple-600 dark:text-purple-400 block mb-2">01</span>
-      <h3 class="font-bold text-slate-950 dark:text-white text-lg mb-2">Usar y Compartir</h3>
-      <p class="text-slate-700 dark:text-slate-300 text-sm">
-        Adquiere los productos con descuento para consumo personal y comercialización directa con Clientes Admirables.
-      </p>
-    </div>
-    <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 rounded-2xl shadow-xs">
-      <span class="text-2xl font-black text-purple-600 dark:text-purple-400 block mb-2">02</span>
-      <h3 class="font-bold text-slate-950 dark:text-white text-lg mb-2">Presentar</h3>
-      <p class="text-slate-700 dark:text-slate-300 text-sm">
-        Comparte la oportunidad del Negocio Independiente con personas interesadas para construir tu red.
-      </p>
-    </div>
-    <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 rounded-2xl shadow-xs">
-      <span class="text-2xl font-black text-purple-600 dark:text-purple-400 block mb-2">03</span>
-      <h3 class="font-bold text-slate-950 dark:text-white text-lg mb-2">Desarrollar Equipos</h3>
-      <p class="text-slate-700 dark:text-slate-300 text-sm">
-        Brinda soporte operativo y de liderazgo a tu red para potenciar el volumen y la retención.
-      </p>
-    </div>
+
+<div id="panel-pasos" class="emp-panel space-y-16 sm:space-y-20 max-w-6xl mx-auto py-6">
+  
+  <!-- Encabezado del Módulo (Adaptado para Light y Dark Mode) -->
+  <div class="bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-8 sm:p-10 rounded-3xl text-center space-y-3 relative overflow-hidden shadow-xs dark:shadow-lg">
+    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-purple-500/10 dark:bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <span class="inline-block px-3.5 py-1 bg-purple-100 dark:bg-purple-500/20 text-purple-900 dark:text-purple-300 border border-purple-200 dark:border-purple-500/30 rounded-full text-xs font-extrabold uppercase tracking-wider">
+      Ruta Guiada de Crecimiento
+    </span>
+    <h2 class="text-2xl sm:text-4xl font-black text-slate-950 dark:text-white tracking-tight">
+      El Camino del Empresario: Los 5 Pasos de Oro
+    </h2>
+    <p class="text-xs sm:text-sm text-slate-600 dark:text-purple-200/90 max-w-2xl mx-auto leading-relaxed font-medium">
+      Sigue esta trayectoria paso a paso. Cada etapa está conectada para llevarte desde tus primeras ventas hasta la independencia financiera.
+    </p>
   </div>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-    <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 rounded-2xl shadow-xs">
-      <span class="text-2xl font-black text-purple-600 dark:text-purple-400 block mb-2">04</span>
-      <h3 class="font-bold text-slate-950 dark:text-white text-lg mb-2">Conservar / Fidelizar</h3>
-      <p class="text-slate-700 dark:text-slate-300 text-sm">
-        Asegura la recompra y consolida relaciones duraderas tanto con tu red como con tus clientes finales.
-      </p>
-    </div>
-    <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 rounded-2xl shadow-xs">
-      <span class="text-2xl font-black text-purple-600 dark:text-purple-400 block mb-2">05</span>
-      <h3 class="font-bold text-slate-950 dark:text-white text-lg mb-2">Liderar</h3>
-      <p class="text-slate-700 dark:text-slate-300 text-sm">
-        Alcanza los niveles superiores de carrera y consolida tu estabilidad financiera a largo plazo.
-      </p>
-    </div>
+
+  <!-- Contenedor Principal del Camino (Timeline) -->
+  <div class="relative space-y-16 sm:space-y-24">
+    
+    <!-- Línea Conectora Central (Eje del Camino en Desktop) -->
+    <div 
+      aria-hidden="true" 
+      class="hidden md:block absolute left-1/2 top-10 bottom-10 -translate-x-1/2 w-1.5 rounded-full bg-linear-to-b from-purple-600 via-indigo-500 to-emerald-500 shadow-[0_0_15px_rgba(147,51,235,0.4)] z-0"
+    ></div>
+
+    {pasos.map((paso, idx) => {
+      const isCardOnLeft = idx % 2 === 0;
+
+      return (
+        <section 
+          class="step-section opacity-0 translate-y-12 transition-all duration-700 ease-out relative z-10"
+          data-step={paso.num}
+        >
+          <!-- Grid Responsiva de 3 Columnas (Desktop) -->
+          <div class="grid grid-cols-1 md:grid-cols-12 items-center gap-6 sm:gap-8">
+            
+            <!-- Columna Izquierda -->
+            <div class={`md:col-span-5 ${isCardOnLeft ? 'order-2 md:order-1' : 'order-1 md:order-1 hidden md:flex justify-end'}`}>
+              {isCardOnLeft ? (
+                /* Contenido de Tarjeta (Impares: 1, 3, 5) */
+                <div class="w-full bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-6 sm:p-8 rounded-3xl shadow-xs hover:shadow-2xl hover:border-purple-400 dark:hover:border-purple-600/60 transition-all space-y-6 relative overflow-hidden group">
+                  <span class="absolute -bottom-10 -right-4 text-[16rem] md:text-[18rem] font-black text-purple-950/4 dark:text-purple-300/4 select-none pointer-events-none group-hover:scale-110 group-hover:text-purple-600/8 transition-all duration-500 leading-none">
+                    {paso.num}
+                  </span>
+                  <div class="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-purple-600 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  
+                  <div class="relative z-10 space-y-5">
+                    <div class="border-b border-slate-100 dark:border-purple-950/60 pb-4 space-y-1">
+                      <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-950 px-2.5 py-1 rounded-md">
+                        Paso {paso.num} de 5
+                      </span>
+                      <h3 class="text-xl sm:text-2xl font-black text-slate-950 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors pt-1">
+                        {paso.titulo}
+                      </h3>
+                      <p class="text-xs sm:text-sm text-purple-700 dark:text-purple-300 font-semibold">{paso.subtitulo}</p>
+                    </div>
+
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{paso.concepto}</p>
+
+                    <div class="space-y-4 pt-1">
+                      <div class="bg-purple-50/70 dark:bg-purple-950/30 p-4 rounded-2xl border border-purple-100 dark:border-purple-900/40">
+                        <span class="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-purple-900 dark:text-purple-300 mb-1">
+                          <span>📌</span> Objetivo Clave
+                        </span>
+                        <p class="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{paso.objetivo}</p>
+                      </div>
+
+                      <div class="bg-slate-50/80 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-100 dark:border-purple-950/40 space-y-2">
+                        <span class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">⚡ Acciones Recomendadas</span>
+                        <ul class="space-y-2 text-xs text-slate-600 dark:text-slate-300">
+                          {paso.acciones.map((acc) => (
+                            <li class="flex items-start gap-2">
+                              <span class="text-purple-600 dark:text-purple-400 font-bold text-xs shrink-0 mt-0.5">✓</span>
+                              <span class="leading-relaxed" set:html={acc} />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div class="bg-amber-50/80 dark:bg-amber-950/20 p-3.5 rounded-2xl border border-amber-200/60 dark:border-amber-900/40 flex items-start gap-2.5">
+                      <span class="text-base shrink-0">💡</span>
+                      <p class="text-[11px] text-amber-950 dark:text-amber-200 leading-relaxed">
+                        <strong>Regla de Oro:</strong> {paso.tip}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Número Gigante a la Izquierda (Pares: 2, 4) */
+                <div class="flex items-center justify-center md:justify-end w-full select-none pointer-events-none">
+                  <span class="text-9xl md:text-[24rem] font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-purple-600 via-purple-500 to-purple-950 dark:from-purple-400 dark:via-purple-300 dark:to-purple-950/20 leading-none drop-shadow-md">
+                    {paso.num}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <!-- Columna Central: Nodo de Hito en el Camino (Línea) -->
+            <div class="md:col-span-2 order-1 md:order-2 flex flex-col items-center justify-center relative my-2 md:my-0">
+              <div class="relative flex items-center justify-center">
+                <!-- Anillo de Pulso Neón -->
+                <div class="absolute w-14 h-14 rounded-full bg-purple-500/20 dark:bg-purple-500/30 animate-ping pointer-events-none"></div>
+                
+                <!-- Botón / Nodo Numerado -->
+                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-3xl bg-slate-950 dark:bg-[#181233] border-4 border-purple-500 text-white font-black text-xl sm:text-2xl flex items-center justify-center shadow-xl shadow-purple-600/30 z-20 group-hover:scale-110 transition-transform">
+                  <span>{paso.icono}</span>
+                </div>
+              </div>
+
+              {/* Indicador de Dirección del Camino (Arrow down) */}
+              {idx < pasos.length - 1 && (
+                <div class="hidden md:flex items-center justify-center mt-6 text-purple-400 dark:text-purple-500 font-bold text-lg animate-bounce">
+                  ↓
+                </div>
+              )}
+            </div>
+
+            <!-- Columna Derecha -->
+            <div class={`md:col-span-5 ${isCardOnLeft ? 'order-3 md:order-3 hidden md:flex justify-start' : 'order-2 md:order-3'}`}>
+              {!isCardOnLeft ? (
+                /* Contenido de Tarjeta (Pares: 2, 4) */
+                <div class="w-full bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-6 sm:p-8 rounded-3xl shadow-xs hover:shadow-2xl hover:border-purple-400 dark:hover:border-purple-600/60 transition-all space-y-6 relative overflow-hidden group">
+                  <span class="absolute -bottom-10 -left-4 text-[16rem] md:text-[18rem] font-black text-purple-950/4 dark:text-purple-300/4 select-none pointer-events-none group-hover:scale-110 group-hover:text-purple-600/8 transition-all duration-500 leading-none">
+                    {paso.num}
+                  </span>
+                  <div class="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-purple-600 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  
+                  <div class="relative z-10 space-y-5">
+                    <div class="border-b border-slate-100 dark:border-purple-950/60 pb-4 space-y-1">
+                      <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-950 px-2.5 py-1 rounded-md">
+                        Paso {paso.num} de 5
+                      </span>
+                      <h3 class="text-xl sm:text-2xl font-black text-slate-950 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors pt-1">
+                        {paso.titulo}
+                      </h3>
+                      <p class="text-xs sm:text-sm text-purple-700 dark:text-purple-300 font-semibold">{paso.subtitulo}</p>
+                    </div>
+
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{paso.concepto}</p>
+
+                    <div class="space-y-4 pt-1">
+                      <div class="bg-purple-50/70 dark:bg-purple-950/30 p-4 rounded-2xl border border-purple-100 dark:border-purple-900/40">
+                        <span class="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-purple-900 dark:text-purple-300 mb-1">
+                          <span>📌</span> Objetivo Clave
+                        </span>
+                        <p class="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{paso.objetivo}</p>
+                      </div>
+
+                      <div class="bg-slate-50/80 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-100 dark:border-purple-950/40 space-y-2">
+                        <span class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">⚡ Acciones Recomendadas</span>
+                        <ul class="space-y-2 text-xs text-slate-600 dark:text-slate-300">
+                          {paso.acciones.map((acc) => (
+                            <li class="flex items-start gap-2">
+                              <span class="text-purple-600 dark:text-purple-400 font-bold text-xs shrink-0 mt-0.5">✓</span>
+                              <span class="leading-relaxed" set:html={acc} />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div class="bg-amber-50/80 dark:bg-amber-950/20 p-3.5 rounded-2xl border border-amber-200/60 dark:border-amber-900/40 flex items-start gap-2.5">
+                      <span class="text-base shrink-0">💡</span>
+                      <p class="text-[11px] text-amber-950 dark:text-amber-200 leading-relaxed">
+                        <strong>Regla de Oro:</strong> {paso.tip}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Número Gigante a la Derecha (Impares: 1, 3, 5) */
+                <div class="flex items-center justify-center md:justify-start w-full select-none pointer-events-none">
+                  <span class="text-9xl md:text-[24rem] font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-purple-600 via-purple-500 to-purple-950 dark:from-purple-400 dark:via-purple-300 dark:to-purple-950/20 leading-none drop-shadow-md">
+                    {paso.num}
+                  </span>
+                </div>
+              )}
+            </div>
+
+          </div>
+        </section>
+      );
+    })}
+
   </div>
 </div>
+
+<script is:inline>
+  function initPasosObserver() {
+    const sections = document.querySelectorAll('.step-section');
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('opacity-0', 'translate-y-12');
+            entry.target.classList.add('opacity-100', 'translate-y-0');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '0px 0px -80px 0px',
+        threshold: 0.15,
+      }
+    );
+
+    sections.forEach((sec) => observer.observe(sec));
+  }
+
+  document.addEventListener('DOMContentLoaded', initPasosObserver);
+</script>

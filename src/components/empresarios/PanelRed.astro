@@ -1,136 +1,321 @@
-<!-- Panel 4: Simulador Financiero Progresivo con Sliders desde 300 pts y saltos de 100 en 100 -->
-<div id="panel-ganancias" class="emp-panel hidden space-y-8 max-w-4xl mx-auto">
-  <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 sm:p-8 rounded-3xl shadow-xs">
+---
+// src/components/empresarios/PanelGanancias.astro
 
-    <div class="mb-8 text-center max-w-2xl mx-auto">
-      <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block mb-1">Simulador Financiero Progresivo</span>
-      <h2 class="text-2xl font-extrabold text-slate-950 dark:text-white">Calculadora de Comisiones por Red y Rango</h2>
-      <p class="text-slate-600 dark:text-slate-300 text-sm mt-1">
-        Proyecta tus ingresos mensuales en base al volumen de puntos de tu red y los porcentajes oficiales de tu Nivel de Pago.
+const escalas = [
+  { id: "bronce", nombre: "Bronce", icono: "🥉", desc: "Inicio de red y comisiones de 1er y 2º nivel." },
+  { id: "plata", nombre: "Plata", icono: "🥈", desc: "Liderazgo consolidado y cobro de 3er nivel." },
+  { id: "oro", nombre: "Oro", icono: "🥇", desc: "Regalías avanzadas y fondo generacional." },
+  { id: "diamante", nombre: "Diamante", icono: "💎", desc: "Cúspide de comisiones e ingresos globales." }
+];
+
+// Matriz de Duplicación 4x4 en Plata Supreme con +15% IR en N1 (10% + 15% = 25%)
+const matrizDuplicacion = [
+  { 
+    nivel: "1er Nivel (Nuevos 90 días)", 
+    socios: "4 Empresarios", 
+    ptsSocio: "1,000 PTS", 
+    ptsTotal: "4,000 PTS", 
+    porc: "10% Base + 15% IR (25% Total)", 
+    comisionEst: "C$ 11,000.00" 
+  },
+  { 
+    nivel: "2º Nivel (Recurrente)", 
+    socios: "16 Empresarios", 
+    ptsSocio: "1,000 PTS", 
+    ptsTotal: "16,000 PTS", 
+    porc: "8% Base Nivel", 
+    comisionEst: "C$ 14,080.00" 
+  },
+  { 
+    nivel: "3er Nivel (Recurrente)", 
+    socios: "64 Empresarios", 
+    ptsSocio: "1,000 PTS", 
+    ptsTotal: "64,000 PTS", 
+    porc: "6% Base Nivel", 
+    comisionEst: "C$ 42,240.00" 
+  },
+];
+---
+
+<div id="panel-ganancias" class="emp-panel hidden space-y-12 max-w-6xl mx-auto py-4">
+  
+  <!-- Encabezado del Módulo (Bloque 0) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-8 sm:p-10 rounded-3xl text-center space-y-3 relative overflow-hidden shadow-xs dark:shadow-lg">
+    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 dark:bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <span class="inline-block px-3.5 py-1 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30 rounded-full text-xs font-extrabold uppercase tracking-wider">
+      Plan de Compensación Oficial Nicaragua
+    </span>
+    <h2 class="text-2xl sm:text-4xl font-black text-slate-950 dark:text-white tracking-tight">
+      Simulador de Comisiones Residuales y de Inicio Rápido
+    </h2>
+    <p class="text-xs sm:text-sm text-slate-600 dark:text-purple-200/90 max-w-2xl mx-auto leading-relaxed font-medium">
+      Proyecta tus ingresos de red ajustando el volumen de puntos por nivel. Evalúa el cobro residual recurrente y la bonificación aceleradora del <strong>+15% de Inicio Rápido</strong> en el 1er Nivel durante los primeros 90 días.
+    </p>
+  </div>
+
+  <!-- 1. Infografía Educativa: Explicación del 15% Adicional (Bloque 1) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-6 rounded-3xl space-y-3">
+      <div class="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-extrabold text-xs uppercase tracking-wider">
+        <span>🔄</span> Ingresos Residuales Recurrentes (A partir del día 91)
+      </div>
+      <h3 class="text-lg font-black text-slate-950 dark:text-white">Compensación por Nivel Base</h3>
+      <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+        Una vez transcurridos los primeros 3 meses de tu afiliado, cobras tu porcentaje de comisión de nivel permanente (hasta un <strong>10% en 1er Nivel</strong>, <strong>8% en 2º Nivel</strong> y <strong>6% en 3er Nivel</strong>).
       </p>
     </div>
 
-    <!-- 1. Botones de Categoría (Escala) -->
-    <div id="calc-category-buttons" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-      <button data-category="bronce" class="calc-cat-btn group p-4 rounded-2xl text-left border transition-all cursor-pointer bg-purple-900 text-white border-purple-700 shadow-md">
-        <span class="text-2xl block mb-1 opacity-90">🥉</span>
-        <span class="font-black text-xs block opacity-80">Escala</span>
-        <span class="font-extrabold text-base block">Bronce</span>
-      </button>
-
-      <button data-category="plata" class="calc-cat-btn group p-4 rounded-2xl text-left border transition-all cursor-pointer bg-slate-100 dark:bg-purple-950/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500 hover:shadow-sm">
-        <span class="text-2xl block mb-1 opacity-90 group-hover:scale-105 transition-transform">🥈</span>
-        <span class="font-black text-xs block opacity-80">Escala</span>
-        <span class="font-extrabold text-base block">Plata</span>
-      </button>
-
-      <button data-category="oro" class="calc-cat-btn group p-4 rounded-2xl text-left border transition-all cursor-pointer bg-slate-100 dark:bg-purple-950/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500 hover:shadow-sm">
-        <span class="text-2xl block mb-1 opacity-90 group-hover:scale-105 transition-transform">🥇</span>
-        <span class="font-black text-xs block opacity-80">Escala</span>
-        <span class="font-extrabold text-base block">Oro</span>
-      </button>
-
-      <button data-category="diamante" class="calc-cat-btn group p-4 rounded-2xl text-left border transition-all cursor-pointer bg-slate-100 dark:bg-purple-950/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500 hover:shadow-sm">
-        <span class="text-2xl block mb-1 opacity-90 group-hover:scale-105 transition-transform">💎</span>
-        <span class="font-black text-xs block opacity-80">Escala</span>
-        <span class="font-extrabold text-base block">Diamante</span>
-      </button>
+    <div class="bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 p-6 rounded-3xl space-y-3">
+      <div class="flex items-center gap-2 text-amber-900 dark:text-amber-300 font-extrabold text-xs uppercase tracking-wider">
+        <span>⚡</span> Acelerador de Inicio Rápido (Primeros 90 Días)
+      </div>
+      <h3 class="text-lg font-black text-amber-950 dark:text-amber-200">+15% Adicional Exclusivo en 1er Nivel</h3>
+      <p class="text-xs text-amber-900/90 dark:text-amber-200/90 leading-relaxed">
+        Por cada nuevo empresario directo en tu 1er Nivel, la empresa suma un <strong>+15% fijo</strong> a tu comisión base durante sus primeros 90 días (alcanzando hasta un <strong>25% de cobro total</strong> en Bronce Supreme).
+      </p>
     </div>
+  </div>
 
-    <!-- 2. Sub-selección de Niveles de Pago -->
-    <div id="calc-sub-selector" class="mb-8 border-t border-slate-100 dark:border-purple-950/60 pt-6">
-       <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 text-center">Selecciona tu Nivel de Pago en <span id="calc-cat-title" class="text-purple-700 dark:text-purple-300">Bronce</span></h4>
-       <div id="calc-sub-container" class="flex flex-wrap justify-center gap-2"></div>
-    </div>
-
-    <!-- 3. Controles Deslizantes de Niveles (A partir de 300 pts, incrementos de 100 en 100) -->
-    <div class="space-y-6 mb-8 border-t border-slate-100 dark:border-purple-950/60 pt-6">
-      
-      <!-- Nivel 1 -->
-      <div id="box-n1" class="bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-200 dark:border-purple-900/40 transition-all">
-        <div class="flex justify-between items-center mb-2">
-          <span id="label-n1" class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">1er Nivel (No disponible)</span>
-          <span id="n1-val" class="text-purple-600 dark:text-purple-400 font-black text-sm">1,000 PTS</span>
+  <!-- 2. SIMULADOR INTERACTIVO PRINCIPAL (Bloque 2) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-6 sm:p-8 rounded-3xl shadow-lg space-y-8">
+    
+    <!-- Encabezado y Categorías -->
+    <div class="space-y-4 border-b border-slate-100 dark:border-purple-950/60 pb-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950 px-2.5 py-1 rounded-md inline-block mb-1">
+            Paso 1: Selecciona tu Escala de Pago
+          </span>
+          <h3 class="text-xl font-black text-slate-950 dark:text-white">
+            Nivel de Pago de la Organización
+          </h3>
         </div>
-        <input type="range" id="n1-slider" min="300" max="10000" step="100" value="1000" class="w-full accent-purple-600 cursor-pointer" />
+
+        <!-- Switch Toggle para Activar el +15% de Inicio Rápido -->
+        <div class="bg-amber-50 dark:bg-amber-950/30 p-3 rounded-2xl border border-amber-200 dark:border-amber-900/50 flex items-center gap-3 shrink-0">
+          <label for="bir-toggle" class="text-xs font-extrabold text-amber-950 dark:text-amber-200 cursor-pointer select-none">
+            ⚡ Evaluar con +15% de Inicio Rápido (N1 - 90 Días)
+          </label>
+          <input type="checkbox" id="bir-toggle" class="w-5 h-5 accent-amber-500 cursor-pointer rounded-md" />
+        </div>
+      </div>
+
+      <!-- Botones de Categorías principales -->
+      <div id="calc-category-buttons" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {escalas.map((e, idx) => (
+          <button 
+            data-category={e.id} 
+            class={`calc-cat-btn group p-4 rounded-2xl text-left border-2 transition-all cursor-pointer ${
+              idx === 0 
+                ? 'bg-linear-to-br from-purple-900 via-slate-900 to-purple-950 text-white border-purple-500 shadow-lg' 
+                : 'bg-slate-50 dark:bg-purple-950/30 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-400'
+            }`}
+          >
+            <span class="text-2xl block mb-1 opacity-90">{e.icono}</span>
+            <span class="font-extrabold text-[10px] uppercase tracking-wider text-slate-400 group-hover:text-purple-300 block">Escala</span>
+            <span class="font-black text-lg block text-slate-950 dark:text-white group-hover:text-white">{e.nombre}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Selector de Sub-Nivel de Pago -->
+    <div id="calc-sub-selector" class="space-y-3">
+      <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-center">
+        Selecciona tu Nivel de Pago Exacto en <span id="calc-cat-title" class="text-purple-600 dark:text-purple-300">Bronce</span>:
+      </h4>
+      <div id="calc-sub-container" class="flex flex-wrap justify-center gap-2">
+        <!-- Generado por JS -->
+      </div>
+    </div>
+
+    <!-- Controles Deslizantes por Nivel (3 Sliders) -->
+    <div class="space-y-6 pt-2">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-purple-950/60 pb-2">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          Paso 2: Ajusta los Puntos Totales por Nivel (Puntos de Red)
+        </span>
+        <span class="text-[11px] font-bold text-purple-600 dark:text-purple-400">Incrementos de 100 PTS</span>
+      </div>
+
+      <!-- Nivel 1 -->
+      <div id="box-n1" class="bg-slate-50 dark:bg-purple-950/20 p-5 rounded-2xl border border-slate-200/80 dark:border-purple-900/40 space-y-3 transition-all">
+        <div class="flex justify-between items-center text-xs">
+          <span id="label-n1" class="font-extrabold text-slate-950 dark:text-white uppercase tracking-wider">1er Nivel (10% Comisión)</span>
+          <span id="n1-val" class="text-purple-600 dark:text-purple-400 font-black text-base">1,000 PTS</span>
+        </div>
+        <input type="range" id="n1-slider" min="0" max="20000" step="100" value="1000" class="w-full accent-purple-600 cursor-pointer" />
+        <div class="flex justify-between text-[10px] text-slate-400 font-bold">
+          <span>0 PTS</span>
+          <span>5,000 PTS</span>
+          <span>10,000 PTS</span>
+          <span>20,000 PTS</span>
+        </div>
       </div>
 
       <!-- Nivel 2 -->
-      <div id="box-n2" class="bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-200 dark:border-purple-900/40 transition-all">
-        <div class="flex justify-between items-center mb-2">
-          <span id="label-n2" class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">2º Nivel (No disponible)</span>
-          <span id="n2-val" class="text-purple-600 dark:text-purple-400 font-black text-sm">2,500 PTS</span>
+      <div id="box-n2" class="bg-slate-50 dark:bg-purple-950/20 p-5 rounded-2xl border border-slate-200/80 dark:border-purple-900/40 space-y-3 transition-all">
+        <div class="flex justify-between items-center text-xs">
+          <span id="label-n2" class="font-extrabold text-slate-950 dark:text-white uppercase tracking-wider">2º Nivel (5% Comisión)</span>
+          <span id="n2-val" class="text-purple-600 dark:text-purple-400 font-black text-base">2,500 PTS</span>
         </div>
-        <input type="range" id="n2-slider" min="300" max="25000" step="100" value="2500" class="w-full accent-purple-600 cursor-pointer" />
+        <input type="range" id="n2-slider" min="0" max="40000" step="100" value="2500" class="w-full accent-purple-600 cursor-pointer" />
+        <div class="flex justify-between text-[10px] text-slate-400 font-bold">
+          <span>0 PTS</span>
+          <span>10,000 PTS</span>
+          <span>20,000 PTS</span>
+          <span>40,000 PTS</span>
+        </div>
       </div>
 
       <!-- Nivel 3 -->
-      <div id="box-n3" class="bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-200 dark:border-purple-900/40 transition-all">
-        <div class="flex justify-between items-center mb-2">
-          <span id="label-n3" class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">3er Nivel (No disponible)</span>
-          <span id="n3-val" class="text-purple-600 dark:text-purple-400 font-black text-sm">5,000 PTS</span>
+      <div id="box-n3" class="bg-slate-50 dark:bg-purple-950/20 p-5 rounded-2xl border border-slate-200/80 dark:border-purple-900/40 space-y-3 transition-all">
+        <div class="flex justify-between items-center text-xs">
+          <span id="label-n3" class="font-extrabold text-slate-950 dark:text-white uppercase tracking-wider">3er Nivel (No disponible)</span>
+          <span id="n3-val" class="text-purple-600 dark:text-purple-400 font-black text-base">5,000 PTS</span>
         </div>
-        <input type="range" id="n3-slider" min="300" max="50000" step="100" value="5000" class="w-full accent-purple-600 cursor-pointer" />
+        <input type="range" id="n3-slider" min="0" max="80000" step="100" value="5000" class="w-full accent-purple-600 cursor-pointer" />
+        <div class="flex justify-between text-[10px] text-slate-400 font-bold">
+          <span>0 PTS</span>
+          <span>20,000 PTS</span>
+          <span>40,000 PTS</span>
+          <span>80,000 PTS</span>
+        </div>
       </div>
-
     </div>
 
-    <!-- 4. Resultado Proyectado en Doble Moneda -->
-    <div class="bg-emerald-950/90 dark:bg-emerald-950/60 border border-emerald-500/30 p-6 rounded-2xl text-center text-white shadow-lg">
-      <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider block mb-1">Proyección Estimada de Comisiones</span>
-      
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 my-2">
-        <div>
-          <div id="total-comision-nio" class="text-3xl sm:text-4xl font-black text-emerald-300">C$ 0.00</div>
-          <span class="text-[10px] uppercase font-bold text-emerald-200/70">Córdobas (NIO)</span>
-        </div>
-        <span class="hidden sm:inline text-emerald-500/50 text-3xl font-light">/</span>
-        <div>
-          <div id="total-comision-usd" class="text-2xl sm:text-3xl font-black text-emerald-200">$0.00 USD</div>
-          <span class="text-[10px] uppercase font-bold text-emerald-200/70">Dólares (USD)</span>
+    <!-- TARJETA DE RESULTADO PROYECTADO DE COMISIONES -->
+    <div class="bg-linear-to-br from-emerald-950 via-slate-950 to-emerald-950 border-2 border-emerald-500/50 p-6 sm:p-8 rounded-3xl text-white space-y-6 shadow-2xl relative overflow-hidden">
+      <div class="text-center space-y-1 border-b border-emerald-800/60 pb-4">
+        <span class="text-[10px] font-black uppercase tracking-wider text-emerald-300">
+          💰 Cheque Mensual Proyectado de Red
+        </span>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 my-2">
+          <div>
+            <div id="total-comision-nio" class="text-3xl sm:text-5xl font-black text-emerald-400">C$ 0.00</div>
+            <span class="text-[10px] uppercase font-bold text-emerald-200/70">Córdobas (NIO)</span>
+          </div>
+          <span class="hidden sm:inline text-emerald-700 text-3xl font-light">/</span>
+          <div>
+            <div id="total-comision-usd" class="text-2xl sm:text-4xl font-black text-emerald-200">$0.00 USD</div>
+            <span class="text-[10px] uppercase font-bold text-emerald-200/70">Dólares (USD)</span>
+          </div>
         </div>
       </div>
 
-      <p id="info-rango-texto" class="text-xs text-emerald-100/80 font-medium mt-2">
-        Calculado con base en el valor de compensación por punto en Nicaragua.
+      <!-- Desglose Matemático por Nivel -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <div class="bg-emerald-900/40 border border-emerald-700/50 p-3.5 rounded-xl space-y-1">
+          <span class="text-[10px] text-emerald-300 font-bold uppercase block">1er Nivel:</span>
+          <span id="desglose-n1" class="font-extrabold text-white block">C$ 0.00</span>
+        </div>
+        <div class="bg-emerald-900/40 border border-emerald-700/50 p-3.5 rounded-xl space-y-1">
+          <span class="text-[10px] text-emerald-300 font-bold uppercase block">2º Nivel:</span>
+          <span id="desglose-n2" class="font-extrabold text-white block">C$ 0.00</span>
+        </div>
+        <div class="bg-emerald-900/40 border border-emerald-700/50 p-3.5 rounded-xl space-y-1">
+          <span class="text-[10px] text-emerald-300 font-bold uppercase block">3er Nivel:</span>
+          <span id="desglose-n3" class="font-extrabold text-white block">C$ 0.00</span>
+        </div>
+      </div>
+
+      <p id="info-rango-texto" class="text-xs text-emerald-100/90 leading-relaxed font-medium text-center bg-emerald-950/80 p-3 rounded-xl border border-emerald-800/60">
+        Cálculo estimado basado en la compensación promedio por punto en Nicaragua (~C$ 11.00 NIO / PTS).
       </p>
     </div>
 
   </div>
+
+  <!-- 3. DEEP DIVE EDUCATIVO: La Estructura 4x4 de Plata Supreme (Bloque 3) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out space-y-6">
+    <div class="border-b border-slate-200 dark:border-purple-950/60 pb-2">
+      <h3 class="text-lg sm:text-2xl font-black text-slate-950 dark:text-white flex items-center gap-2">
+        <span>📈</span> Ejemplo Real: La Duplicación 4x4 de Plata Supreme
+      </h3>
+      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
+        Visualiza el impacto económico de afiliar a 4 personas directas y enseñarle a cada una a duplicarse con 4 socios comercializando 1,000 PTS al mes.
+      </p>
+    </div>
+
+    <!-- Tabla de la Matriz 4x4 -->
+    <div class="bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 rounded-3xl p-6 shadow-md space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {matrizDuplicacion.map((item, idx) => (
+          <div class="bg-slate-50 dark:bg-purple-950/20 border border-slate-200/80 dark:border-purple-900/40 p-5 rounded-2xl space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-purple-900/40 pb-2">
+              <span class="text-xs font-black text-purple-700 dark:text-purple-300">{item.nivel}</span>
+              <span class="text-[10px] font-bold bg-purple-100 dark:bg-purple-900 text-purple-900 dark:text-purple-200 px-2 py-0.5 rounded-md">
+                Nivel {idx + 1}
+              </span>
+            </div>
+            
+            <div class="space-y-1 text-xs">
+              <div class="flex justify-between text-slate-600 dark:text-slate-300">
+                <span>Estructura de Red:</span>
+                <strong class="text-slate-950 dark:text-white">{item.socios}</strong>
+              </div>
+              <div class="flex justify-between text-slate-600 dark:text-slate-300">
+                <span>Volumen Acumulado:</span>
+                <strong class="text-purple-600 dark:text-purple-400">{item.ptsTotal}</strong>
+              </div>
+              <div class="flex justify-between text-slate-600 dark:text-slate-300">
+                <span>% de Comisión:</span>
+                <strong class="text-emerald-600 dark:text-emerald-400">{item.porc}</strong>
+              </div>
+            </div>
+
+            <div class="bg-emerald-50 dark:bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-900/40 flex justify-between items-center text-xs">
+              <span class="font-extrabold text-emerald-900 dark:text-emerald-200">Comisión Est.:</span>
+              <span class="font-black text-emerald-700 dark:text-emerald-300">{item.comisionEst}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Resumen Total 4x4 -->
+      <div class="bg-linear-to-br from-purple-900 via-slate-900 to-purple-950 text-white p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-purple-700/60 shadow-lg">
+        <div class="space-y-1 text-center sm:text-left">
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300">Resultado de la Red Completa (84 Socios)</span>
+          <h4 class="text-xl font-black text-white">Cheque Estimado Mensual: C$ 67,320.00 NIO (~$1,838 USD)</h4>
+          <p class="text-xs text-purple-200">Sumando el 10% Base + 15% IR en 1er Nivel (25% Total) + comisiones regulares de 2º (8%) y 3er Nivel (6%).</p>
+        </div>
+        <span class="text-3xl shrink-0">🚀</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
+    // DICCIONARIO DE NIVELES Y COMISIONES OFICIALES OMNILIFE NICARAGUA
     const calculadoraRangosData = {
       bronce: [
-        { id: 'bronce-base', name: 'Bronce', p1: 0, p2: 0, p3: 0, desc: 'Bronce (Nivel Inicial): En esta etapa las ganancias provienen de la venta directa e inicio rápido. Las comisiones de red se desbloquean en Bronce Premier.' },
-        { id: 'bronce-activo', name: 'Bronce Activo', p1: 0, p2: 0, p3: 0, desc: 'Bronce Activo (Nivel Inicial): Enfocado en consolidar tus bases comerciales. Las comisiones de red permanecen bloqueadas.' },
-        { id: 'bronce-premier', name: 'Bronce Premier', p1: 0.08, p2: 0, p3: 0, desc: 'Bronce Premier: ¡Desbloqueas el 8% de comisión sobre el volumen de tu 1er Nivel!' },
-        { id: 'bronce-elite', name: 'Bronce Elite', p1: 0.10, p2: 0, p3: 0, desc: 'Bronce Elite: Incrementas al 10% la comisión de tu 1er Nivel.' },
-        { id: 'bronce-supreme', name: 'Bronce Supreme', p1: 0.10, p2: 0.05, p3: 0, desc: 'Bronce Supreme: Cobras 10% del 1er Nivel y habilitas el 5% del 2º Nivel.' }
+        { id: 'bronce-base', name: 'Bronce Base', p1: 0, p2: 0, p3: 0, desc: 'Bronce Base: Las ganancias provienen de la venta directa. La compensación por nivel se activa a partir de Bronce Premier.' },
+        { id: 'bronce-premier', name: 'Bronce Premier', p1: 0.08, p2: 0, p3: 0, desc: 'Bronce Premier: Cobras 8% base en 1er Nivel (o 23% Total al sumar el +15% de Inicio Rápido durante los primeros 90 días del afiliado).' },
+        { id: 'bronce-elite', name: 'Bronce Elite', p1: 0.10, p2: 0, p3: 0, desc: 'Bronce Elite: Cobras 10% base en 1er Nivel (o 25% Total al sumar el +15% de Inicio Rápido durante los primeros 90 días del afiliado).' },
+        { id: 'bronce-supreme', name: 'Bronce Supreme', p1: 0.10, p2: 0.05, p3: 0, desc: 'Bronce Supreme: Cobras 10% base en 1er Nivel (+15% con Inicio Rápido) + 5% permanente en el 2º Nivel.' }
       ],
       plata: [
-        { id: 'plata-premier', name: 'Plata Premier', p1: 0.10, p2: 0.04, p3: 0, desc: 'Plata Premier: Cobras 10% del 1er Nivel y 4% del 2º Nivel.' },
-        { id: 'plata-elite', name: 'Plata Elite', p1: 0.10, p2: 0.08, p3: 0.04, desc: 'Plata Elite: Cobras 10% (N1), 8% (N2) y habilitas el 4% del 3er Nivel.' },
-        { id: 'plata-supreme', name: 'Plata Supreme', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Plata Supreme: ¡Máximo nivel de cobro por generación en red! 10% (N1), 8% (N2) y 6% (N3).' }
+        { id: 'plata-premier', name: 'Plata Premier', p1: 0.10, p2: 0.04, p3: 0, desc: 'Plata Premier: Cobras 10% base en 1er Nivel (+15% con Inicio Rápido) y 4% permanente en el 2º Nivel.' },
+        { id: 'plata-elite', name: 'Plata Elite', p1: 0.10, p2: 0.08, p3: 0.04, desc: 'Plata Elite: Cobras 10% en 1er Nivel (+15% con Inicio Rápido), 8% en 2º Nivel y 4% en 3er Nivel.' },
+        { id: 'plata-supreme', name: 'Plata Supreme', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Plata Supreme: ¡Máximo cobro por nivel! 10% en 1er Nivel (+15% con Inicio Rápido), 8% en 2º Nivel y 6% en 3er Nivel.' }
       ],
       oro: [
-        { id: 'oro-premier', name: 'Oro Premier', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Oro Premier: Consolidación de red. Cobras 10% (N1), 8% (N2) y 6% (N3).' },
-        { id: 'oro-elite', name: 'Oro Elite', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Oro Elite: Cobras 10% (N1), 8% (N2) y 6% (N3) + bonos de generación.' },
-        { id: 'oro-supreme', name: 'Oro Supreme', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Oro Supreme: Cobras 10% (N1), 8% (N2) y 6% (N3) + bonos avanzados.' }
+        { id: 'oro-premier', name: 'Oro Premier', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Oro Premier: Cobras 10% en 1er Nivel (+15% con IR), 8% en 2º Nivel, 6% en 3er Nivel + bonos de generación.' },
+        { id: 'oro-elite', name: 'Oro Elite', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Oro Elite: Cobras comisiones completas por nivel + múltiples generaciones.' },
+        { id: 'oro-supreme', name: 'Oro Supreme', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Oro Supreme: Cobras comisiones máximas de nivel + fondo de generaciones infinitas.' }
       ],
       diamante: [
-        { id: 'diamante-premier', name: 'Diamante Premier', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Diamante Premier: Cobras 10% (N1), 8% (N2) y 6% (N3) + altas bonificaciones.' },
-        { id: 'diamante-elite', name: 'Diamante Elite', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Diamante Elite: Cobras 10% (N1), 8% (N2) y 6% (N3) con múltiples generaciones.' },
-        { id: 'diamante-supreme', name: 'Diamante Supreme', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Diamante Supreme: Máximo rendimiento financiero y comisiones completas.' },
-        { id: 'doble-diamante', name: 'Doble Diamante', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Doble Diamante: Estatus de cúspide con comisiones al 100%.' },
-        { id: 'triple-diamante', name: 'Triple Diamante', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Triple Diamante: Máximo escalafón global y de comisiones.' }
+        { id: 'diamante-premier', name: 'Diamante Premier', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Diamante Premier: Cobras comisiones completas de red + Fondo Diamante Mundial.' },
+        { id: 'diamante-supreme', name: 'Diamante Supreme', p1: 0.10, p2: 0.08, p3: 0.06, desc: 'Diamante Supreme: Cúspide del Plan de Compensación con ingresos ilimitados.' }
       ]
     };
 
     const catButtons = document.querySelectorAll('.calc-cat-btn');
     const subContainer = document.getElementById('calc-sub-container');
     const catTitleSpan = document.getElementById('calc-cat-title');
+    const birToggle = document.getElementById('bir-toggle');
 
     const n1Slider = document.getElementById('n1-slider');
     const n2Slider = document.getElementById('n2-slider');
@@ -150,11 +335,14 @@
     
     const totalComisionNIO = document.getElementById('total-comision-nio');
     const totalComisionUSD = document.getElementById('total-comision-usd');
+    const desgloseN1 = document.getElementById('desglose-n1');
+    const desgloseN2 = document.getElementById('desglose-n2');
+    const desgloseN3 = document.getElementById('desglose-n3');
     const infoTexto = document.getElementById('info-rango-texto');
 
-    let currentActiveRank = calculadoraRangosData.bronce[0];
+    let currentActiveRank = calculadoraRangosData.bronce[3]; // Bronce Supreme por defecto
 
-    const VALOR_BASE_PUNTO_NIO = 11.0; 
+    const VALOR_BASE_PUNTO_NIO = 11.00; 
     const TASA_CAMBIO_OFICIAL = 36.62;
 
     function calcularGanancias() {
@@ -162,71 +350,92 @@
       const pts2 = parseInt(n2Slider.value) || 0;
       const pts3 = parseInt(n3Slider.value) || 0;
 
+      const isBirActive = birToggle?.checked || false;
+
+      // 1. Compensación Base por Nivel (según Rango)
+      let p1Final = currentActiveRank.p1;
+      let p2Final = currentActiveRank.p2;
+      let p3Final = currentActiveRank.p3;
+
+      // 2. Regla Oficial: El +15% de Inicio Rápido aplica EXCLUSIVAMENTE a N1 cuando el rango califica a comisiones (p1 > 0)
+      if (isBirActive && p1Final > 0) {
+        p1Final += 0.15; // Ej: 10% Base + 15% IR = 25% Total N1
+      }
+
+      // Actualización de Textos de la Interfaz
       n1Val.textContent = pts1.toLocaleString() + ' PTS';
       n2Val.textContent = pts2.toLocaleString() + ' PTS';
       n3Val.textContent = pts3.toLocaleString() + ' PTS';
 
-      labelN1.textContent = currentActiveRank.p1 > 0 ? `1er Nivel (${(currentActiveRank.p1 * 100)}% Comisión)` : `1er Nivel (No disponible)`;
-      labelN2.textContent = currentActiveRank.p2 > 0 ? `2º Nivel (${(currentActiveRank.p2 * 100)}% Comisión)` : `2º Nivel (No disponible)`;
-      labelN3.textContent = currentActiveRank.p3 > 0 ? `3er Nivel (${(currentActiveRank.p3 * 100)}% Comisión)` : `3er Nivel (No disponible)`;
+      labelN1.textContent = p1Final > 0 
+        ? `1er Nivel (${(p1Final * 100).toFixed(0)}% ${isBirActive ? '- Con +15% Inicio Rápido' : 'Comisión Base'})` 
+        : `1er Nivel (No disponible)`;
 
-      if (currentActiveRank.p1 === 0) {
-        boxN1.style.opacity = '0.35';
-        n1Slider.disabled = true;
-      } else {
-        boxN1.style.opacity = '1';
-        n1Slider.disabled = false;
+      labelN2.textContent = p2Final > 0 
+        ? `2º Nivel (${(p2Final * 100).toFixed(0)}% Comisión Base)` 
+        : `2º Nivel (No disponible)`;
+
+      labelN3.textContent = p3Final > 0 
+        ? `3er Nivel (${(p3Final * 100).toFixed(0)}% Comisión Base)` 
+        : `3er Nivel (No disponible)`;
+
+      // Habilitar o deshabilitar sliders según nivel de pago
+      if (boxN1 && n1Slider) {
+        boxN1.style.opacity = p1Final === 0 ? '0.35' : '1';
+        n1Slider.disabled = p1Final === 0;
       }
 
-      if (currentActiveRank.p2 === 0) {
-        boxN2.style.opacity = '0.35';
-        n2Slider.disabled = true;
-      } else {
-        boxN2.style.opacity = '1';
-        n2Slider.disabled = false;
+      if (boxN2 && n2Slider) {
+        boxN2.style.opacity = p2Final === 0 ? '0.35' : '1';
+        n2Slider.disabled = p2Final === 0;
       }
 
-      if (currentActiveRank.p3 === 0) {
-        boxN3.style.opacity = '0.35';
-        n3Slider.disabled = true;
-      } else {
-        boxN3.style.opacity = '1';
-        n3Slider.disabled = false;
+      if (boxN3 && n3Slider) {
+        boxN3.style.opacity = p3Final === 0 ? '0.35' : '1';
+        n3Slider.disabled = p3Final === 0;
       }
 
-      const comisionNIO1 = pts1 * currentActiveRank.p1 * VALOR_BASE_PUNTO_NIO;
-      const comisionNIO2 = pts2 * currentActiveRank.p2 * VALOR_BASE_PUNTO_NIO;
-      const comisionNIO3 = pts3 * currentActiveRank.p3 * VALOR_BASE_PUNTO_NIO;
+      // 3. Cálculo Matemático de Comisiones
+      const comisionNIO1 = pts1 * p1Final * VALOR_BASE_PUNTO_NIO;
+      const comisionNIO2 = pts2 * p2Final * VALOR_BASE_PUNTO_NIO;
+      const comisionNIO3 = pts3 * p3Final * VALOR_BASE_PUNTO_NIO;
 
       const totalNIO = comisionNIO1 + comisionNIO2 + comisionNIO3;
       const totalUSD = totalNIO / TASA_CAMBIO_OFICIAL;
 
-      totalComisionNIO.textContent = `C$ ${totalNIO.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      totalComisionUSD.textContent = `$${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
-      infoTexto.textContent = currentActiveRank.desc;
+      const formatNio = (num) => `C$ ${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      if (totalComisionNIO) totalComisionNIO.textContent = formatNio(totalNIO);
+      if (totalComisionUSD) totalComisionUSD.textContent = `$${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
+      
+      if (desgloseN1) desgloseN1.textContent = `${formatNio(comisionNIO1)} (${(p1Final * 100).toFixed(0)}%)`;
+      if (desgloseN2) desgloseN2.textContent = `${formatNio(comisionNIO2)} (${(p2Final * 100).toFixed(0)}%)`;
+      if (desgloseN3) desgloseN3.textContent = `${formatNio(comisionNIO3)} (${(p3Final * 100).toFixed(0)}%)`;
+
+      if (infoTexto) infoTexto.textContent = currentActiveRank.desc;
     }
 
     function renderSubRanksForCalculator(categoryKey, categoryName) {
       const ranks = calculadoraRangosData[categoryKey];
       if (!ranks) return;
 
-      catTitleSpan.textContent = categoryName;
+      if (catTitleSpan) catTitleSpan.textContent = categoryName;
       subContainer.innerHTML = '';
 
       ranks.forEach((rank, index) => {
         const btn = document.createElement('button');
-        btn.className = `px-3.5 py-2 rounded-xl font-bold text-xs transition-all cursor-pointer border ${
-          index === 0 
-            ? 'bg-purple-900 text-white border-purple-700 shadow-xs' 
-            : 'bg-white dark:bg-[#0c0816] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500'
+        btn.className = `px-3.5 py-2 rounded-xl font-extrabold text-xs transition-all cursor-pointer border ${
+          index === ranks.length - 1 
+            ? 'bg-purple-600 text-white border-purple-500 shadow-md scale-105' 
+            : 'bg-white dark:bg-[#0c0816] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-400'
         }`;
         btn.textContent = rank.name;
 
         btn.addEventListener('click', () => {
           subContainer.querySelectorAll('button').forEach(b => {
-            b.className = 'px-3.5 py-2 rounded-xl font-bold text-xs transition-all cursor-pointer border bg-white dark:bg-[#0c0816] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500';
+            b.className = 'px-3.5 py-2 rounded-xl font-extrabold text-xs transition-all cursor-pointer border bg-white dark:bg-[#0c0816] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-400';
           });
-          btn.className = 'px-3.5 py-2 rounded-xl font-bold text-xs transition-all cursor-pointer border bg-purple-900 text-white border-purple-700 shadow-xs';
+          btn.className = 'px-3.5 py-2 rounded-xl font-extrabold text-xs transition-all cursor-pointer border bg-purple-600 text-white border-purple-500 shadow-md scale-105';
           
           currentActiveRank = rank;
           calcularGanancias();
@@ -235,27 +444,57 @@
         subContainer.appendChild(btn);
       });
 
-      currentActiveRank = ranks[0];
+      currentActiveRank = ranks[ranks.length - 1];
       calcularGanancias();
     }
 
     catButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         catButtons.forEach(b => {
-          b.className = 'calc-cat-btn group p-4 rounded-2xl text-left border transition-all cursor-pointer bg-slate-100 dark:bg-purple-950/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500 hover:shadow-sm';
+          b.className = 'calc-cat-btn group p-4 rounded-2xl text-left border-2 transition-all cursor-pointer bg-slate-50 dark:bg-purple-950/30 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-400';
         });
-        btn.className = 'calc-cat-btn group p-4 rounded-2xl text-left border transition-all cursor-pointer bg-purple-900 text-white border-purple-700 shadow-md';
+        btn.className = 'calc-cat-btn group p-4 rounded-2xl text-left border-2 transition-all cursor-pointer bg-linear-to-br from-purple-900 via-slate-900 to-purple-950 text-white border-purple-500 shadow-lg';
 
         const categoryKey = btn.getAttribute('data-category');
-        const categoryName = btn.querySelector('.font-extrabold').textContent;
+        const categoryName = btn.querySelector('.font-black').textContent;
         renderSubRanksForCalculator(categoryKey, categoryName);
       });
     });
 
-    n1Slider.addEventListener('input', calcularGanancias);
-    n2Slider.addEventListener('input', calcularGanancias);
-    n3Slider.addEventListener('input', calcularGanancias);
+    n1Slider?.addEventListener('input', calcularGanancias);
+    n2Slider?.addEventListener('input', calcularGanancias);
+    n3Slider?.addEventListener('input', calcularGanancias);
+    birToggle?.addEventListener('change', calcularGanancias);
 
     renderSubRanksForCalculator('bronce', 'Bronce');
+  });
+
+  // Observer para Animaciones de Scroll
+  function initGananciasObserver() {
+    const blocks = document.querySelectorAll('#panel-ganancias .fade-in-block');
+    if (blocks.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('opacity-0', 'translate-y-10');
+            entry.target.classList.add('opacity-100', 'translate-y-0');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '0px 0px -60px 0px',
+        threshold: 0.1,
+      }
+    );
+
+    blocks.forEach((block) => observer.observe(block));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initGananciasObserver();
   });
 </script>

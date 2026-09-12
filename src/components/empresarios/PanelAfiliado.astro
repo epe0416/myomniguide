@@ -1,41 +1,424 @@
 ---
-// Panel 5: Configuración de Enlace de Afiliado
+// src/components/empresarios/PanelAfiliado.astro
+
+const tipsHerramienta = [
+  {
+    icono: "📲",
+    titulo: "Contacto Directo",
+    desc: "Tus clientes irán directamente a tu chat de WhatsApp sin intermediarios ni pasos confusos."
+  },
+  {
+    icono: "🔗",
+    titulo: "Enlace en la URL",
+    desc: "Tu número se adjunta automáticamente en la barra de direcciones (?ref=505...) para que compartas tu link."
+  },
+  {
+    icono: "⚡",
+    titulo: "Activación Inmediata",
+    desc: "Guarda tu número una vez y todos los botones de compartir catálogo se actualizarán al instante."
+  }
+];
 ---
-<div id="panel-afiliado" class="emp-panel hidden space-y-6 max-w-2xl mx-auto">
-  <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 sm:p-8 rounded-3xl shadow-xs">
-    
-    <div class="mb-6 text-center">
-      <span class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider block mb-1">Herramienta para Empresarios</span>
-      <h2 class="text-2xl font-extrabold text-slate-950 dark:text-white">Configura tu WhatsApp de Red</h2>
-      <p class="text-slate-600 dark:text-slate-300 text-sm mt-1">
-        Ingresa tu número personal con código de país para que cuando compartas cualquier ficha técnica, los clientes te contacten directamente a ti.
-      </p>
-    </div>
 
-    <div class="space-y-4">
-      <div>
-        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
-          Tu Número de WhatsApp (ej. 50588888888)
-        </label>
-        <input 
-          type="text" 
-          id="input-afiliado-whatsapp" 
-          placeholder="Ej. 50587291404" 
-          class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-purple-900/50 bg-slate-50 dark:bg-purple-950/30 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-purple-500"
-        />
-      </div>
-
-      <button 
-        id="btn-guardar-whatsapp"
-        class="w-full py-3 px-4 rounded-xl font-bold text-sm bg-purple-900 hover:bg-purple-800 text-white transition-all shadow-xs cursor-pointer"
-      >
-        Guardar Mi Configuración
-      </button>
-
-      <div id="afiliado-feedback" class="hidden p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 text-xs text-emerald-700 dark:text-emerald-300 text-center font-medium">
-        ¡Guardado correctamente! A partir de ahora tus enlaces llevarán tu número integrado.
-      </div>
-    </div>
-
+<div id="panel-afiliado" class="emp-panel hidden space-y-12 max-w-6xl mx-auto py-4">
+  
+  <!-- Encabezado del Módulo (Bloque 0) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-8 sm:p-10 rounded-3xl text-center space-y-3 relative overflow-hidden shadow-xs dark:shadow-lg">
+    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-purple-500/10 dark:bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <span class="inline-block px-3.5 py-1 bg-purple-100 dark:bg-purple-500/20 text-purple-900 dark:text-purple-300 border border-purple-200 dark:border-purple-500/30 rounded-full text-xs font-extrabold uppercase tracking-wider">
+      Herramientas de Ventas
+    </span>
+    <h2 class="text-2xl sm:text-4xl font-black text-slate-950 dark:text-white tracking-tight">
+      Configuración de Enlaces de Afiliado
+    </h2>
+    <p class="text-xs sm:text-sm text-slate-600 dark:text-purple-200/90 max-w-2xl mx-auto leading-relaxed font-medium">
+      Vincula tu WhatsApp para recibir pedidos directamente en tu teléfono cada vez que compartas un producto o el catálogo general con un cliente.
+    </p>
   </div>
+
+  <!-- 1. Tarjeta Principal de Configuración (Bloque 1) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out max-w-3xl mx-auto">
+    <div class="bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-6 sm:p-8 rounded-3xl shadow-lg space-y-6">
+      
+      <!-- Estado de Registro -->
+      <div id="status-banner" class="p-4 rounded-2xl border transition-all duration-300 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50 dark:bg-purple-950/30 border-slate-200 dark:border-purple-900/50">
+        <div class="flex items-center gap-3 text-xs">
+          <span id="status-icon" class="text-2xl shrink-0">⚠️</span>
+          <div>
+            <span id="status-title" class="font-black text-sm block text-slate-950 dark:text-white">
+              Sin número registrado
+            </span>
+            <span id="status-desc" class="text-slate-500 dark:text-slate-400 block text-xs mt-0.5">
+              Los enlaces compartidos utilizarán el contacto general del sitio.
+            </span>
+          </div>
+        </div>
+
+        <!-- Botón para Eliminar Número -->
+        <button 
+          id="btn-remove-phone" 
+          type="button"
+          class="hidden px-3.5 py-2 text-xs font-extrabold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 dark:text-rose-300 rounded-xl transition-all border border-rose-200 dark:border-rose-900/40 cursor-pointer shrink-0"
+        >
+          🗑️ Quitar mi número
+        </button>
+      </div>
+
+      <!-- Formulario de Entrada -->
+      <div class="space-y-4 pt-2">
+        <div class="space-y-1.5">
+          <label for="input-wa-phone" class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Número de WhatsApp para Ventas:
+          </label>
+          <div class="relative">
+            <input 
+              type="tel" 
+              id="input-wa-phone" 
+              placeholder="Ej: 50588888888" 
+              class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 dark:border-purple-900/60 bg-white dark:bg-[#0c0816] text-slate-950 dark:text-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+            />
+          </div>
+
+          <!-- Mensaje de Error Inline -->
+          <div id="input-error-msg" class="hidden text-rose-600 dark:text-rose-400 text-xs font-bold items-center gap-1.5 pt-1">
+            <span>⚠️</span> <span>Por favor ingresa un número válido con al menos 8 dígitos (ej: 50588888888).</span>
+          </div>
+
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+            💡 Incluye el código de país. Para Nicaragua escribe <strong>505</strong> seguido de tu número, sin espacios ni el signo (+).
+          </p>
+        </div>
+
+        <!-- Box 1: Previsualización del Enlace Directo a WhatsApp -->
+        <div id="preview-box" class="hidden bg-purple-50/80 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-900/50 p-4 rounded-2xl space-y-1 text-xs">
+          <span class="font-extrabold text-purple-900 dark:text-purple-300 block text-[11px] uppercase tracking-wider">
+            👀 Así se estructurará tu mensaje de pedido:
+          </span>
+          <p id="preview-url-text" class="text-purple-700 dark:text-purple-200 font-mono text-[11px] truncate">
+            https://wa.me/50588888888?text=Hola,%20me%20interesa...
+          </p>
+        </div>
+
+        <!-- Box 2: Enlace Personalizado de la Tienda para Compartir -->
+        <div id="share-link-box" class="hidden bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 p-4 rounded-2xl space-y-3 text-xs">
+          <div>
+            <span class="font-extrabold text-emerald-900 dark:text-emerald-300 block text-[11px] uppercase tracking-wider">
+              🌐 Tu Enlace Personalizado de Catálogo:
+            </span>
+            <p id="share-url-text" class="text-emerald-800 dark:text-emerald-200 font-mono text-[11px] truncate mt-0.5 font-bold">
+              https://tusitio.com/?ref=50588888888
+            </p>
+          </div>
+          <button 
+            id="btn-copy-share-link" 
+            type="button"
+            class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all cursor-pointer inline-flex items-center gap-1.5"
+          >
+            📋 Copiar Enlace Personalizado
+          </button>
+        </div>
+
+        <!-- Botón Guardar -->
+        <div class="pt-2">
+          <button 
+            id="btn-save-phone" 
+            type="button"
+            class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs shadow-md hover:shadow-lg transition-all cursor-pointer text-center"
+          >
+            💾 Guardar y Activar en la URL
+          </button>
+        </div>
+      </div>
+
+      <!-- Toast Informativo -->
+      <div id="wa-toast" class="hidden p-3.5 rounded-2xl border text-xs font-bold text-center transition-all"></div>
+
+    </div>
+  </div>
+
+  <!-- 2. Ventajas para el Distribuidor (Bloque 2) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out grid grid-cols-1 md:grid-cols-3 gap-4">
+    {tipsHerramienta.map((tip) => (
+      <div class="bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-5 rounded-2xl shadow-xs space-y-2">
+        <span class="text-2xl block">{tip.icono}</span>
+        <h4 class="text-sm font-black text-slate-950 dark:text-white">{tip.titulo}</h4>
+        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+          {tip.desc}
+        </p>
+      </div>
+    ))}
+  </div>
+
+  <!-- MODAL PERSONALIZADO DE CONFIRMACIÓN -->
+  <div id="modal-delete-confirm" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300">
+    <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-900/60 rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl space-y-5 text-center transform transition-transform duration-300 scale-95" id="modal-card">
+      <div class="w-12 h-12 bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 rounded-2xl flex items-center justify-center mx-auto text-xl">
+        🗑️
+      </div>
+      <div class="space-y-1.5">
+        <h3 class="text-lg font-black text-slate-950 dark:text-white">¿Quitar número registrado?</h3>
+        <p class="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+          Al eliminar tu número, limpiaremos el parámetro de la URL y los enlaces de productos volverán a dirigir los mensajes al número general del sitio.
+        </p>
+      </div>
+      <div class="flex items-center gap-3 pt-2">
+        <button 
+          id="btn-modal-cancel" 
+          type="button"
+          class="w-1/2 py-3 px-4 rounded-xl border border-slate-200 dark:border-purple-900/50 font-bold text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-purple-950/40 transition-all cursor-pointer"
+        >
+          Cancelar
+        </button>
+        <button 
+          id="btn-modal-confirm" 
+          type="button"
+          class="w-1/2 py-3 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 font-extrabold text-xs text-white shadow-md transition-all cursor-pointer"
+        >
+          Sí, Quitar
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const STORAGE_KEY = 'omni_distributor_wa_phone';
+
+    const phoneInput = document.getElementById('input-wa-phone');
+    const inputErrorMsg = document.getElementById('input-error-msg');
+    const saveBtn = document.getElementById('btn-save-phone');
+    const removeBtn = document.getElementById('btn-remove-phone');
+    
+    const statusBanner = document.getElementById('status-banner');
+    const statusIcon = document.getElementById('status-icon');
+    const statusTitle = document.getElementById('status-title');
+    const statusDesc = document.getElementById('status-desc');
+    
+    const previewBox = document.getElementById('preview-box');
+    const previewUrlText = document.getElementById('preview-url-text');
+    
+    const shareBox = document.getElementById('share-link-box');
+    const shareUrlText = document.getElementById('share-url-text');
+    const copyShareBtn = document.getElementById('btn-copy-share-link');
+
+    const toast = document.getElementById('wa-toast');
+
+    // Elementos del Modal
+    const deleteModal = document.getElementById('modal-delete-confirm');
+    const modalCard = document.getElementById('modal-card');
+    const modalCancelBtn = document.getElementById('btn-modal-cancel');
+    const modalConfirmBtn = document.getElementById('btn-modal-confirm');
+
+    // Sincronizar parámetro en la URL del navegador sin recargar la página
+    function updateUrlParam(phone) {
+      const url = new URL(window.location.href);
+      if (phone) {
+        url.searchParams.set('ref', phone);
+      } else {
+        url.searchParams.delete('ref');
+        url.searchParams.delete('wa');
+      }
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    function showToast(msg, isError = false) {
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.className = `p-3.5 rounded-2xl border text-xs font-bold text-center transition-all ${
+        isError 
+          ? 'bg-rose-100 dark:bg-rose-950/80 border-rose-300 dark:border-rose-800 text-rose-950 dark:text-rose-200' 
+          : 'bg-emerald-100 dark:bg-emerald-950/80 border-emerald-300 dark:border-emerald-800 text-emerald-950 dark:text-emerald-200'
+      }`;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 4000);
+    }
+
+    function clearInputError() {
+      if (!phoneInput || !inputErrorMsg) return;
+      inputErrorMsg.classList.add('hidden');
+      inputErrorMsg.classList.remove('flex');
+      phoneInput.classList.remove('border-rose-500', 'focus:ring-rose-500');
+      phoneInput.classList.add('border-slate-300', 'dark:border-purple-900/60', 'focus:ring-purple-500');
+    }
+
+    function showInputError() {
+      if (!phoneInput || !inputErrorMsg) return;
+      inputErrorMsg.classList.remove('hidden');
+      inputErrorMsg.classList.add('flex');
+      phoneInput.classList.remove('border-slate-300', 'dark:border-purple-900/60', 'focus:ring-purple-500');
+      phoneInput.classList.add('border-rose-500', 'focus:ring-rose-500');
+    }
+
+    function updatePreviews(phone) {
+      if (phone && phone.length >= 8) {
+        // Preview de mensaje WhatsApp
+        if (previewUrlText) {
+          previewUrlText.textContent = `https://wa.me/${phone}?text=Hola,%20me%20interesa%20comprar...`;
+        }
+        if (previewBox) previewBox.classList.remove('hidden');
+
+        // Enlace de catálogo para compartir
+        const currentBase = window.location.origin + window.location.pathname;
+        const fullShareUrl = `${currentBase}?ref=${phone}`;
+        if (shareUrlText) {
+          shareUrlText.textContent = fullShareUrl;
+        }
+        if (shareBox) shareBox.classList.remove('hidden');
+      } else {
+        if (previewBox) previewBox.classList.add('hidden');
+        if (shareBox) shareBox.classList.add('hidden');
+      }
+    }
+
+    function updateUI() {
+      // 1. Detectar si la URL trae un parámetro de afiliado (?ref=... o ?wa=...)
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlPhoneRaw = urlParams.get('ref') || urlParams.get('wa');
+      const urlPhone = urlPhoneRaw ? urlPhoneRaw.replace(/\D/g, '') : null;
+
+      if (urlPhone && urlPhone.length >= 8) {
+        localStorage.setItem(STORAGE_KEY, urlPhone);
+      }
+
+      const savedPhone = localStorage.getItem(STORAGE_KEY);
+      clearInputError();
+
+      if (savedPhone) {
+        // Sincronizar parámetro en la URL del navegador
+        updateUrlParam(savedPhone);
+
+        if (statusIcon) statusIcon.textContent = '✅';
+        if (statusTitle) statusTitle.textContent = `Número activo: +${savedPhone}`;
+        if (statusDesc) statusDesc.textContent = 'Tu número está activo en la URL (?ref=) y los pedidos de tus clientes irán directamente a tu WhatsApp.';
+        
+        if (statusBanner) {
+          statusBanner.className = 'p-4 rounded-2xl border transition-all duration-300 flex flex-col sm:flex-row items-center justify-between gap-3 bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/50';
+        }
+
+        if (phoneInput) phoneInput.value = savedPhone;
+        if (removeBtn) removeBtn.classList.remove('hidden');
+        updatePreviews(savedPhone);
+      } else {
+        // Limpiar parámetro de la URL
+        updateUrlParam(null);
+
+        if (statusIcon) statusIcon.textContent = '⚠️';
+        if (statusTitle) statusTitle.textContent = 'Sin número registrado';
+        if (statusDesc) statusDesc.textContent = 'Los enlaces compartidos utilizarán el contacto general del sitio.';
+        
+        if (statusBanner) {
+          statusBanner.className = 'p-4 rounded-2xl border transition-all duration-300 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50 dark:bg-purple-950/30 border-slate-200 dark:border-purple-900/50';
+        }
+
+        if (phoneInput) phoneInput.value = '';
+        if (removeBtn) removeBtn.classList.add('hidden');
+        if (previewBox) previewBox.classList.add('hidden');
+        if (shareBox) shareBox.classList.add('hidden');
+      }
+    }
+
+    // Funciones del Modal
+    function openModal() {
+      if (!deleteModal || !modalCard) return;
+      deleteModal.classList.remove('hidden');
+      deleteModal.classList.add('flex');
+      setTimeout(() => {
+        modalCard.classList.remove('scale-95');
+        modalCard.classList.add('scale-100');
+      }, 10);
+    }
+
+    function closeModal() {
+      if (!deleteModal || !modalCard) return;
+      modalCard.classList.remove('scale-100');
+      modalCard.classList.add('scale-95');
+      setTimeout(() => {
+        deleteModal.classList.remove('flex');
+        deleteModal.classList.add('hidden');
+      }, 150);
+    }
+
+    // Event Listeners
+    phoneInput?.addEventListener('input', (e) => {
+      clearInputError();
+      const clean = e.target.value.replace(/\D/g, '');
+      updatePreviews(clean);
+    });
+
+    saveBtn?.addEventListener('click', () => {
+      const rawValue = phoneInput?.value || '';
+      const cleanPhone = rawValue.replace(/\D/g, '');
+
+      if (!cleanPhone || cleanPhone.length < 8) {
+        showInputError();
+        return;
+      }
+
+      // Guardar en localStorage y actualizar la URL de inmediato
+      localStorage.setItem(STORAGE_KEY, cleanPhone);
+      updateUrlParam(cleanPhone);
+      updateUI();
+      showToast('¡Número guardado y parámetro añadido a la URL correctamente!');
+    });
+
+    // Copiar enlace personalizado al portapapeles
+    copyShareBtn?.addEventListener('click', () => {
+      const shareUrl = shareUrlText?.textContent || window.location.href;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        showToast('📋 ¡Enlace personalizado copiado al portapapeles!');
+      }).catch(() => {
+        showToast('No se pudo copiar el enlace automáticamente.', true);
+      });
+    });
+
+    removeBtn?.addEventListener('click', openModal);
+    modalCancelBtn?.addEventListener('click', closeModal);
+
+    modalConfirmBtn?.addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_KEY);
+      updateUrlParam(null);
+      closeModal();
+      updateUI();
+      showToast('Has eliminado tu número registrado y limpiado el parámetro de la URL.', true);
+    });
+
+    deleteModal?.addEventListener('click', (e) => {
+      if (e.target === deleteModal) closeModal();
+    });
+
+    updateUI();
+  });
+
+  // Observer para Animaciones de Scroll
+  function initAfiliadoObserver() {
+    const blocks = document.querySelectorAll('#panel-afiliado .fade-in-block');
+    if (blocks.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('opacity-0', 'translate-y-10');
+            entry.target.classList.add('opacity-100', 'translate-y-0');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '0px 0px -60px 0px',
+        threshold: 0.1,
+      }
+    );
+
+    blocks.forEach((block) => observer.observe(block));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initAfiliadoObserver();
+  });
+</script>

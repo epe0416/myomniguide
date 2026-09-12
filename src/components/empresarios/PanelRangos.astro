@@ -1,107 +1,589 @@
 ---
-// Panel 3: Inspector Interactivo de Niveles y Ganancias
----
-<div id="panel-rangos" class="emp-panel hidden space-y-8 max-w-5xl mx-auto">
-  <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-6 sm:p-8 rounded-3xl shadow-xs">
+// src/components/empresarios/PanelRangos.astro
 
-    <div class="mb-8 text-center max-w-2xl mx-auto">
-      <span class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider block mb-1">Simulador de Carrera</span>
-      <h2 class="text-2xl font-extrabold text-slate-950 dark:text-white">Mapa de Ruta por Categoría</h2>
-      <p class="text-slate-600 dark:text-slate-300 text-sm mt-1">
-        Selecciona una categoría para desplegar sus niveles y consulta los requisitos y beneficios detallados.
+const categorias = [
+  { id: "bronce", nombre: "Escala Bronce", badge: "🥉 Cimientos", desc: "Primeros pasos, duplicación básica y menudeo en equipo." },
+  { id: "plata", nombre: "Escala Plata", badge: "🥈 Liderazgo Real", desc: "Consolidación de red, bonos de equipo y comisiones de profundidad." },
+  { id: "oro", nombre: "Escala Oro", badge: "🥇 Libertad Financiera", desc: "Estructuras sólidas, regalías por generaciones y grandes bonificaciones." },
+  { id: "diamante", nombre: "Escala Diamante", badge: "💎 Cúspide del Negocio", desc: "Máximos ingresos pasivos, impacto internacional y estilo de vida." }
+];
+
+const conceptosClave = [
+  { siglas: "PP", nombre: "Puntos Personales", desc: "Compras realizadas directamente con tu código (menudeo + autoconsumo)." },
+  { siglas: "PG", nombre: "Puntos de Grupo", desc: "Puntos comprados por tu red hasta 3 niveles que aún no alcanzan el 40%." },
+  { siglas: "PLD", nombre: "Puntos Línea Descendente", desc: "Volumen total de toda tu organización sin límite de niveles ni descuentos." },
+  { siglas: "LA", nombre: "Líneas Activas", desc: "Distribuidores directos de 1er Nivel que realizan mínimo 300 PP en el mes." }
+];
+---
+
+<div id="panel-rangos" class="emp-panel hidden space-y-12 max-w-6xl mx-auto py-4">
+  
+  <!-- Encabezado del Módulo (Bloque 0) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-8 sm:p-10 rounded-3xl text-center space-y-3 relative overflow-hidden shadow-xs dark:shadow-lg">
+    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-purple-500/10 dark:bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <span class="inline-block px-3.5 py-1 bg-purple-100 dark:bg-purple-500/20 text-purple-900 dark:text-purple-300 border border-purple-200 dark:border-purple-500/30 rounded-full text-xs font-extrabold uppercase tracking-wider">
+      Plan de Carrera e Ingresos Residuales
+    </span>
+    <h2 class="text-2xl sm:text-4xl font-black text-slate-950 dark:text-white tracking-tight">
+      Inspector de Rangos y Plan de Liderazgo
+    </h2>
+    <p class="text-xs sm:text-sm text-slate-600 dark:text-purple-200/90 max-w-2xl mx-auto leading-relaxed font-medium">
+      Conoce los requisitos de calificación, las comisiones desglosadas por nivel y la estrategia comercial requerida para alcanzar cada categoría de la empresa.
+    </p>
+  </div>
+
+  <!-- 1. Infografía Educativa: Glosario de Términos del Plan (Bloque 1) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out space-y-4">
+    <div class="flex items-center justify-between border-b border-slate-200 dark:border-purple-950/60 pb-2">
+      <h3 class="text-base sm:text-lg font-black text-slate-950 dark:text-white flex items-center gap-2">
+        <span>📖</span> Glosario Técnico de Calificación
+      </h3>
+      <span class="text-xs font-semibold text-purple-700 dark:text-purple-400">Conceptos Fundamentales</span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {conceptosClave.map((c) => (
+        <div class="bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-5 rounded-2xl shadow-xs space-y-2 hover:border-purple-400 transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xl font-black text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950 px-2.5 py-0.5 rounded-lg">
+              {c.siglas}
+            </span>
+            <span class="text-[10px] text-slate-400 font-extrabold uppercase">Término Oficial</span>
+          </div>
+          <h4 class="text-xs font-black text-slate-950 dark:text-white">{c.nombre}</h4>
+          <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+            {c.desc}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- 2. Módulo Interactivo: Inspector de Niveles (Bloque 2) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-6 sm:p-8 rounded-3xl shadow-lg space-y-8">
+    
+    <!-- Encabezado del Inspector -->
+    <div class="border-b border-slate-100 dark:border-purple-950/60 pb-4 text-center sm:text-left">
+      <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-950 px-2.5 py-1 rounded-md inline-block mb-1">
+        Simulador Visual de Estructuras
+      </span>
+      <h3 class="text-xl font-black text-slate-950 dark:text-white">
+        Selecciona una Escala de Carrera
+      </h3>
+      <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+        Haz clic en una categoría para desglosar sus sub-niveles y consultar los volúmenes y comisiones que desbloqueas.
       </p>
     </div>
 
-    {/* 1. Botones de Categoría (Escala) */}
-    <div id="category-buttons" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
-      <button data-category="bronce" class="category-btn group p-5 rounded-2xl text-left border transition-all cursor-pointer bg-purple-900 text-white border-purple-700 shadow-md">
+    <!-- Botones Principales de Categoría (4 Cols) -->
+    <div id="category-buttons" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <button data-category="bronce" class="category-btn active-cat group p-5 rounded-2xl text-left border-2 transition-all cursor-pointer bg-linear-to-br from-purple-900 via-slate-900 to-purple-950 text-white border-purple-500 shadow-lg">
         <span class="text-3xl block mb-2 opacity-90">🥉</span>
-        <span class="font-black text-sm block">Escala</span>
-        <span class="font-extrabold text-lg block">Bronce</span>
-        <span class="text-xs opacity-75 mt-1 block">Niveles Iniciales</span>
+        <span class="font-extrabold text-xs uppercase tracking-wider text-purple-300 block">Escala</span>
+        <span class="font-black text-xl block">Bronce</span>
+        <span class="text-[10px] text-purple-200/80 mt-1 block font-medium">Cimientos de Red</span>
       </button>
 
-      <button data-category="plata" class="category-btn group p-5 rounded-2xl text-left border transition-all cursor-pointer bg-slate-100 dark:bg-purple-950/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500 hover:shadow-sm">
+      <button data-category="plata" class="category-btn group p-5 rounded-2xl text-left border-2 transition-all cursor-pointer bg-slate-50 dark:bg-purple-950/30 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-400">
         <span class="text-3xl block mb-2 opacity-90 group-hover:scale-105 transition-transform">🥈</span>
-        <span class="font-black text-sm block">Escala</span>
-        <span class="font-extrabold text-lg block">Plata</span>
-        <span class="text-xs opacity-75 mt-1 block">Liderazgo y CCE</span>
+        <span class="font-extrabold text-xs uppercase tracking-wider text-slate-400 block">Escala</span>
+        <span class="font-black text-xl block text-slate-950 dark:text-white">Plata</span>
+        <span class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 block font-medium">Liderazgo e Ingresos</span>
       </button>
 
-      <button data-category="oro" class="category-btn group p-5 rounded-2xl text-left border transition-all cursor-pointer bg-slate-100 dark:bg-purple-950/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500 hover:shadow-sm">
+      <button data-category="oro" class="category-btn group p-5 rounded-2xl text-left border-2 transition-all cursor-pointer bg-slate-50 dark:bg-purple-950/30 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-400">
         <span class="text-3xl block mb-2 opacity-90 group-hover:scale-105 transition-transform">🥇</span>
-        <span class="font-black text-sm block">Escala</span>
-        <span class="font-extrabold text-lg block">Oro</span>
-        <span class="text-xs opacity-75 mt-1 block">Consolidación</span>
+        <span class="font-extrabold text-xs uppercase tracking-wider text-slate-400 block">Escala</span>
+        <span class="font-black text-xl block text-slate-950 dark:text-white">Oro</span>
+        <span class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 block font-medium">Generaciones y Regalías</span>
       </button>
 
-      <button data-category="diamante" class="category-btn group p-5 rounded-2xl text-left border transition-all cursor-pointer bg-slate-100 dark:bg-purple-950/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-500 hover:shadow-sm">
+      <button data-category="diamante" class="category-btn group p-5 rounded-2xl text-left border-2 transition-all cursor-pointer bg-slate-50 dark:bg-purple-950/30 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/50 hover:border-purple-400">
         <span class="text-3xl block mb-2 opacity-90 group-hover:scale-105 transition-transform">💎</span>
-        <span class="font-black text-sm block">Escala</span>
-        <span class="font-extrabold text-lg block">Diamante</span>
-        <span class="text-xs opacity-75 mt-1 block">Cúspide y Máximos Bonos</span>
+        <span class="font-extrabold text-xs uppercase tracking-wider text-slate-400 block">Escala</span>
+        <span class="font-black text-xl block text-slate-950 dark:text-white">Diamante</span>
+        <span class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 block font-medium">Cúspide y Libertad Total</span>
       </button>
     </div>
 
-    {/* 2. Sub-selección de Niveles */}
-    <div id="sub-rank-selector" class="mb-8 border-t border-slate-100 dark:border-purple-950/60 pt-8 hidden transition-all duration-300 ease-in-out transform scale-95 opacity-0">
-       <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 text-center">Niveles dentro de la Escala <span id="category-title-span" class="text-purple-700 dark:text-purple-300">Bronce</span></h4>
-       <div id="sub-buttons-container" class="flex flex-wrap justify-center gap-3"></div>
+    <!-- Selector de Sub-Niveles (Premier, Elite, Supreme) -->
+    <div id="sub-rank-selector" class="border-t border-slate-100 dark:border-purple-950/60 pt-6 space-y-3">
+      <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-center">
+        Niveles de Calificación dentro de la Escala <span id="category-title-span" class="text-purple-600 dark:text-purple-300">Bronce</span>:
+      </h4>
+      <div id="sub-buttons-container" class="flex flex-wrap justify-center gap-3">
+        <!-- Generado dinámicamente vía Javascript -->
+      </div>
     </div>
 
-    {/* 3. Tarjeta de Visualización de Requisitos */}
-    <div id="rank-display-card" class="bg-purple-50/70 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-900/50 p-6 sm:p-8 rounded-2xl transition-opacity duration-200 opacity-100">
+    <!-- TARJETA PRINCIPAL DE INSPECCIÓN DE RANGO -->
+    <div id="rank-display-card" class="bg-slate-50/80 dark:bg-purple-950/20 border border-slate-200/90 dark:border-purple-900/50 p-6 sm:p-8 rounded-3xl space-y-6 transition-all">
       
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-purple-200/60 dark:border-purple-900/40 mb-6">
+      <!-- Cabecera de la Tarjeta del Rango -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 dark:border-purple-900/40">
         <div>
-          <span id="card-badge" class="text-xs font-bold text-purple-700 dark:text-purple-300 bg-purple-200/60 dark:bg-purple-900/60 px-3 py-1 rounded-md uppercase">Nivel Inicial</span>
-          <h3 id="card-title" class="text-2xl font-black text-purple-950 dark:text-white mt-1">Bronce</h3>
+          <span id="card-badge" class="text-[10px] font-black uppercase tracking-wider text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/80 px-3 py-1 rounded-md">
+            🥉 Bronce Premier
+          </span>
+          <h3 id="card-title" class="text-2xl sm:text-3xl font-black text-slate-950 dark:text-white mt-1">
+            Bronce Premier
+          </h3>
         </div>
-        <div class="text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-[#0c0816] px-4 py-2 rounded-xl border border-purple-100 dark:border-purple-950/60 shadow-xs">
-          🎯 Títulos Requeridos: <strong id="card-titles" class="text-purple-700 dark:text-purple-400">Ninguno</strong>
+        <div class="text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-[#0c0816] px-4 py-3 rounded-2xl border border-slate-200 dark:border-purple-900/60 shadow-xs">
+          🎯 Estructura de Red Requerida: <strong id="card-titles" class="text-purple-700 dark:text-purple-300 font-extrabold">Ninguna (1 Línea Activa)</strong>
         </div>
       </div>
 
-      <div class="mb-6">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">📋 Requisitos de Calificación</h4>
+      <!-- Grid de Requisitos Volumétricos (4 Cards) -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          📋 Requisitos Volumétricos Mensuales
+        </h4>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="bg-white dark:bg-[#0c0816] p-4 rounded-xl border border-purple-100 dark:border-purple-950/60 text-center shadow-xs">
-            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Puntos Personales (PP)</span>
-            <span id="req-pp" class="text-lg font-black text-purple-700 dark:text-purple-300">100</span>
+          <div class="bg-white dark:bg-[#0c0816] p-4 rounded-2xl border border-slate-200/80 dark:border-purple-900/50 text-center">
+            <span class="text-[10px] uppercase font-extrabold text-slate-400 block mb-1">Puntos Personales (PP)</span>
+            <span id="req-pp" class="text-xl font-black text-purple-700 dark:text-purple-300">100 PP</span>
           </div>
-          <div class="bg-white dark:bg-[#0c0816] p-4 rounded-xl border border-purple-100 dark:border-purple-950/60 text-center shadow-xs">
-            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Puntos Grupales (PG)</span>
-            <span id="req-pg" class="text-lg font-black text-purple-700 dark:text-purple-300">-</span>
+          <div class="bg-white dark:bg-[#0c0816] p-4 rounded-2xl border border-slate-200/80 dark:border-purple-900/50 text-center">
+            <span class="text-[10px] uppercase font-extrabold text-slate-400 block mb-1">Puntos de Grupo (PG)</span>
+            <span id="req-pg" class="text-xl font-black text-purple-700 dark:text-purple-300">300 PG</span>
           </div>
-          <div class="bg-white dark:bg-[#0c0816] p-4 rounded-xl border border-purple-100 dark:border-purple-950/60 text-center shadow-xs">
-            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Puntos de Línea (PLD)</span>
-            <span id="req-pld" class="text-lg font-black text-purple-700 dark:text-purple-300">-</span>
+          <div class="bg-white dark:bg-[#0c0816] p-4 rounded-2xl border border-slate-200/80 dark:border-purple-900/50 text-center">
+            <span class="text-[10px] uppercase font-extrabold text-slate-400 block mb-1">Puntos Línea Desc. (PLD)</span>
+            <span id="req-pld" class="text-xl font-black text-purple-700 dark:text-purple-300">-</span>
           </div>
-          <div class="bg-white dark:bg-[#0c0816] p-4 rounded-xl border border-purple-100 dark:border-purple-950/60 text-center shadow-xs">
-            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Líneas Activas (LA)</span>
-            <span id="req-la" class="text-lg font-black text-purple-700 dark:text-purple-300">-</span>
+          <div class="bg-white dark:bg-[#0c0816] p-4 rounded-2xl border border-slate-200/80 dark:border-purple-900/50 text-center">
+            <span class="text-[10px] uppercase font-extrabold text-slate-400 block mb-1">Líneas Activas (LA)</span>
+            <span id="req-la" class="text-xl font-black text-purple-700 dark:text-purple-300">1 LA</span>
           </div>
         </div>
       </div>
 
-      <div>
-        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">💰 Ganancias y Comisiones Desbloqueadas</h4>
+      <!-- Grid de Ganancias y Comisiones Desbloqueadas (3 Cards) -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          💰 Comisiones y Reembolsos de Red
+        </h4>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div class="bg-emerald-50/70 dark:bg-emerald-950/30 p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50">
-            <span class="text-xs font-bold text-emerald-800 dark:text-emerald-400 block mb-1">Comisión 1er Nivel</span>
-            <span id="gain-n1" class="text-base font-black text-emerald-950 dark:text-emerald-200">10%</span>
+          <!-- 1er Nivel -->
+          <div class="bg-emerald-50/80 dark:bg-emerald-950/30 p-4 rounded-2xl border border-emerald-200/80 dark:border-emerald-900/50 space-y-1">
+            <span class="text-xs font-extrabold text-emerald-900 dark:text-emerald-300 block">Comisión 1er Nivel</span>
+            <span id="gain-n1" class="text-lg font-black text-emerald-950 dark:text-emerald-200 block">8% (+10% BIR)</span>
+            <span class="text-[10px] text-emerald-700 dark:text-emerald-400 block">Compras de tus afiliados directos</span>
           </div>
-          <div class="bg-purple-50/70 dark:bg-purple-950/30 p-4 rounded-xl border border-purple-200 dark:border-purple-900/50">
-            <span class="text-xs font-bold text-purple-800 dark:text-purple-300 block mb-1">Comisión 2º y 3º Nivel</span>
-            <span id="gain-n2n3" class="text-base font-black text-purple-950 dark:text-purple-200">No disponible</span>
+          <!-- 2do Nivel -->
+          <div class="bg-purple-50/80 dark:bg-purple-950/30 p-4 rounded-2xl border border-purple-200/80 dark:border-purple-900/50 space-y-1">
+            <span class="text-xs font-extrabold text-purple-900 dark:text-purple-300 block">Comisión 2º Nivel</span>
+            <span id="gain-n2n3" class="text-lg font-black text-purple-950 dark:text-purple-200 block">No disponible</span>
+            <span class="text-[10px] text-purple-700 dark:text-purple-400 block">Afiliados de tus afiliados</span>
           </div>
-          <div class="bg-amber-50/70 dark:bg-amber-950/30 p-4 rounded-xl border border-amber-200 dark:border-amber-900/50">
-            <span class="text-xs font-bold text-amber-800 dark:text-amber-300 block mb-1">Constructor / Generaciones</span>
-            <span id="gain-extra" class="text-base font-black text-amber-950 dark:text-amber-200">No disponible</span>
+          <!-- 3er Nivel o Extra -->
+          <div class="bg-amber-50/80 dark:bg-amber-950/30 p-4 rounded-2xl border border-amber-200/80 dark:border-amber-900/50 space-y-1">
+            <span class="text-xs font-extrabold text-amber-900 dark:text-amber-300 block">3er Nivel / Fondo Generacional</span>
+            <span id="gain-extra" class="text-lg font-black text-amber-950 dark:text-amber-200 block">No disponible</span>
+            <span class="text-[10px] text-amber-700 dark:text-amber-400 block">Profundidad y Bonos de Liderazgo</span>
           </div>
+        </div>
+      </div>
+
+      <!-- Enfoque Estratégico del Rango -->
+      <div class="bg-white dark:bg-[#0c0816] p-4 rounded-2xl border border-purple-100 dark:border-purple-950/60 flex items-start gap-3">
+        <span class="text-2xl shrink-0">🎯</span>
+        <div class="space-y-0.5 text-xs">
+          <span class="font-extrabold text-purple-900 dark:text-purple-300 block uppercase tracking-wider text-[10px]">
+            Enfoque Estratégico de esta Etapa:
+          </span>
+          <p id="rank-strategy" class="text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+            Aprende la dinámica de compras personales y afilia a tu primer distribuidor para comenzar a cobrar comisiones por su volumen.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- 3. DEEP DIVE EDUCATIVO: Los 2 Hitos Fundamentales del Negocio (Bloque 3) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out space-y-6">
+    <div class="border-b border-slate-200 dark:border-purple-950/60 pb-2">
+      <h3 class="text-lg sm:text-2xl font-black text-slate-950 dark:text-white flex items-center gap-2">
+        <span>⭐</span> Los 2 Hitos Clave para Construir Riqueza
+      </h3>
+      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
+        No intentes memorizar todo el plan. Enfoca el 90% de tu esfuerzo en alcanzar y duplicar estas dos metas fundamentales.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- Hito 1: Bronce Supreme -->
+      <div class="bg-linear-to-br from-purple-900 via-slate-900 to-purple-950 border-2 border-purple-500/50 p-6 sm:p-8 rounded-3xl text-white space-y-5 shadow-xl relative overflow-hidden">
+        <div class="flex items-center justify-between border-b border-purple-800/60 pb-3">
+          <span class="text-xs font-black uppercase text-amber-400 tracking-wider">Hito 1: El Motor del Negocio</span>
+          <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-md">META MES 1 - 2</span>
+        </div>
+
+        <div class="space-y-1">
+          <h4 class="text-2xl font-black text-white">Bronce Supreme</h4>
+          <p class="text-xs text-purple-200 leading-relaxed">
+            Es la base operativa más importante. Aquí aprendes a comercializar tus 1,000 PP e integrar a tus primeros 3 socios en el equipo.
+          </p>
+        </div>
+
+        <!-- Fórmula Bronce Supreme -->
+        <div class="bg-purple-950/80 border border-purple-700/60 p-4 rounded-2xl space-y-2 text-xs">
+          <span class="font-extrabold text-amber-300 block text-[11px] uppercase tracking-wider">📐 La Fórmula Estructurada:</span>
+          <ul class="space-y-1.5 text-purple-100">
+            <li class="flex items-center gap-2">
+              <span class="text-amber-400 font-bold">✓</span>
+              <span><strong>1,000 Puntos Personales (PP)</strong> en el mes.</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-amber-400 font-bold">✓</span>
+              <span><strong>2,000 Puntos de Grupo (PG)</strong> acumulados.</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-amber-400 font-bold">✓</span>
+              <span><strong>3 Líneas Activas (LA)</strong> en 1er Nivel (mín. 300 PP c/u).</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-amber-400/20 border border-amber-400/40 p-3.5 rounded-xl text-xs text-amber-200 leading-relaxed">
+          <strong>Por qué importa:</strong> Calificas al <strong>Bono Bronce Supreme</strong> en efectivo y sientas las bases para llegar al 40% de descuento.
+        </div>
+      </div>
+
+      <!-- Hito 2: Plata Supreme -->
+      <div class="bg-linear-to-br from-slate-950 via-purple-950 to-slate-900 border-2 border-emerald-500/50 p-6 sm:p-8 rounded-3xl text-white space-y-5 shadow-xl relative overflow-hidden">
+        <div class="flex items-center justify-between border-b border-purple-800/60 pb-3">
+          <span class="text-xs font-black uppercase text-emerald-400 tracking-wider">Hito 2: La Fábrica de Independencia</span>
+          <span class="bg-emerald-400 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-md">META MES 3 - 6</span>
+        </div>
+
+        <div class="space-y-1">
+          <h4 class="text-2xl font-black text-white">Plata Supreme</h4>
+          <p class="text-xs text-purple-200 leading-relaxed">
+            El verdadero salto a los ingresos residuales significativos. Ocurre cuando ayudas a 4 personas de tu equipo a convertirse en Bronce Supreme.
+          </p>
+        </div>
+
+        <!-- Fórmula Plata Supreme -->
+        <div class="bg-purple-950/80 border border-purple-700/60 p-4 rounded-2xl space-y-2 text-xs">
+          <span class="font-extrabold text-emerald-300 block text-[11px] uppercase tracking-wider">📐 La Fórmula Estructurada:</span>
+          <ul class="space-y-1.5 text-purple-100">
+            <li class="flex items-center gap-2">
+              <span class="text-emerald-400 font-bold">✓</span>
+              <span><strong>2,500 Puntos Personales (PP)</strong> en el mes.</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-emerald-400 font-bold">✓</span>
+              <span><strong>10,000 Puntos de Grupo (PG / PLD)</strong> en la red.</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-emerald-400 font-bold">✓</span>
+              <span>Desarrollar <strong>4 Líneas de Bronce Supreme</strong> independientes.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-emerald-400/20 border border-emerald-400/40 p-3.5 rounded-xl text-xs text-emerald-200 leading-relaxed">
+          <strong>Por qué importa:</strong> Desbloqueas el cobro de <strong>Generaciones Infinitas</strong>, calificas a viajes internacionales de la empresa y abres los bonos de liderazgo en efectivo más altos.
         </div>
       </div>
 
     </div>
   </div>
+
 </div>
+
+<script is:inline>
+  // DICCIONARIO COMPLETO DE RANGOS Y NIVELES OFICIALES
+  const RANGOS_DATA = {
+    bronce: [
+      {
+        id: "b-premier",
+        nombre: "Bronce Premier",
+        titles: "Ninguna (1 Línea Activa)",
+        pp: "100 PP",
+        pg: "300 PG",
+        pld: "-",
+        la: "1 LA",
+        gainN1: "8% (+10% BIR)",
+        gainN2: "No disponible",
+        gainExtra: "No disponible",
+        strategy: "Realiza tus primeras compras personales y afilia a tu primer socio directo."
+      },
+      {
+        id: "b-elite",
+        nombre: "Bronce Elite",
+        titles: "Ninguna (1 Línea Activa)",
+        pp: "300 PP",
+        pg: "1,500 PG",
+        pld: "-",
+        la: "1 LA",
+        gainN1: "10% (+10% BIR)",
+        gainN2: "No disponible (+5% BIR)",
+        gainExtra: "No disponible",
+        strategy: "Incrementa tu menudeo personal y enseña a tu equipo a duplicar compras periódicas."
+      },
+      {
+        id: "b-supreme",
+        nombre: "Bronce Supreme",
+        titles: "3 Líneas Activas (300 PP c/u)",
+        pp: "1,000 PP",
+        pg: "2,000 PG",
+        pld: "-",
+        la: "3 LA",
+        gainN1: "10% (+10% BIR)",
+        gainN2: "5% (+5% BIR)",
+        gainExtra: "5% Reembolso Constructor",
+        strategy: "¡El motor base de tu negocio! Gana el Bono Bronce Supreme y prepárate para el 40%."
+      }
+    ],
+    plata: [
+      {
+        id: "p-premier",
+        nombre: "Plata Premier",
+        titles: "2 Bronce Premier en 1er Nivel",
+        pp: "1,500 PP",
+        pg: "4,000 PG",
+        pld: "-",
+        la: "4 LA",
+        gainN1: "10% (+10% BIR)",
+        gainN2: "8% (+5% BIR)",
+        gainExtra: "2% en 3er Nivel",
+        strategy: "Amplía tu estructura a 4 líneas activas y ayuda a tus primeros 2 socios a subir de rango."
+      },
+      {
+        id: "p-elite",
+        nombre: "Plata Elite",
+        titles: "2 Bronce Elite en 1er Nivel",
+        pp: "2,000 PP",
+        pg: "7,000 PG",
+        pld: "-",
+        la: "4 LA",
+        gainN1: "10% (+10% BIR)",
+        gainN2: "8% (+5% BIR)",
+        gainExtra: "4% en 3er Nivel",
+        strategy: "Consolida volúmenes de 7,000 PG impulsando a tu equipo a calificar a la escala Bronce Elite."
+      },
+      {
+        id: "p-supreme",
+        nombre: "Plata Supreme",
+        titles: "4 Bronce Supreme en 1er Nivel",
+        pp: "2,500 PP",
+        pg: "10,000 PG / PLD",
+        pld: "10,000 PLD",
+        la: "4 LA",
+        gainN1: "10% (+10% BIR)",
+        gainN2: "8% (+5% BIR)",
+        gainExtra: "6% 3er Nivel + 2% 1ª Gen",
+        strategy: "¡La llave de la independencia financiera! Formas líderes independientes y abres cobros de Generaciones."
+      }
+    ],
+    oro: [
+      {
+        id: "o-premier",
+        nombre: "Oro Premier",
+        titles: "2 Plata Supreme + 2 Bronce Supreme",
+        pp: "2,500 PP",
+        pg: "-",
+        pld: "12,000 PLD",
+        la: "4 LA",
+        gainN1: "10% (+10% BIR)",
+        gainN2: "8% (+5% BIR)",
+        gainExtra: "6% 3er Nivel + 3% 1ª Gen",
+        strategy: "Desarrolla 2 grandes pilares de Plata Supreme dentro de tu organización."
+      },
+      {
+        id: "o-elite",
+        nombre: "Oro Elite",
+        titles: "2 Plata Supreme + 2 Plata Elite",
+        pp: "2,500 PP",
+        pg: "-",
+        pld: "30,000 PLD",
+        la: "4 LA",
+        gainN1: "10% (+10% BIR)",
+        gainN2: "8% (+5% BIR)",
+        gainExtra: "6% 3er Nivel + 3% 1ª/2ª Gen",
+        strategy: "Multiplica el volumen de red superando los 30,000 Puntos de Línea Descendente."
+      },
+      {
+        id: "o-supreme",
+        nombre: "Oro Supreme",
+        titles: "4 Plata Supreme en 1er Nivel",
+        pp: "2,500 PP",
+        pg: "-",
+        pld: "50,000 PLD",
+        la: "4 LA",
+        gainN1: "10% (+10% BIR)",
+        gainN2: "8% (+5% BIR)",
+        gainExtra: "6% 3er Nivel + 3% hasta 3ª Gen",
+        strategy: "Liderazgo consolidado. Formas 4 Plata Supreme directos y cobras 3 generaciones continuas."
+      }
+    ],
+    diamante: [
+      {
+        id: "d-premier",
+        nombre: "Diamante Premier",
+        titles: "3 Oro Supreme + 2 Plata Supreme",
+        pp: "2,500 PP",
+        pg: "-",
+        pld: "100,000 PLD",
+        la: "5 LA",
+        gainN1: "10% (+10% BIR)",
+        gainN2: "8% (+5% BIR)",
+        gainExtra: "6% 3er Nivel + Fondo Diamante",
+        strategy: "Máxima libertad financiera. Tu organización genera más de 100,000 PLD al mes."
+      },
+      {
+        id: "d-elite",
+        nombre: "Diamante Elite",
+        titles: "4 Oro Supreme + 2 Plata Supreme",
+        pp: "2,500 PP",
+        pg: "-",
+        pld: "200,000 PLD",
+        la: "6 LA",
+        gainN1: "10% (+10% BIR)",
+        gainN2: "8% (+5% BIR)",
+        gainExtra: "Fondo Mundial + Bonos Millonarios",
+        strategy: "Organización internacional altamente duplicada en múltiples países."
+      },
+      {
+        id: "d-supreme",
+        nombre: "Diamante Supreme",
+        titles: "5 Oro Supreme en 1er Nivel",
+        pp: "2,500 PP",
+        pg: "-",
+        pld: "500,000 PLD",
+        la: "5 LA",
+        gainN1: "10% (+10% BIR)",
+        gainN2: "8% (+5% BIR)",
+        gainExtra: "Cúspide del Plan de Compensación",
+        strategy: "Máximo nivel de logro de Multidesarrollo. Lideras un imperio de salud y bienestar a nivel global."
+      }
+    ]
+  };
+
+  let currentCategory = 'bronce';
+  let currentSubIndex = 0;
+
+  function initInspectorRangos() {
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const subContainer = document.getElementById('sub-buttons-container');
+    const categoryTitleSpan = document.getElementById('category-title-span');
+
+    if (!categoryButtons.length || !subContainer) return;
+
+    function renderSubButtons(catKey) {
+      const list = RANGOS_DATA[catKey] || RANGOS_DATA.bronce;
+      subContainer.innerHTML = '';
+
+      list.forEach((item, index) => {
+        const btn = document.createElement('button');
+        const isActive = index === currentSubIndex;
+
+        btn.className = `px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer border ${
+          isActive 
+            ? 'bg-purple-600 text-white border-purple-500 shadow-md scale-105' 
+            : 'bg-white dark:bg-[#0c0816] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-purple-900/60 hover:border-purple-400'
+        }`;
+        
+        btn.textContent = item.nombre;
+        btn.addEventListener('click', () => {
+          currentSubIndex = index;
+          renderSubButtons(catKey);
+          updateCard(catKey, index);
+        });
+
+        subContainer.appendChild(btn);
+      });
+    }
+
+    function updateCard(catKey, subIdx) {
+      const item = RANGOS_DATA[catKey][subIdx];
+      if (!item) return;
+
+      const cardBadge = document.getElementById('card-badge');
+      const cardTitle = document.getElementById('card-title');
+      const cardTitles = document.getElementById('card-titles');
+      const reqPp = document.getElementById('req-pp');
+      const reqPg = document.getElementById('req-pg');
+      const reqPld = document.getElementById('req-pld');
+      const reqLa = document.getElementById('req-la');
+      const gainN1 = document.getElementById('gain-n1');
+      const gainN2N3 = document.getElementById('gain-n2n3');
+      const gainExtra = document.getElementById('gain-extra');
+      const rankStrategy = document.getElementById('rank-strategy');
+
+      if (cardBadge) cardBadge.textContent = item.nombre;
+      if (cardTitle) cardTitle.textContent = item.nombre;
+      if (cardTitles) cardTitles.textContent = item.titles;
+      if (reqPp) reqPp.textContent = item.pp;
+      if (reqPg) reqPg.textContent = item.pg;
+      if (reqPld) reqPld.textContent = item.pld;
+      if (reqLa) reqLa.textContent = item.la;
+      if (gainN1) gainN1.textContent = item.gainN1;
+      if (gainN2N3) gainN2N3.textContent = item.gainN2;
+      if (gainExtra) gainExtra.textContent = item.gainExtra;
+      if (rankStrategy) rankStrategy.textContent = item.strategy;
+    }
+
+    categoryButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        categoryButtons.forEach((b) => {
+          b.classList.remove('active-cat', 'bg-linear-to-br', 'from-purple-900', 'via-slate-900', 'to-purple-950', 'text-white', 'border-purple-500', 'shadow-lg');
+          b.classList.add('bg-slate-50', 'dark:bg-purple-950/30', 'text-slate-700', 'dark:text-slate-300', 'border-slate-200', 'dark:border-purple-900/50');
+        });
+
+        btn.classList.remove('bg-slate-50', 'dark:bg-purple-950/30', 'text-slate-700', 'dark:text-slate-300', 'border-slate-200', 'dark:border-purple-900/50');
+        btn.classList.add('active-cat', 'bg-linear-to-br', 'from-purple-900', 'via-slate-900', 'to-purple-950', 'text-white', 'border-purple-500', 'shadow-lg');
+
+        const cat = btn.getAttribute('data-category');
+        currentCategory = cat;
+        currentSubIndex = 0;
+
+        if (categoryTitleSpan) {
+          categoryTitleSpan.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+        }
+
+        renderSubButtons(cat);
+        updateCard(cat, 0);
+      });
+    });
+
+    renderSubButtons('bronce');
+    updateCard('bronce', 0);
+  }
+
+  // Observer para Animaciones de Scroll
+  function initRangosObserver() {
+    const blocks = document.querySelectorAll('#panel-rangos .fade-in-block');
+    if (blocks.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('opacity-0', 'translate-y-10');
+            entry.target.classList.add('opacity-100', 'translate-y-0');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '0px 0px -60px 0px',
+        threshold: 0.1,
+      }
+    );
+
+    blocks.forEach((block) => observer.observe(block));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initInspectorRangos();
+    initRangosObserver();
+  });
+</script>

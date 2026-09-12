@@ -1,34 +1,666 @@
 ---
-// Panel 2: Simulador de Descuentos
----
-<div id="panel-calculadora" class="emp-panel hidden space-y-6 max-w-3xl mx-auto">
-  <div class="bg-white dark:bg-[#130f24] border border-slate-200 dark:border-purple-950/60 p-8 rounded-3xl shadow-xs">
-    <h2 class="text-xl font-bold text-slate-950 dark:text-white mb-4">Simulador de Escala de Descuentos</h2>
-    <p class="text-slate-600 dark:text-slate-300 text-sm mb-6">
-      Ingresa tus puntos acumulados en el periodo para calcular tu nivel de descuento y conocer qué te falta para llegar al 40%.
-    </p>
+// src/components/empresarios/PanelDescuentos.astro
 
-    <div class="space-y-4 mb-6">
-      <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-        Puntos Personales Acumulados: <span id="puntos-val" class="text-purple-600 dark:text-purple-400 text-base font-black">1000</span> PTS
-      </label>
-      <input 
-        type="range" 
-        id="puntos-slider" 
-        min="0" 
-        max="4000" 
-        step="100" 
-        value="1000" 
-        class="w-full accent-purple-600 cursor-pointer"
-      />
+const nivelesDescuento = [
+  { porc: "25%", pts: "0 - 999 PTS", desc: "Descuento base automático al afiliarte. Válido desde tu primer pedido sin mínimo de compra.", permanente: true, badge: "Base Afiliación" },
+  { porc: "30%", pts: "1,000 - 1,999 PTS", desc: "Primer incremento de margen comercial al acumular tus pedidos.", permanente: false, badge: "Intermedio" },
+  { porc: "35%", pts: "2,000+ PTS", desc: "¡Nivel Fijo Protegido! Una vez alcanzado este porcentaje, jamás vuelves a bajar.", permanente: true, badge: "Fijo / Protegido" },
+  { porc: "40%", pts: "4,000 PTS (en 1 o 2 meses)", desc: "Máximo descuento mayorista. Mantén tu nivel completando 1,500 PP al año.", permanente: true, badge: "Mayor Descuento" },
+];
+
+const combinaciones40 = [
+  { m1: "4,000 PP", m2: "0 PP", titulo: "Calificación Directa", desc: "Completa 4,000 Puntos Personales en un solo periodo mensual." },
+  { m1: "1,000 PP", m2: "3,000 PP", titulo: "Estrategia Progresiva A", desc: "Consolida 1,000 PP el primer mes y acelera a 3,000 PP en el segundo." },
+  { m1: "2,000 PP", m2: "2,000 PP", titulo: "Estrategia Equilibrada", desc: "Ritmo constante de 2,000 PP en dos periodos mensuales consecutivos." },
+  { m1: "3,000 PP", m2: "1,000 PP", titulo: "Estrategia Progresiva B", desc: "Asegura el mayor volumen en el primer mes y cierra con 1,000 PP." },
+];
+
+// Datos Oficiales de Productos Top para la Calculadora Financiera
+const productosTop = [
+  { id: 'magnus', nombre: 'Magnus Supreme (Caja 30 Sach)', pts: 54, sugerido: 1185, c30: 864.73, c35: 811.35, c40: 757.97, g30: 320.27, g35: 373.65, g40: 427.03 },
+  { id: 'omniplus', nombre: 'Omniplus Frutas (30 Sach)', pts: 87, sugerido: 1740, c30: 1269.73, c35: 1191.35, c40: 1112.97, g30: 470.27, g35: 548.65, g40: 627.03 },
+  { id: 'cafezzino', nombre: 'Cafezzino Evolución (30 Sach)', pts: 57, sugerido: 1640, c30: 1196.75, c35: 1122.88, c40: 1049.01, g30: 443.25, g35: 517.12, g40: 590.99 },
+  { id: 'powermaker', nombre: 'Power Maker (Caja 30 Sach)', pts: 110, sugerido: 2230, c30: 1627.29, c35: 1526.84, c40: 1426.39, g30: 602.71, g35: 703.16, g40: 803.61 },
+  { id: 'teatino', nombre: 'Teatino Limón (Caja 30 Sach)', pts: 63, sugerido: 1500, c30: 1094.50, c35: 1027.03, c40: 959.46, g30: 405.40, g35: 472.97, g40: 540.54 }
+];
+
+// Desglose del Combo Multiproducto de Inicio Rápido (~C$ 16,500)
+const comboInicioRapido = {
+  items: [
+    { cant: 5, prod: "Magnus Supreme", pts: 270, objetivo: "Energía y Rendimiento Diario" },
+    { cant: 3, prod: "Omniplus Frutas", pts: 261, objetivo: "Nutrición Base e Inmunidad" },
+    { cant: 5, prod: "Cafezzino Evolución", pts: 285, objetivo: "Control de Peso y Metabolismo" },
+    { cant: 4, prod: "Flu-Y (60 Cáp)", pts: 176, objetivo: "Equilibrio, Estrés y Sueño" },
+    { cant: 5, prod: "Agua Blu 600ml", pts: 10, objetivo: "Hidratación e Impacto Visual" }
+  ],
+  totalPts: 1002,
+  inversion: 16670.67,
+  recuperacionVenta: 22905.00,
+  gananciaLiquida: 6234.33
+};
+---
+
+<div id="panel-calculadora" class="emp-panel hidden space-y-12 max-w-6xl mx-auto py-4">
+  
+  <!-- Encabezado del Módulo (Bloque 0) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-8 sm:p-10 rounded-3xl text-center space-y-3 relative overflow-hidden shadow-xs dark:shadow-lg">
+    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-purple-500/10 dark:bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <span class="inline-block px-3.5 py-1 bg-purple-100 dark:bg-purple-500/20 text-purple-900 dark:text-purple-300 border border-purple-200 dark:border-purple-500/30 rounded-full text-xs font-extrabold uppercase tracking-wider">
+      Plan de Compensación Oficial
+    </span>
+    <h2 class="text-2xl sm:text-4xl font-black text-slate-950 dark:text-white tracking-tight">
+      Escala de Descuentos y Proyección de Inversión
+    </h2>
+    <p class="text-xs sm:text-sm text-slate-600 dark:text-purple-200/90 max-w-2xl mx-auto leading-relaxed font-medium">
+      Proyecta tus ganancias reales de menudeo en Córdobas (C$), conoce cuántas unidades necesitas para escalar de nivel y planifica tu salto al 40% mayorista.
+    </p>
+  </div>
+
+  <!-- 1. Infografía Visual de Niveles de Descuento (Bloque 1) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out space-y-4">
+    <div class="flex items-center justify-between">
+      <h3 class="text-lg sm:text-xl font-black text-slate-950 dark:text-white flex items-center gap-2">
+        <span>📈</span> Escala Fija de Descuentos
+      </h3>
+      <span class="text-xs font-semibold text-purple-700 dark:text-purple-400">Puntos Acumulables</span>
     </div>
 
-    <div id="resultado-descuento" class="bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900/60 p-6 rounded-2xl text-center">
-      <span class="text-xs font-bold text-purple-800 dark:text-purple-300 uppercase tracking-wider block mb-1">Descuento Actual</span>
-      <div id="desc-porcentaje" class="text-4xl font-black text-purple-950 dark:text-white mb-2">30%</div>
-      <p id="desc-mensaje" class="text-xs text-slate-600 dark:text-slate-300 font-medium">
-        ¡Buen trabajo! Has escalado al 30%. Tu siguiente meta es llegar a 2,000 puntos.
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {nivelesDescuento.map((nivel) => (
+        <div class={`bg-white dark:bg-[#130f24] border ${nivel.porc === '40%' ? 'border-amber-400 dark:border-amber-500/60 ring-2 ring-amber-400/20' : 'border-slate-200/90 dark:border-purple-950/80'} p-6 rounded-2xl shadow-xs flex flex-col justify-between relative overflow-hidden group hover:border-purple-400 transition-all`}>
+          {nivel.permanente && (
+            <span class="absolute top-0 right-0 bg-amber-500 text-slate-950 text-[9px] font-black uppercase px-2 py-0.5 rounded-bl-lg">
+              {nivel.porc === '25%' ? 'Base' : 'Protegido'}
+            </span>
+          )}
+          <div class="space-y-2">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/80 px-2.5 py-1 rounded-md inline-block">
+              {nivel.badge}
+            </span>
+            <div class="text-4xl font-black text-slate-950 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+              {nivel.porc}
+            </div>
+            <div class="text-xs font-extrabold text-purple-900 dark:text-purple-300">
+              {nivel.pts}
+            </div>
+            <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed pt-1">
+              {nivel.desc}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- 2. Simulador Interactivo Avanzado de Sliders de 2 Meses (Bloque 2) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-6 sm:p-8 rounded-3xl shadow-lg space-y-8">
+    <div class="border-b border-slate-100 dark:border-purple-950/60 pb-4">
+      <h3 class="text-xl font-black text-slate-950 dark:text-white flex items-center gap-2">
+        <span>🧮</span> Simulador de Calificación al 40% (En 1 o 2 Meses)
+      </h3>
+      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
+        Ajusta tus puntos estimados para 2 periodos mensuales consecutivos y diagnostica tu nivel de descuento según la regla de múltiplos de 1,000.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <!-- Sliders de Control (7 Cols) -->
+      <div class="lg:col-span-7 space-y-6">
+        <!-- Control Mes 1 -->
+        <div class="space-y-2 bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-100 dark:border-purple-950/50">
+          <div class="flex justify-between items-center text-xs font-extrabold uppercase tracking-wider">
+            <span class="text-slate-700 dark:text-slate-300">📅 Periodo Mensual 1:</span>
+            <span class="text-purple-600 dark:text-purple-400 text-sm font-black"><span id="m1-val">1000</span> PTS</span>
+          </div>
+          <input 
+            type="range" 
+            id="m1-slider" 
+            min="0" 
+            max="4000" 
+            step="100" 
+            value="1000" 
+            class="w-full accent-purple-600 cursor-pointer"
+          />
+          <div class="flex justify-between text-[10px] text-slate-400 font-bold">
+            <span>0 PTS</span>
+            <span>1,000 PTS</span>
+            <span>2,000 PTS</span>
+            <span>3,000 PTS</span>
+            <span>4,000 PTS</span>
+          </div>
+        </div>
+
+        <!-- Control Mes 2 -->
+        <div class="space-y-2 bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-100 dark:border-purple-950/50">
+          <div class="flex justify-between items-center text-xs font-extrabold uppercase tracking-wider">
+            <span class="text-slate-700 dark:text-slate-300">📅 Periodo Mensual 2 (Consecutivo):</span>
+            <span class="text-purple-600 dark:text-purple-400 text-sm font-black"><span id="m2-val">3000</span> PTS</span>
+          </div>
+          <input 
+            type="range" 
+            id="m2-slider" 
+            min="0" 
+            max="4000" 
+            step="100" 
+            value="3000" 
+            class="w-full accent-purple-600 cursor-pointer"
+          />
+          <div class="flex justify-between text-[10px] text-slate-400 font-bold">
+            <span>0 PTS</span>
+            <span>1,000 PTS</span>
+            <span>2,000 PTS</span>
+            <span>3,000 PTS</span>
+            <span>4,000 PTS</span>
+          </div>
+        </div>
+
+        <!-- Regla Oficial -->
+        <div class="bg-amber-50/80 dark:bg-amber-950/20 p-3.5 rounded-2xl border border-amber-200/60 dark:border-amber-900/40 flex items-start gap-2.5 text-xs text-amber-950 dark:text-amber-200 leading-relaxed">
+          <span class="text-base shrink-0">📌</span>
+          <div>
+            <strong>Regla de Múltiplos para el 40%:</strong> En cada periodo mensual solo se considerarán <strong>múltiplos exactos de 1,000 Puntos</strong> (ejemplo: 1,000, 2,000, 3,000 o 4,000). Si usas puntos de red, debes realizar un mínimo de <strong>500 Puntos Personales (PP)</strong> en ese periodo.
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta Resultado Diagnóstico (5 Cols) -->
+      <div class="lg:col-span-5 bg-linear-to-br from-purple-900 via-slate-900 to-purple-950 p-6 sm:p-8 rounded-3xl text-white space-y-6 shadow-xl border border-purple-700/50 relative overflow-hidden">
+        <div class="space-y-1 border-b border-purple-800/60 pb-4">
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-300">Diagnóstico de Descuento</span>
+          <div class="flex items-baseline justify-between">
+            <span class="text-xs text-purple-200 font-semibold">Descuento Obtenido:</span>
+            <span id="desc-porcentaje-res" class="text-4xl sm:text-5xl font-black text-amber-400">40%</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex justify-between text-xs">
+            <span class="text-purple-300">Puntos Totales Acumulados:</span>
+            <span id="puntos-totales-res" class="font-extrabold text-white">4,000 PTS</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-purple-300">Múltiplos de 1,000 Válidos al 40%:</span>
+            <span id="puntos-40-validos" class="font-extrabold text-emerald-400">4,000 PTS</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-purple-300">Condición de Nivel:</span>
+            <span id="estado-permanencia" class="font-bold text-amber-300">Descuento Mayorista</span>
+          </div>
+        </div>
+
+        <!-- Barra de Progreso Hacia el 40% -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-[11px] font-extrabold uppercase tracking-wider text-purple-200">
+            <span>Progreso al 40%</span>
+            <span id="progreso-porcentaje-texto">100%</span>
+          </div>
+          <div class="w-full h-3 bg-purple-950 rounded-full overflow-hidden p-0.5 border border-purple-700/50">
+            <div id="barra-progreso" class="h-full bg-linear-to-r from-purple-500 via-indigo-400 to-amber-400 rounded-full transition-all duration-300" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <div id="desc-mensaje-res" class="bg-purple-950/80 p-3.5 rounded-xl border border-purple-800/60 text-xs text-purple-100 leading-relaxed font-medium">
+          ¡Felicidades! Has cumplido la calificación al 40% de descuento mayorista.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Las 4 Combinaciones Ganadoras para el 40% (Bloque 3) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out space-y-4">
+    <div class="border-b border-slate-200 dark:border-purple-950/60 pb-2">
+      <h3 class="text-lg sm:text-xl font-black text-slate-950 dark:text-white flex items-center gap-2">
+        <span>🏆</span> Formas de Lograr el 40% en 2 Meses Consecutivos
+      </h3>
+      <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+        Elige la combinación de Puntos Personales (PP) o Puntos de Red que mejor se adapte a tu meta.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {combinaciones40.map((combo) => (
+        <div class="bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-5 rounded-2xl shadow-xs space-y-3 hover:border-purple-400 transition-all">
+          <span class="text-xs font-black text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950 px-2.5 py-1 rounded-md inline-block">
+            {combo.titulo}
+          </span>
+          <div class="space-y-1 text-xs font-bold text-slate-800 dark:text-slate-200">
+            <div class="flex justify-between">
+              <span>1er Mes:</span>
+              <span class="text-purple-600 dark:text-purple-400">{combo.m1}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>2do Mes:</span>
+              <span class="text-purple-600 dark:text-purple-400">{combo.m2}</span>
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed pt-1 border-t border-slate-100 dark:border-purple-950/60">
+            {combo.desc}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- 4. Conservación del 40% y Puntos de Organización (Bloque 4) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Regla de Conservación del 40% -->
+    <div class="bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 p-6 rounded-3xl space-y-2">
+      <h4 class="text-sm font-black text-amber-950 dark:text-amber-200 flex items-center gap-2">
+        <span>🔒</span> ¿Cómo Conservar el 40% de Descuento?
+      </h4>
+      <p class="text-xs text-amber-900/90 dark:text-amber-200/90 leading-relaxed">
+        Una vez que alcanzas el 40%, para conservarlo deberás completar anualmente <strong>1,500 Puntos Personales (PP)</strong> dentro del periodo que indique OMNILIFE. Si no los completas, tu descuento cambiará al 35%, manteniendo la opción de calificar nuevamente al 40%.
+      </p>
+    </div>
+
+    <!-- Puntos de Red de hasta 3er Nivel -->
+    <div class="bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200/80 dark:border-purple-900/40 p-6 rounded-3xl space-y-2">
+      <h4 class="text-sm font-black text-purple-950 dark:text-purple-200 flex items-center gap-2">
+        <span>👥</span> Calificación con Puntos de Red
+      </h4>
+      <p class="text-xs text-purple-900/90 dark:text-purple-200/90 leading-relaxed">
+        Puedes sumar los puntos de los Empresarios de tu red de <strong>hasta tres niveles</strong> que no tengan el 40% de descuento ni dependan de alguien que lo tenga. Debes completar al menos <strong>500 PP</strong> en cada periodo mensual para usar este beneficio.
       </p>
     </div>
   </div>
+
+  <!-- 5. Calculadora Financiera de Inversión vs Ganancia por Producto (Bloque 5) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out bg-white dark:bg-[#130f24] border border-slate-200/90 dark:border-purple-950/80 p-6 sm:p-8 rounded-3xl shadow-lg space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 dark:border-purple-950/60 pb-5">
+      <div>
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-950 px-2.5 py-1 rounded-md inline-block mb-1">
+          Planificador Financiero de Menudeo
+        </span>
+        <h3 class="text-xl font-black text-slate-950 dark:text-white flex items-center gap-2">
+          <span>💵</span> Proyección de Inversión y Retorno en Córdobas (C$)
+        </h3>
+        <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+          Selecciona un producto bandera para calcular cuántas unidades necesitas comprar, tu capital de inversión requerido y tu ganancia líquida.
+        </p>
+      </div>
+
+      <!-- Selector de Producto Top -->
+      <div class="shrink-0 min-w-60">
+        <label for="prod-select" class="block text-[11px] font-extrabold uppercase text-slate-500 dark:text-slate-400 mb-1">
+          Producto para la Simulación:
+        </label>
+        <select id="prod-select" class="w-full bg-slate-50 dark:bg-purple-950/60 border border-slate-200 dark:border-purple-800 text-slate-900 dark:text-white text-xs font-bold rounded-xl p-3 focus:ring-2 focus:ring-purple-500 outline-none cursor-pointer">
+          {productosTop.map((p) => (
+            <option value={p.id}>{p.nombre} ({p.pts} PTS)</option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid de Tarjetas de Metas Financieras (3 Columnas) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Meta 1: 1,000 PTS (30% Descuento) -->
+      <div class="bg-slate-50/80 dark:bg-purple-950/20 border border-slate-200/80 dark:border-purple-900/40 p-6 rounded-2xl space-y-4 relative overflow-hidden">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-purple-900/40 pb-3">
+          <span class="text-xs font-extrabold text-purple-700 dark:text-purple-300">Meta 1: Escalón 30%</span>
+          <span class="text-[10px] font-black uppercase bg-purple-100 dark:bg-purple-900 text-purple-900 dark:text-purple-200 px-2 py-0.5 rounded-md">1,000 PTS</span>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between">
+            <span class="text-slate-500 dark:text-slate-400">Unidades Necesarias:</span>
+            <span id="m30-unidades" class="font-black text-slate-900 dark:text-white text-sm">19 Cajas</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500 dark:text-slate-400">Puntos Computados:</span>
+            <span id="m30-puntos" class="font-bold text-purple-600 dark:text-purple-400">1,026 PTS</span>
+          </div>
+          <div class="flex justify-between pt-1 border-t border-slate-200 dark:border-purple-900/30">
+            <span class="text-slate-700 dark:text-slate-300 font-semibold">Venta Total Sugerida:</span>
+            <span id="m30-venta" class="font-bold text-slate-900 dark:text-white">C$ 22,515.00</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-700 dark:text-slate-300 font-semibold">Inversión Necesaria (al 30%):</span>
+            <span id="m30-costo" class="font-bold text-slate-900 dark:text-white">C$ 16,429.87</span>
+          </div>
+        </div>
+
+        <div class="bg-purple-100/70 dark:bg-purple-950/60 p-3.5 rounded-xl border border-purple-200/60 dark:border-purple-800/50 flex justify-between items-center">
+          <span class="text-xs font-extrabold text-purple-900 dark:text-purple-200">Ganancia Limpia:</span>
+          <span id="m30-ganancia" class="text-base font-black text-purple-700 dark:text-purple-300">C$ 6,085.13</span>
+        </div>
+      </div>
+
+      <!-- Meta 2: 2,000 PTS (35% Descuento Fijo) -->
+      <div class="bg-slate-50/80 dark:bg-purple-950/20 border border-slate-200/80 dark:border-purple-900/40 p-6 rounded-2xl space-y-4 relative overflow-hidden">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-purple-900/40 pb-3">
+          <span class="text-xs font-extrabold text-purple-700 dark:text-purple-300">Meta 2: Nivel Fijo 35%</span>
+          <span class="text-[10px] font-black uppercase bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-200 px-2 py-0.5 rounded-md">2,000 PTS</span>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between">
+            <span class="text-slate-500 dark:text-slate-400">Unidades Necesarias:</span>
+            <span id="m35-unidades" class="font-black text-slate-900 dark:text-white text-sm">38 Cajas</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500 dark:text-slate-400">Puntos Computados:</span>
+            <span id="m35-puntos" class="font-bold text-purple-600 dark:text-purple-400">2,052 PTS</span>
+          </div>
+          <div class="flex justify-between pt-1 border-t border-slate-200 dark:border-purple-900/30">
+            <span class="text-slate-700 dark:text-slate-300 font-semibold">Venta Total Sugerida:</span>
+            <span id="m35-venta" class="font-bold text-slate-900 dark:text-white">C$ 45,030.00</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-700 dark:text-slate-300 font-semibold">Inversión Necesaria (al 35%):</span>
+            <span id="m35-costo" class="font-bold text-slate-900 dark:text-white">C$ 30,831.30</span>
+          </div>
+        </div>
+
+        <div class="bg-amber-100/70 dark:bg-amber-950/60 p-3.5 rounded-xl border border-amber-200/60 dark:border-amber-800/50 flex justify-between items-center">
+          <span class="text-xs font-extrabold text-amber-950 dark:text-amber-200">Ganancia Limpia:</span>
+          <span id="m35-ganancia" class="text-base font-black text-amber-800 dark:text-amber-300">C$ 14,198.70</span>
+        </div>
+      </div>
+
+      <!-- Meta 3: 4,000 PTS (40% Mayorista) -->
+      <div class="bg-linear-to-br from-purple-900 via-slate-900 to-purple-950 text-white p-6 rounded-2xl space-y-4 relative overflow-hidden shadow-xl border border-purple-700/60">
+        <div class="flex items-center justify-between border-b border-purple-800/60 pb-3">
+          <span class="text-xs font-extrabold text-amber-400">Meta 3: Salto al 40%</span>
+          <span class="text-[10px] font-black uppercase bg-amber-400 text-slate-950 px-2 py-0.5 rounded-md">4,000 PTS</span>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between">
+            <span class="text-purple-300">Unidades Totales (2 Meses):</span>
+            <span id="m40-unidades" class="font-black text-white text-sm">75 Cajas</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-purple-300">Puntos Computados:</span>
+            <span id="m40-puntos" class="font-bold text-emerald-400">4,050 PTS</span>
+          </div>
+          <div class="flex justify-between pt-1 border-t border-purple-800/40">
+            <span class="text-purple-200 font-semibold">Venta Total Sugerida:</span>
+            <span id="m40-venta" class="font-bold text-white">C$ 88,875.00</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-purple-200 font-semibold">Inversión Estimada (Comprando al 35%):</span>
+            <span id="m40-costo" class="font-bold text-white">C$ 60,851.25</span>
+          </div>
+        </div>
+
+        <div class="bg-amber-400/20 p-3.5 rounded-xl border border-amber-400/40 flex justify-between items-center">
+          <span class="text-xs font-extrabold text-amber-300">Ganancia Neta por Menudeo:</span>
+          <span id="m40-ganancia" class="text-base font-black text-amber-400">C$ 28,023.75</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. REMATE DEL PANEL: PAQUETE DE INICIO RÁPIDO MULTIPRODUCTO (~C$ 16,500) (Bloque 6) -->
+  <div class="fade-in-block opacity-0 translate-y-10 transition-all duration-700 ease-out relative bg-linear-to-br from-slate-950 via-purple-950 to-slate-900 border-2 border-purple-500/40 rounded-3xl p-6 sm:p-10 text-white shadow-2xl overflow-hidden space-y-8">
+    <!-- Glows Decorativos de Fondo -->
+    <div class="absolute top-0 right-0 w-80 h-80 bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Encabezado del Remate -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-purple-800/60 pb-6 relative z-10">
+      <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 bg-linear-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[11px] uppercase tracking-wider rounded-lg shadow-md">
+          <span>⚡ ESTRATEGIA RECOMENDADA</span>
+        </div>
+        <h3 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
+          Combo de Inicio Rápido: <span class="text-transparent bg-clip-text bg-linear-to-r from-purple-300 via-amber-300 to-emerald-300">1,000 Puntos Directos</span>
+        </h3>
+        <p class="text-xs sm:text-sm text-purple-200/90 max-w-2xl leading-relaxed">
+          La mejor estrategia para el nuevo distribuidor. Invierte en un surtido equilibrado con los 4 pilares de mayor rotación comercial en Nicaragua y salta automáticamente al <strong>30% de descuento</strong> desde tu primer pedido.
+        </p>
+      </div>
+
+      <div class="bg-purple-900/60 border border-purple-700/60 p-4 rounded-2xl text-center shrink-0">
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-300 block">Descuento Activado</span>
+        <span class="text-3xl font-black text-amber-400">30% DIRECTO</span>
+        <span class="text-[10px] text-emerald-400 font-bold block mt-0.5">1,002 PTS Acumulados</span>
+      </div>
+    </div>
+
+    <!-- Tabla / Grid de Productos del Combo -->
+    <div class="space-y-3 relative z-10">
+      <span class="block text-xs font-extrabold uppercase tracking-wider text-purple-300">
+        📦 Contenido Sugerido del Paquete de Inicio (~C$ 16,500 NIO):
+      </span>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {comboInicioRapido.items.map((item) => (
+          <div class="bg-slate-900/80 border border-purple-900/60 p-4 rounded-xl flex items-center justify-between gap-3 hover:border-purple-500/60 transition-all">
+            <div class="space-y-0.5">
+              <span class="text-xs font-black text-white block">{item.cant}x {item.prod}</span>
+              <span class="text-[10px] text-purple-300/80 block">{item.objetivo}</span>
+            </div>
+            <span class="text-xs font-bold text-amber-400 bg-purple-950 px-2 py-1 rounded-md shrink-0">
+              +{item.pts} PTS
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Resumen Financiero: Inversión vs Retorno -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 relative z-10">
+      <!-- Inversión al 30% -->
+      <div class="bg-slate-900/90 border border-purple-800/60 p-5 rounded-2xl space-y-1">
+        <span class="text-[11px] font-extrabold uppercase tracking-wider text-purple-300">Inversión Aproximada (30%)</span>
+        <div class="text-2xl font-black text-white">
+          C$ {comboInicioRapido.inversion.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </div>
+        <span class="text-[10px] text-purple-400 block">Pago de contado a Omnilife</span>
+      </div>
+
+      <!-- Venta Total Sugerida -->
+      <div class="bg-slate-900/90 border border-purple-800/60 p-5 rounded-2xl space-y-1">
+        <span class="text-[11px] font-extrabold uppercase tracking-wider text-purple-300">Recuperación por Venta</span>
+        <div class="text-2xl font-black text-white">
+          C$ {comboInicioRapido.recuperacionVenta.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </div>
+        <span class="text-[10px] text-purple-400 block">Ingreso bruto al menudear</span>
+      </div>
+
+      <!-- Ganancia Neta -->
+      <div class="bg-linear-to-br from-emerald-950/80 to-purple-950/80 border border-emerald-500/50 p-5 rounded-2xl space-y-1">
+        <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-300">Ganancia Neta Limpia</span>
+        <div class="text-2xl font-black text-emerald-400">
+          C$ {comboInicioRapido.gananciaLiquida.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </div>
+        <span class="text-[10px] text-emerald-300/80 block">Rentabilidad inmediata (+37%)</span>
+      </div>
+    </div>
+
+    <!-- Mensaje Motivacional Cierre -->
+    <div class="bg-purple-950/70 border border-purple-800/60 p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-purple-200 relative z-10">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">💡</span>
+        <p class="leading-relaxed">
+          <strong>¿Por qué arrancar con este combo?</strong> Colocas tu capital a trabajar de inmediato, tienes stock variado en mano para entregas rápidas y estás a la mitad del camino para congelar tu <strong>35% definitivo</strong>.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
 </div>
+
+<script is:inline>
+  // Objeto con Datos Oficiales de Lista de Precios
+  const PRODUCTOS_DATA = {
+    magnus: { pts: 54, sugerido: 1185, c30: 864.73, g30: 320.27, c35: 811.35, g35: 373.65, c40: 757.97, g40: 427.03 },
+    omniplus: { pts: 87, sugerido: 1740, c30: 1269.73, g30: 470.27, c35: 1191.35, g35: 548.65, c40: 1112.97, g40: 627.03 },
+    cafezzino: { pts: 57, sugerido: 1640, c30: 1196.75, g30: 443.25, c35: 1122.88, g35: 517.12, c40: 1049.01, g40: 590.99 },
+    powermaker: { pts: 110, sugerido: 2230, c30: 1627.29, g30: 602.71, c35: 1526.84, g35: 703.16, c40: 1426.39, g40: 803.61 },
+    teatino: { pts: 63, sugerido: 1500, c30: 1094.50, g30: 405.40, c35: 1027.03, g35: 472.97, c40: 959.46, g40: 540.54 }
+  };
+
+  function initSimuladorDescuentos() {
+    // 1. Calculadora Financiera por Producto Bandera
+    const prodSelect = document.getElementById('prod-select');
+    
+    function actualizarCalculadoraProducto() {
+      const prodKey = prodSelect ? prodSelect.value : 'magnus';
+      const data = PRODUCTOS_DATA[prodKey] || PRODUCTOS_DATA.magnus;
+
+      const formatNio = (num) => `C$ ${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      // Meta 1000 PTS (Comprando al 30%)
+      const u30 = Math.ceil(1000 / data.pts);
+      const pts30 = u30 * data.pts;
+      const venta30 = u30 * data.sugerido;
+      const costo30 = u30 * data.c30;
+      const ganancia30 = u30 * data.g30;
+
+      const elU30 = document.getElementById('m30-unidades');
+      const elPts30 = document.getElementById('m30-puntos');
+      const elVenta30 = document.getElementById('m30-venta');
+      const elCosto30 = document.getElementById('m30-costo');
+      const elGanancia30 = document.getElementById('m30-ganancia');
+
+      if (elU30) elU30.textContent = `${u30} Cajas`;
+      if (elPts30) elPts30.textContent = `${pts30.toLocaleString()} PTS`;
+      if (elVenta30) elVenta30.textContent = formatNio(venta30);
+      if (elCosto30) elCosto30.textContent = formatNio(costo30);
+      if (elGanancia30) elGanancia30.textContent = formatNio(ganancia30);
+
+      // Meta 2000 PTS (Comprando al 35%)
+      const u35 = Math.ceil(2000 / data.pts);
+      const pts35 = u35 * data.pts;
+      const venta35 = u35 * data.sugerido;
+      const costo35 = u35 * data.c35;
+      const ganancia35 = u35 * data.g35;
+
+      const elU35 = document.getElementById('m35-unidades');
+      const elPts35 = document.getElementById('m35-puntos');
+      const elVenta35 = document.getElementById('m35-venta');
+      const elCosto35 = document.getElementById('m35-costo');
+      const elGanancia35 = document.getElementById('m35-ganancia');
+
+      if (elU35) elU35.textContent = `${u35} Cajas`;
+      if (elPts35) elPts35.textContent = `${pts35.toLocaleString()} PTS`;
+      if (elVenta35) elVenta35.textContent = formatNio(venta35);
+      if (elCosto35) elCosto35.textContent = formatNio(costo35);
+      if (elGanancia35) elGanancia35.textContent = formatNio(ganancia35);
+
+      // Meta 4000 PTS (Acumulados al 35% o 40%)
+      const u40 = Math.ceil(4000 / data.pts);
+      const pts40 = u40 * data.pts;
+      const venta40 = u40 * data.sugerido;
+      const costo40 = u40 * data.c35;
+      const ganancia40 = u40 * data.g35;
+
+      const elU40 = document.getElementById('m40-unidades');
+      const elPts40 = document.getElementById('m40-puntos');
+      const elVenta40 = document.getElementById('m40-venta');
+      const elCosto40 = document.getElementById('m40-costo');
+      const elGanancia40 = document.getElementById('m40-ganancia');
+
+      if (elU40) elU40.textContent = `${u40} Cajas`;
+      if (elPts40) elPts40.textContent = `${pts40.toLocaleString()} PTS`;
+      if (elVenta40) elVenta40.textContent = formatNio(venta40);
+      if (elCosto40) elCosto40.textContent = formatNio(costo40);
+      if (elGanancia40) elGanancia40.textContent = formatNio(ganancia40);
+    }
+
+    prodSelect?.addEventListener('change', actualizarCalculadoraProducto);
+    actualizarCalculadoraProducto();
+
+    // 2. Simulador de Sliders por Periodos Mensuales
+    const m1Slider = document.getElementById('m1-slider');
+    const m2Slider = document.getElementById('m2-slider');
+    const m1Val = document.getElementById('m1-val');
+    const m2Val = document.getElementById('m2-val');
+
+    const descPorcentajeRes = document.getElementById('desc-porcentaje-res');
+    const puntosTotalesRes = document.getElementById('puntos-totales-res');
+    const puntos40Validos = document.getElementById('puntos-40-validos');
+    const estadoPermanencia = document.getElementById('estado-permanencia');
+    const barraProgreso = document.getElementById('barra-progreso');
+    const progresoPorcentajeTexto = document.getElementById('progreso-porcentaje-texto');
+    const descMensajeRes = document.getElementById('desc-mensaje-res');
+
+    if (!m1Slider || !m2Slider) return;
+
+    function calcularSliders() {
+      const p1 = parseInt(m1Slider.value || '0');
+      const p2 = parseInt(m2Slider.value || '0');
+
+      if (m1Val) m1Val.textContent = p1.toLocaleString();
+      if (m2Val) m2Val.textContent = p2.toLocaleString();
+
+      const totalAcumulado = p1 + p2;
+      
+      const v1 = Math.floor(p1 / 1000) * 1000;
+      const v2 = Math.floor(p2 / 1000) * 1000;
+      const totalValido40 = v1 + v2;
+
+      let descuento = '25%';
+      let mensaje = 'Inicias directamente al 25% con tu afiliación. Acumula 1,000 puntos para subir al 30%.';
+      let permanencia = 'Descuento Base de Afiliación';
+
+      if (totalAcumulado >= 2000) {
+        descuento = '35%';
+        mensaje = '¡Excelente! Has alcanzado el 35%. Tu porcentaje queda protegido y congelado de por vida.';
+        permanencia = '¡Nivel Fijo Protegido!';
+      } else if (totalAcumulado >= 1000) {
+        descuento = '30%';
+        mensaje = '¡Buen trabajo! Estás al 30%. Sigue acumulando para subir al 35% protegido en los 2,000 PTS.';
+      }
+
+      const califica40 = totalValido40 >= 4000;
+
+      if (califica40) {
+        descuento = '40%';
+        mensaje = '¡Felicidades! Has cumplido la regla de múltiplos de 1,000 PTS en 2 meses y alcanzado el 40% Mayor Descuento.';
+        permanencia = '¡Descuento Mayorista!';
+      } else if (totalAcumulado >= 4000 && totalValido40 < 4000) {
+        mensaje = `Tienes ${totalAcumulado.toLocaleString()} PTS acumulados, pero para la regla del 40% solo computan bloques de 1,000 PTS por mes (tienes ${totalValido40.toLocaleString()} PTS válidos al 40%).`;
+      }
+
+      if (descPorcentajeRes) descPorcentajeRes.textContent = descuento;
+      if (puntosTotalesRes) puntosTotalesRes.textContent = `${totalAcumulado.toLocaleString()} PTS`;
+      if (puntos40Validos) puntos40Validos.textContent = `${totalValido40.toLocaleString()} PTS`;
+      if (estadoPermanencia) estadoPermanencia.textContent = permanencia;
+      if (descMensajeRes) descMensajeRes.textContent = mensaje;
+
+      const porcentajeProgreso = Math.min(100, Math.round((totalValido40 / 4000) * 100));
+      if (barraProgreso) barraProgreso.style.width = `${porcentajeProgreso}%`;
+      if (progresoPorcentajeTexto) progresoPorcentajeTexto.textContent = `${porcentajeProgreso}%`;
+    }
+
+    m1Slider.addEventListener('input', calcularSliders);
+    m2Slider.addEventListener('input', calcularSliders);
+
+    calcularSliders();
+  }
+
+  // 3. Observer para Animación al Hacer Scroll
+  function initDescuentosObserver() {
+    const blocks = document.querySelectorAll('#panel-calculadora .fade-in-block');
+    if (blocks.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('opacity-0', 'translate-y-10');
+            entry.target.classList.add('opacity-100', 'translate-y-0');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '0px 0px -60px 0px',
+        threshold: 0.1,
+      }
+    );
+
+    blocks.forEach((block) => observer.observe(block));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initSimuladorDescuentos();
+    initDescuentosObserver();
+  });
+</script>

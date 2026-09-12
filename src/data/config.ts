@@ -13,7 +13,7 @@ export const CONFIG_NEGOCIO = {
         pasos: true,      // ⭐ 5 Pasos
         descuentos: true, // 📊 Descuento
         rangos: true,     // 🏆 Niveles
-        red: false,       // 💰 Red (Oculto temporalmente)
+        red: true,       // 💰 Red
         afiliado: false,   // 🔗 Mi Enlace
     }
 };

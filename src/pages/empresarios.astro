@@ -1,4 +1,5 @@
 ---
+// src/pages/empresarios.astro
 import LayoutBase from '../layouts/LayoutBase.astro';
 import { CONFIG_NEGOCIO } from '../data/config';
 import PanelPasos from '../components/empresarios/PanelPasos.astro';
@@ -27,33 +28,38 @@ const listaPestanas = [
   titulo="Guía para Empresarios - Plan de Compensación"
   descripcion="Domina el Multidesarrollo Omnilife, los 5 Pasos de Oro y el Plan de Compensación con herramientas interactivas."
 >
-  <div class="mb-8 text-center max-w-3xl mx-auto">
-    <span class="text-xs font-bold tracking-wider text-purple-700 dark:text-purple-400 bg-purple-100 dark:bg-purple-950/80 px-3 py-1 rounded-md uppercase inline-block mb-3">
-      💼 Centro de Negocio y Liderazgo
-    </span>
-    <h1 class="text-3xl md:text-5xl font-extrabold text-slate-950 dark:text-white mb-4">
-      Multidesarrollo Omnilife
+  <!-- Encabezado Estilo Hub de Entrenamiento -->
+  <div class="mb-10 text-center max-w-4xl mx-auto space-y-4">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-purple-100 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-800/60 rounded-full text-purple-900 dark:text-purple-300 text-xs font-extrabold uppercase tracking-wider shadow-2xs">
+      <span>💼</span> Hub de Capacitación y Negocio
+    </div>
+    
+    <h1 class="text-3xl sm:text-5xl md:text-6xl font-black text-slate-950 dark:text-white tracking-tight leading-tight">
+      Multidesarrollo <span class="text-transparent bg-clip-text bg-linear-to-r from-purple-600 via-indigo-500 to-emerald-500">Omnilife</span>
     </h1>
-    <p class="text-slate-700 dark:text-slate-300 text-base md:text-lg">
-      Comprende de forma clara, interactiva y estratégica cómo funciona el plan de compensación, la escala de descuentos y los incentivos de crecimiento.
+    
+    <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium">
+      Tu centro de entrenamiento interactivo. Domina los 5 Pasos de Oro, simula tu escala de descuentos y proyecta tu crecimiento en el Plan de Compensación.
     </p>
   </div>
 
-  <!-- Pestañas de Navegación Renderizadas Dinámicamente -->
+  <!-- Pestañas de Navegación Flotantes (Sticky Bar) -->
   {listaPestanas.length > 0 && (
-    <div class="flex flex-wrap border border-slate-200/80 dark:border-purple-950/60 mb-8 bg-slate-100 dark:bg-purple-950/30 p-1.5 rounded-2xl max-w-3xl mx-auto gap-2">
-      {listaPestanas.map((tab, index) => (
-        <button 
-          class={`emp-tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
-            index === 0 
-              ? 'bg-white dark:bg-purple-900 text-purple-900 dark:text-white shadow-xs' 
-              : 'text-slate-700 dark:text-slate-400 hover:text-purple-900 dark:hover:text-white'
-          }`} 
-          data-target={tab.id}
-        >
-          {tab.label}
-        </button>
-      ))}
+    <div class="sticky top-4 z-40 mb-10 max-w-3xl mx-auto">
+      <div class="flex flex-wrap border border-slate-200/90 dark:border-purple-900/60 bg-white/90 dark:bg-[#130f24]/90 backdrop-blur-md p-1.5 rounded-2xl shadow-xl gap-1.5 justify-center">
+        {listaPestanas.map((tab, index) => (
+          <button 
+            class={`emp-tab-btn flex-1 min-w-30 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 cursor-pointer text-center ${
+              index === 0 
+                ? 'bg-purple-900 text-white dark:bg-purple-600 dark:text-white shadow-md shadow-purple-900/20' 
+                : 'text-slate-600 dark:text-slate-400 hover:text-purple-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-purple-950/50'
+            }`} 
+            data-target={tab.id}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
     </div>
   )}
 
@@ -70,6 +76,9 @@ const listaPestanas = [
     // 1. Pestañas de Navegación y Sincronización Inicial
     const buttons = document.querySelectorAll('.emp-tab-btn');
     const panels = document.querySelectorAll('.emp-panel');
+
+    const activeClasses = ['bg-purple-900', 'text-white', 'dark:bg-purple-600', 'dark:text-white', 'shadow-md', 'shadow-purple-900/20'];
+    const inactiveClasses = ['text-slate-600', 'dark:text-slate-400', 'hover:text-purple-900', 'dark:hover:text-white', 'hover:bg-slate-100', 'dark:hover:bg-purple-950/50'];
 
     // Sincronizar el panel visible con la primera pestaña activa disponible
     if (buttons.length > 0) {
@@ -88,12 +97,12 @@ const listaPestanas = [
         const targetId = btn.getAttribute('data-target');
 
         buttons.forEach((b) => {
-          b.classList.remove('bg-white', 'dark:bg-purple-900', 'text-purple-900', 'dark:text-white', 'shadow-xs');
-          b.classList.add('text-slate-700', 'dark:text-slate-400', 'hover:text-purple-900', 'dark:hover:text-white');
+          b.classList.remove(...activeClasses);
+          b.classList.add(...inactiveClasses);
         });
 
-        btn.classList.add('bg-white', 'dark:bg-purple-900', 'text-purple-900', 'dark:text-white', 'shadow-xs');
-        btn.classList.remove('text-slate-700', 'dark:text-slate-400', 'hover:text-purple-900', 'dark:hover:text-white');
+        btn.classList.add(...activeClasses);
+        btn.classList.remove(...inactiveClasses);
 
         panels.forEach((p) => {
           if (p.id === targetId) {
@@ -257,7 +266,7 @@ const listaPestanas = [
       loadCategory('bronce', 'Bronce');
     }
 
-    // 4. Calculadora de Comisiones de Red (Defensiva si el panel está oculto)
+    // 4. Calculadora de Comisiones de Red (Defensiva)
     const n1Slider = document.getElementById('n1-slider');
     const n2Slider = document.getElementById('n2-slider');
     const n3Slider = document.getElementById('n3-slider');
