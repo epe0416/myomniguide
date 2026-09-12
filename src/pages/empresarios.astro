@@ -10,6 +10,17 @@ import PanelAfiliado from '../components/empresarios/PanelAfiliado.astro';
 if (!CONFIG_NEGOCIO.mostrarNegocios) {
   return Astro.redirect(import.meta.env.BASE_URL);
 }
+
+const { paneles } = CONFIG_NEGOCIO;
+
+// Mapa de pestañas filtrado dinámicamente según la configuración
+const listaPestanas = [
+  { id: 'panel-pasos', label: '⭐ 5 Pasos', enabled: paneles.pasos },
+  { id: 'panel-calculadora', label: '📊 Descuento', enabled: paneles.descuentos },
+  { id: 'panel-rangos', label: '🏆 Niveles', enabled: paneles.rangos },
+  { id: 'panel-ganancias', label: '💰 Red', enabled: paneles.red },
+  { id: 'panel-afiliado', label: '🔗 Mi Enlace', enabled: paneles.afiliado },
+].filter((tab) => tab.enabled);
 ---
 
 <LayoutBase 
@@ -28,38 +39,49 @@ if (!CONFIG_NEGOCIO.mostrarNegocios) {
     </p>
   </div>
 
-  <!-- Pestañas de Navegación Interactiva -->
-  <div class="flex flex-wrap border border-slate-200/80 dark:border-purple-950/60 mb-8 bg-slate-100 dark:bg-purple-950/30 p-1.5 rounded-2xl max-w-3xl mx-auto gap-2">
-    <button class="emp-tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer bg-white dark:bg-purple-900 text-purple-900 dark:text-white shadow-xs" data-target="panel-pasos">
-      ⭐ 5 Pasos
-    </button>
-    <button class="emp-tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer text-slate-700 dark:text-slate-400 hover:text-purple-900 dark:hover:text-white" data-target="panel-calculadora">
-      📊 Descuento
-    </button>
-    <button class="emp-tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer text-slate-700 dark:text-slate-400 hover:text-purple-900 dark:hover:text-white" data-target="panel-rangos">
-      🏆 Niveles
-    </button>
-    <button class="emp-tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer text-slate-700 dark:text-slate-400 hover:text-purple-900 dark:hover:text-white" data-target="panel-ganancias">
-      💰 Red
-    </button>
-    <button class="emp-tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer text-slate-700 dark:text-slate-400 hover:text-purple-900 dark:hover:text-white" data-target="panel-afiliado">
-      🔗 Mi Enlace
-    </button>
-  </div>
+  <!-- Pestañas de Navegación Renderizadas Dinámicamente -->
+  {listaPestanas.length > 0 && (
+    <div class="flex flex-wrap border border-slate-200/80 dark:border-purple-950/60 mb-8 bg-slate-100 dark:bg-purple-950/30 p-1.5 rounded-2xl max-w-3xl mx-auto gap-2">
+      {listaPestanas.map((tab, index) => (
+        <button 
+          class={`emp-tab-btn flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
+            index === 0 
+              ? 'bg-white dark:bg-purple-900 text-purple-900 dark:text-white shadow-xs' 
+              : 'text-slate-700 dark:text-slate-400 hover:text-purple-900 dark:hover:text-white'
+          }`} 
+          data-target={tab.id}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  )}
 
-  <!-- Paneles Modulares -->
-  <PanelPasos />
-  <PanelDescuentos />
-  <PanelRangos />
-  <PanelRed />
-  <PanelAfiliado />
+  <!-- Paneles Modulares Condicionales -->
+  {paneles.pasos && <PanelPasos />}
+  {paneles.descuentos && <PanelDescuentos />}
+  {paneles.rangos && <PanelRangos />}
+  {paneles.red && <PanelRed />}
+  {paneles.afiliado && <PanelAfiliado />}
 </LayoutBase>
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
-    // 1. Pestañas de Navegación
+    // 1. Pestañas de Navegación y Sincronización Inicial
     const buttons = document.querySelectorAll('.emp-tab-btn');
     const panels = document.querySelectorAll('.emp-panel');
+
+    // Sincronizar el panel visible con la primera pestaña activa disponible
+    if (buttons.length > 0) {
+      const firstTargetId = buttons[0].getAttribute('data-target');
+      panels.forEach((p) => {
+        if (p.id === firstTargetId) {
+          p.classList.remove('hidden');
+        } else {
+          p.classList.add('hidden');
+        }
+      });
+    }
 
     buttons.forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -178,7 +200,7 @@ if (!CONFIG_NEGOCIO.mostrarNegocios) {
 
     function loadCategory(categoryKey, categoryDisplayName) {
       const items = categoryData[categoryKey];
-      if (!items) return;
+      if (!items || !subButtonsContainer || !subRankSelector) return;
 
       if (categoryTitleSpan) categoryTitleSpan.textContent = categoryDisplayName;
       subButtonsContainer.innerHTML = '';
@@ -218,7 +240,7 @@ if (!CONFIG_NEGOCIO.mostrarNegocios) {
     categoryBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
         const cat = btn.getAttribute('data-category');
-        const displayName = btn.querySelector('.font-extrabold').textContent;
+        const displayName = btn.querySelector('.font-extrabold')?.textContent || '';
 
         categoryBtns.forEach((b) => {
           b.classList.remove('bg-purple-900', 'text-white', 'border-purple-700', 'shadow-md');
@@ -231,9 +253,11 @@ if (!CONFIG_NEGOCIO.mostrarNegocios) {
       });
     });
 
-    loadCategory('bronce', 'Bronce');
+    if (categoryBtns.length > 0) {
+      loadCategory('bronce', 'Bronce');
+    }
 
-    // 4. Calculadora de Comisiones de Red
+    // 4. Calculadora de Comisiones de Red (Defensiva si el panel está oculto)
     const n1Slider = document.getElementById('n1-slider');
     const n2Slider = document.getElementById('n2-slider');
     const n3Slider = document.getElementById('n3-slider');
@@ -243,9 +267,11 @@ if (!CONFIG_NEGOCIO.mostrarNegocios) {
     const totalComision = document.getElementById('total-comision');
 
     function calcularRed() {
-      const p1 = parseInt(n1Slider?.value || 0);
-      const p2 = parseInt(n2Slider?.value || 0);
-      const p3 = parseInt(n3Slider?.value || 0);
+      if (!n1Slider || !n2Slider || !n3Slider) return;
+
+      const p1 = parseInt(n1Slider.value || '0');
+      const p2 = parseInt(n2Slider.value || '0');
+      const p3 = parseInt(n3Slider.value || '0');
 
       if (n1Val) n1Val.textContent = `${p1.toLocaleString()} PTS`;
       if (n2Val) n2Val.textContent = `${p2.toLocaleString()} PTS`;
@@ -266,9 +292,9 @@ if (!CONFIG_NEGOCIO.mostrarNegocios) {
     n2Slider?.addEventListener('input', calcularRed);
     n3Slider?.addEventListener('input', calcularRed);
 
-    calcularRed();
+    if (n1Slider) calcularRed();
 
-    // 5. Configuración de WhatsApp de Afiliado en LocalStorage
+    // 5. Configuración de WhatsApp de Afiliado
     const inputAfiliado = document.getElementById('input-afiliado-whatsapp');
     const btnGuardar = document.getElementById('btn-guardar-whatsapp');
     const feedback = document.getElementById('afiliado-feedback');

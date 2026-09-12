@@ -6,6 +6,14 @@ export const CONFIG_NEGOCIO = {
     instagramUrl: "https://www.instagram.com/bienestarconeverth/",
     mensajeBase: "Hola, vi la información en MyOmniGuide y me interesa asesoría sobre",
 
-
     mostrarNegocios: true,
+
+    // Control granular de paneles en la sección de Empresarios
+    paneles: {
+        pasos: true,      // ⭐ 5 Pasos
+        descuentos: true, // 📊 Descuento
+        rangos: true,     // 🏆 Niveles
+        red: false,       // 💰 Red (Oculto temporalmente)
+        afiliado: false,   // 🔗 Mi Enlace
+    }
 };
