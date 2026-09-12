@@ -88,10 +88,11 @@ const combosConProductos = await Promise.all(
       </p>
     </div>
 
+    <!-- Componente Estado Vacío (Fuera del grid para ocupar todo el ancho) -->
+    <ComboEmptyState baseUrl={baseUrl} />
+
     <!-- Grid de Combos -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8" id="grid-combos">
-      <ComboEmptyState baseUrl={baseUrl} />
-
       {combosConProductos.map((props) => (
         <ComboCard {...props} baseUrl={baseUrl} />
       ))}
@@ -99,9 +100,14 @@ const combosConProductos = await Promise.all(
   </main>
 </LayoutBase>
 
-<style>
-  .combo-product-item.region-hidden,
-  .combo-card.market-hidden {
+<style is:global>
+  /* Filtrado nativo síncrono por atributo HTML global */
+  html[data-market="nio"] .combo-card[data-has-nio="false"],
+  html[data-market="usa"] .combo-card[data-has-usa="false"],
+  html[data-market="nio"] .combo-product-item[data-has-nio="false"],
+  html[data-market="usa"] .combo-product-item[data-has-usa="false"],
+  .combo-card.market-hidden,
+  .combo-product-item.region-hidden {
     display: none !important;
   }
 
@@ -156,17 +162,19 @@ const combosConProductos = await Promise.all(
       }
     });
 
-    // 4. Estado Vacío (Empty State)
+    // 4. Alternar visibilidad entre el Estado Vacío (Empty State) y la Grilla de Combos
     const emptyState = document.getElementById('empty-state-combos');
-    if (emptyState) {
-      if (visibleCount === 0) {
-        emptyState.classList.remove('hidden');
-      } else {
-        emptyState.classList.add('hidden');
-      }
+    const gridCombos = document.getElementById('grid-combos');
+
+    if (visibleCount === 0) {
+      if (emptyState) emptyState.classList.remove('hidden');
+      if (gridCombos) gridCombos.classList.add('hidden');
+    } else {
+      if (emptyState) emptyState.classList.add('hidden');
+      if (gridCombos) gridCombos.classList.remove('hidden');
     }
 
-    // 5. Ocultar productos individuales no disponibles
+    // 5. Ocultar productos individuales no disponibles dentro de los combos
     document.querySelectorAll('.combo-product-item').forEach((item) => {
       const hasNio = item.getAttribute('data-has-nio') === 'true';
       const hasUsa = item.getAttribute('data-has-usa') === 'true';
@@ -229,9 +237,8 @@ const combosConProductos = await Promise.all(
       dialog.dataset.hasBackdropListener = 'true';
 
       dialog.addEventListener('click', (e) => {
-        // Si el objetivo exacto del clic es el <dialog> (el contenedor raíz que proyecta el ::backdrop)
         if (e.target === dialog) {
-          e.stopPropagation(); // Detiene la propagación hacia .combo-card
+          e.stopPropagation();
           dialog.close();
         }
       });

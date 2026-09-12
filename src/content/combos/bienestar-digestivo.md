@@ -1,5 +1,5 @@
 ---
-nombre: "Kit Bienestar Digestivo"
+nombre: "Pack Bienestar Digestivo"
 subtitulo: "Equilibrio intestinal, depuración y confort gastrointestinal"
 icono: "🌿"
 mercados:
