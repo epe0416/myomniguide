@@ -2,6 +2,8 @@
 nombre: "Kit Bienestar Digestivo"
 subtitulo: "Equilibrio intestinal, depuración y confort gastrointestinal"
 icono: "🌿"
+mercados:
+  - USA
 objetivo: "Optimizar el tránsito intestinal, favorecer la proliferación de microbiota saludable y proporcionar un efecto calmante y depurativo en el sistema digestivo."
 productos:
   - item: omnilife/fiber-n-plus

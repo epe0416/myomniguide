@@ -93,13 +93,16 @@ const combos = defineCollection({
     subtitulo: z.string(),
     icono: z.string().default('🔥'),
     objetivo: z.string(),
+    
+    // Campo para filtrado por mercado/país
+    mercados: z.array(z.enum(['NIO', 'USA'])).default(['NIO', 'USA']),
+
     productos: z.array(elementoProductoCombo),
     protocoloConsumo: z.string(),
     destacado: z.boolean().default(false),
 
     beneficios: z.array(z.string()).optional(),
     recomendaciones: z.object({
-      // Soporta: Objetos estructurados [{ producto, toma }], Arreglo de strings o String plano
       horarios: z.union([
         z.array(horarioProductoSchema),
         z.array(z.string()),

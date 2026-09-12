@@ -3,7 +3,7 @@
 import LayoutBase from '../../layouts/LayoutBase.astro';
 import { getCollection, render } from 'astro:content';
 import { getProductoComercial } from '../../data/inventario';
-import { getDirectContactUrl, getShareUrl } from '../../utils/whatsapp';
+import { getDirectContactUrl } from '../../utils/whatsapp';
 import HeroProducto from '../../components/producto/HeroProducto.astro';
 import GuiaConsumoPanel from '../../components/producto/GuiaConsumoPanel.astro';
 import GuiaComercialPanel from '../../components/producto/GuiaComercialPanel.astro';
@@ -26,9 +26,7 @@ const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 
 const productName = data.nombre;
-const currentUrl = Astro.url.href;
 const whatsappContactUrl = getDirectContactUrl(productName);
-const whatsappShareUrl = getShareUrl(productName, currentUrl);
 ---
 
 <LayoutBase 
@@ -51,7 +49,6 @@ const whatsappShareUrl = getShareUrl(productName, currentUrl);
     producto={producto} 
     comercial={comercial} 
     whatsappContactUrl={whatsappContactUrl} 
-    whatsappShareUrl={whatsappShareUrl} 
   />
 
   {/* Pestañas de Navegación */}
@@ -225,15 +222,6 @@ const whatsappShareUrl = getShareUrl(productName, currentUrl);
       const productName = contactBtn.getAttribute('data-product-name') || '';
       const message = `Hola, vi la información en MyOmniGuide y me interesa asesoría sobre el producto *${productName}*.`;
       contactBtn.href = `https://wa.me/${activePhone}?text=${encodeURIComponent(message)}`;
-    }
-
-    const shareBtn = document.getElementById('whatsapp-share-btn');
-    if (shareBtn) {
-      const productName = shareBtn.getAttribute('data-product-name') || '';
-      const cleanUrl = window.location.href.split('?')[0];
-      const referralUrl = `${cleanUrl}?w=${activePhone}`;
-      const message = `¡Hola! Te comparto la ficha técnica oficial de *${productName}* en MyOmniGuide:\n\n${referralUrl}`;
-      shareBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
     }
   });
 </script>

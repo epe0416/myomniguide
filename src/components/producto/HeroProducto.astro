@@ -2,6 +2,7 @@
 // src/components/producto/HeroProducto.astro
 import { Image } from 'astro:assets';
 import PrecioBadge from '../PrecioBadge.astro';
+import ShareWhatsApp from '../ShareWhatsApp.astro';
 import type { CollectionEntry } from 'astro:content';
 import type { ProductoComercial } from '../../data/inventario';
 
@@ -9,10 +10,9 @@ interface Props {
   producto: CollectionEntry<'productos'>;
   comercial: ProductoComercial | undefined;
   whatsappContactUrl: string;
-  whatsappShareUrl: string;
 }
 
-const { producto, comercial, whatsappContactUrl, whatsappShareUrl } = Astro.props;
+const { producto, comercial, whatsappContactUrl } = Astro.props;
 const { data } = producto;
 
 const precioNIO = comercial?.nio?.precio;
@@ -98,16 +98,12 @@ const tieneCatalogo = Boolean(data.imagenCatalogo);
         <span>💬 Consultar Asesoría</span>
       </a>
 
-      <a 
-        id="whatsapp-share-btn"
-        href={whatsappShareUrl} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        data-product-name={data.nombre}
-        class="inline-flex items-center gap-2 bg-purple-900 hover:bg-purple-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
-      >
-        <span>🔗 Compartir con mi Red</span>
-      </a>
+      <!-- Componente modular de compartir sin precio -->
+      <ShareWhatsApp 
+        nombre={data.nombre}
+        subtitulo={data.subtitulo}
+        clases="!bg-purple-900 hover:!bg-purple-800 !text-white !border-0 !px-4 !py-2.5 !rounded-xl"
+      />
     </div>
   </div>
 </div>

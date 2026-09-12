@@ -1,0 +1,30 @@
+---
+// src/components/combos/ComboEmptyState.astro
+interface Props {
+  baseUrl: string;
+}
+
+const { baseUrl } = Astro.props;
+---
+
+<div 
+  id="empty-state-combos" 
+  class="hidden col-span-1 lg:col-span-2 text-center py-16 px-6 bg-white dark:bg-[#130f24] rounded-3xl border border-dashed border-slate-300 dark:border-purple-950/80 shadow-xs"
+>
+  <div class="w-16 h-16 bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">
+    📦
+  </div>
+  <h3 class="text-xl font-black text-slate-950 dark:text-white mb-2">
+    No hay paquetes disponibles en esta región
+  </h3>
+  <p class="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto mb-6 leading-relaxed">
+    Actualmente no contamos con combos o protocolos configurados para el mercado seleccionado. Puedes intentar cambiar la región en el menú superior o explorar los productos individuales.
+  </p>
+  <a 
+    href={`${baseUrl}productos`}
+    class="inline-flex items-center gap-2 bg-purple-900 hover:bg-purple-800 dark:bg-purple-800 dark:hover:bg-purple-700 text-white text-xs font-extrabold px-5 py-3 rounded-2xl transition-all shadow-xs cursor-pointer"
+  >
+    <span>Explorar Catálogo Individual</span>
+    <span>→</span>
+  </a>
+</div>

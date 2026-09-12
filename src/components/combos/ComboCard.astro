@@ -1,0 +1,200 @@
+---
+// src/components/combos/ComboCard.astro
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import PrecioBadge from '../PrecioBadge.astro';
+import ShareWhatsApp from '../ShareWhatsApp.astro';
+import ComboModal from './ComboModal.astro';
+import type { ProductoComercial } from '../../data/inventario';
+
+export interface ProductoResuelto extends CollectionEntry<'productos'> {
+  cantidad: number;
+  comercial?: ProductoComercial;
+  disponibleNIO: boolean;
+  disponibleUSA: boolean;
+}
+
+interface Props {
+  combo: CollectionEntry<'combos'>;
+  productos: ProductoResuelto[];
+  puntosNIOTotal: number;
+  puntosUSDTotal: number;
+  precioNIOTotal: number;
+  precioUSDTotal: number;
+  baseUrl: string;
+}
+
+const {
+  combo,
+  productos,
+  puntosNIOTotal,
+  puntosUSDTotal,
+  precioNIOTotal,
+  precioUSDTotal,
+  baseUrl,
+} = Astro.props;
+
+const hasNio = (combo.data.mercados?.includes('NIO') ?? true) ? "true" : "false";
+const hasUsa = (combo.data.mercados?.includes('USA') ?? true) ? "true" : "false";
+const esDestacado = combo.data.destacado ?? false;
+---
+
+<div 
+  class="combo-card group relative bg-white dark:bg-[#130f24] rounded-3xl border border-slate-200/80 dark:border-purple-950/70 shadow-xs hover:shadow-2xl hover:shadow-purple-500/10 dark:hover:shadow-[0_0_35px_rgba(147,51,235,0.2)] hover:border-purple-300 dark:hover:border-purple-500/60 transition-all duration-300 flex flex-col justify-between overflow-hidden p-6 md:p-8 space-y-6 cursor-pointer"
+  data-combo-id={combo.id}
+  data-has-nio={hasNio}
+  data-has-usa={hasUsa}
+>
+  <!-- Barra Superior de Acento (Degradado en Hover) -->
+  <div class="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-purple-600 via-indigo-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+  <!-- Cabecera del Combo -->
+  <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-slate-100 dark:border-purple-950/60 pb-5 relative">
+    
+    <div class="space-y-1.5 pr-2">
+      <!-- Badge de Destacado -->
+      {esDestacado && (
+        <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800/60 px-2.5 py-0.5 rounded-full mb-1">
+          <span>⭐</span> Pack Popular
+        </span>
+      )}
+      
+      <div class="flex items-center gap-2.5">
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300 shrink-0">{combo.data.icono}</span>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-950 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors leading-tight">
+          {combo.data.nombre}
+        </h2>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{combo.data.subtitulo}</p>
+    </div>
+
+    <!-- Acumulados de Puntos y Inversión -->
+    <div class="flex flex-row sm:flex-col items-center sm:items-end gap-2 shrink-0 w-full sm:w-auto">
+      <div 
+        class="pts-badge bg-slate-900 dark:bg-purple-950 text-white px-3.5 py-1.5 rounded-2xl text-center flex-1 sm:flex-initial sm:w-full border border-slate-800 dark:border-purple-800/50 shadow-xs"
+        data-nio-pts={`${puntosNIOTotal} pts`}
+        data-usa-pts={`${puntosUSDTotal} pts`}
+      >
+        <span class="block text-[9px] uppercase font-extrabold text-purple-300 leading-none mb-0.5">Total Puntos</span>
+        <span class="pts-value text-xs sm:text-sm font-black text-purple-100">{puntosNIOTotal} pts</span>
+      </div>
+
+      {(precioNIOTotal > 0 || precioUSDTotal > 0) && (
+        <div class="bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-900/60 px-3 py-1.5 rounded-2xl text-center flex-1 sm:flex-initial sm:w-full shadow-2xs">
+          <span class="block text-[9px] uppercase font-extrabold text-emerald-700 dark:text-emerald-400 leading-none mb-0.5">Precio Combo</span>
+          <PrecioBadge 
+            precioNIO={precioNIOTotal} 
+            precioUSD={precioUSDTotal} 
+            clases="!bg-transparent !border-0 !p-0 !text-emerald-950 dark:!text-emerald-200 !text-xs sm:!text-sm font-black justify-center" 
+          />
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Objetivo del Paquete -->
+  <div class="bg-slate-50/70 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-100 dark:border-purple-950/40">
+    <h3 class="text-[11px] font-extrabold text-purple-900 dark:text-purple-300 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+      <span>🎯</span> Objetivo del Protocolo
+    </h3>
+    <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{combo.data.objetivo}</p>
+  </div>
+
+  <!-- Productos Incluidos -->
+  <div class="space-y-3">
+    <div class="flex items-center justify-between">
+      <h3 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+        Productos Incluidos ({productos.length})
+      </h3>
+      <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500">Haz clic en un producto para ver su ficha</span>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {productos.map((prod) => {
+        const ptsNIO = (prod.comercial?.nio?.puntos ?? 0) * prod.cantidad;
+        const ptsUSD = (prod.comercial?.usa?.puntos ?? 0) * prod.cantidad;
+        const prNIO = prod.comercial?.nio?.precio ? prod.comercial.nio.precio * prod.cantidad : undefined;
+        const prUSD = prod.comercial?.usa?.precio ? prod.comercial.usa.precio * prod.cantidad : undefined;
+
+        return (
+          <div 
+            class="combo-product-item"
+            data-has-nio={prod.disponibleNIO ? "true" : "false"}
+            data-has-usa={prod.disponibleUSA ? "true" : "false"}
+          >
+            <a 
+              href={`${baseUrl}productos/${prod.id}`}
+              class="group/item relative bg-white dark:bg-[#18132e] hover:bg-purple-50/50 dark:hover:bg-purple-900/30 p-3 rounded-2xl border border-slate-200/70 dark:border-purple-900/40 hover:border-purple-300 dark:hover:border-purple-500/60 transition-all text-center flex flex-col items-center justify-between h-full shadow-2xs hover:shadow-md"
+              title={`Ver detalles de ${prod.data.nombre}`}
+            >
+              {prod.cantidad > 1 && (
+                <span class="absolute top-2 right-2 z-10 bg-purple-900 text-purple-100 font-black text-[10px] px-2 py-0.5 rounded-full shadow-xs border border-purple-700/50">
+                  x{prod.cantidad}
+                </span>
+              )}
+
+              <div class="w-16 h-16 mb-2 flex items-center justify-center relative">
+                {prod.data.imagen ? (
+                  <Image 
+                    src={prod.data.imagen} 
+                    alt={prod.data.nombre}
+                    width={80}
+                    height={80}
+                    class="max-h-full w-auto object-contain group-hover/item:scale-110 transition-transform duration-300 drop-shadow-xs"
+                  />
+                ) : (
+                  <span class="text-2xl">📦</span>
+                )}
+              </div>
+
+              <div class="w-full space-y-1">
+                <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 group-hover/item:text-purple-600 dark:group-hover/item:text-purple-300 transition-colors line-clamp-1">
+                  {prod.data.nombre}
+                </h4>
+                
+                <span 
+                  class="pts-badge text-[10px] text-slate-500 dark:text-slate-400 font-semibold block"
+                  data-nio-pts={`${ptsNIO} pts`}
+                  data-usa-pts={`${ptsUSD} pts`}
+                >
+                  <span class="pts-value">{ptsNIO} pts</span>
+                </span>
+
+                {(prNIO || prUSD) && (
+                  <div class="pt-0.5">
+                    <PrecioBadge 
+                      precioNIO={prNIO} 
+                      precioUSD={prUSD} 
+                      clases="!text-[10px] !py-0.5 !px-1.5 justify-center" 
+                    />
+                  </div>
+                )}
+              </div>
+            </a>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <!-- Pie de Tarjeta y Acciones -->
+  <div class="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100 dark:border-purple-950/60">
+    <button 
+      type="button"
+      class="inline-flex items-center gap-2 bg-slate-100 dark:bg-purple-950/60 hover:bg-purple-100 dark:hover:bg-purple-900/80 text-purple-950 dark:text-purple-200 text-xs font-extrabold px-4 py-2.5 rounded-xl border border-slate-200/80 dark:border-purple-900/50 transition-all w-full sm:w-auto justify-center group-hover:border-purple-300"
+    >
+      <span>Ver Protocolo Completo</span>
+      <span class="group-hover:translate-x-1 transition-transform">→</span>
+    </button>
+
+    <ShareWhatsApp 
+      nombre={combo.data.nombre}
+      subtitulo={combo.data.subtitulo}
+      objetivo={combo.data.objetivo}
+      clases="shrink-0 w-full sm:w-auto"
+    />
+  </div>
+
+  <!-- Modal Relacionado -->
+  <ComboModal combo={combo} />
+</div>

@@ -2,10 +2,9 @@
 // src/pages/combos.astro
 import LayoutBase from '../layouts/LayoutBase.astro';
 import { getCollection, getEntry } from 'astro:content';
-import { Image } from 'astro:assets';
-import PrecioBadge from '../components/PrecioBadge.astro';
-import ShareWhatsApp from '../components/ShareWhatsApp.astro';
 import { getProductoComercial } from '../data/inventario';
+import ComboCard from '../components/combos/ComboCard.astro';
+import ComboEmptyState from '../components/combos/ComboEmptyState.astro';
 
 const rawBaseUrl = import.meta.env.BASE_URL;
 const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
@@ -14,24 +13,28 @@ const todosLosCombos = await getCollection('combos');
 
 const combosConProductos = await Promise.all(
   todosLosCombos.map(async (combo) => {
-    const productosResueltos = await Promise.all(
-      combo.data.productos.map(async (p) => {
-        const isObject = typeof p === 'object' && p !== null && 'item' in p;
-        const ref = isObject ? p.item : p;
-        const cantidad = isObject ? (p.cantidad ?? 1) : 1;
+    const productosResueltos = (
+      await Promise.all(
+        combo.data.productos.map(async (p) => {
+          const isObject = typeof p === 'object' && p !== null && 'item' in p;
+          const ref = isObject ? p.item : p;
+          const cantidad = isObject ? (p.cantidad ?? 1) : 1;
 
-        const prod = await getEntry(ref);
-        const comercial = prod ? getProductoComercial(prod.id) : undefined;
+          const prod = await getEntry(ref);
+          if (!prod) return null;
 
-        return {
-          ...prod!,
-          cantidad,
-          comercial,
-          disponibleNIO: !!comercial?.nio,
-          disponibleUSA: !!comercial?.usa,
-        };
-      })
-    );
+          const comercial = getProductoComercial(prod.id);
+
+          return {
+            ...prod,
+            cantidad,
+            comercial,
+            disponibleNIO: !!comercial?.nio,
+            disponibleUSA: !!comercial?.usa,
+          };
+        })
+      )
+    ).filter((item): item is NonNullable<typeof item> => item !== null);
 
     const puntosNIOTotal = productosResueltos
       .filter((item) => item.disponibleNIO)
@@ -62,6 +65,15 @@ const combosConProductos = await Promise.all(
 ---
 
 <LayoutBase titulo="Combos Sugeridos">
+  <!-- Script bloqueante síncrono para prevenir FOUC -->
+  <script is:inline>
+    (function () {
+      let moneda = localStorage.getItem('moneda_pref') || 'NIO';
+      if (moneda === 'USD') moneda = 'USA';
+      document.documentElement.setAttribute('data-market', moneda.toLowerCase());
+    })();
+  </script>
+
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
     <!-- Encabezado -->
     <div class="mb-10 text-center max-w-3xl mx-auto">
@@ -78,270 +90,21 @@ const combosConProductos = await Promise.all(
 
     <!-- Grid de Combos -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8" id="grid-combos">
-      {combosConProductos.map(({ combo, productos, puntosNIOTotal, puntosUSDTotal, precioNIOTotal, precioUSDTotal }) => (
-        <div 
-          class="combo-card group bg-white dark:bg-[#130f24] rounded-3xl border border-slate-200/80 dark:border-purple-950/60 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(147,51,235,0.2)] hover:border-purple-300 dark:hover:border-purple-500/50 transition-all cursor-pointer relative p-6 md:p-8 space-y-6"
-          data-combo-id={combo.id}
-        >
-          <!-- Cabecera del Combo -->
-          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-slate-100 dark:border-purple-950/60 pb-5">
-            <div>
-              <div class="flex items-center gap-2 mb-1">
-                <span class="text-2xl group-hover:scale-110 transition-transform">{combo.data.icono}</span>
-                <h2 class="text-xl font-black text-slate-950 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                  {combo.data.nombre}
-                </h2>
-              </div>
-              <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">{combo.data.subtitulo}</p>
-            </div>
+      <ComboEmptyState baseUrl={baseUrl} />
 
-            <!-- Acumulados -->
-            <div class="flex flex-row sm:flex-col items-center sm:items-end gap-2 shrink-0 w-full sm:w-auto">
-              <div 
-                class="pts-badge bg-purple-950 dark:bg-purple-900 text-white px-3 py-1.5 rounded-xl text-center flex-1 sm:flex-initial sm:w-full border border-purple-800/40 shadow-xs"
-                data-nio-pts={`${puntosNIOTotal} pts`}
-                data-usa-pts={`${puntosUSDTotal} pts`}
-              >
-                <span class="block text-[10px] uppercase font-bold text-purple-200 leading-none">Total Puntos</span>
-                <span class="pts-value text-sm font-black">{puntosNIOTotal} pts</span>
-              </div>
-
-              {(precioNIOTotal > 0 || precioUSDTotal > 0) && (
-                <div class="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-900/50 px-2.5 py-1 rounded-xl text-center flex-1 sm:flex-initial sm:w-full">
-                  <span class="block text-[9px] uppercase font-bold text-emerald-800 dark:text-emerald-400 leading-none mb-0.5">Precio Combo</span>
-                  <PrecioBadge 
-                    precioNIO={precioNIOTotal} 
-                    precioUSD={precioUSDTotal} 
-                    clases="!bg-transparent !border-0 !p-0 !text-emerald-950 dark:!text-emerald-200 !text-xs font-black justify-center" 
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-
-          <!-- Objetivo -->
-          <div>
-            <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Objetivo del Paquete</h3>
-            <p class="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{combo.data.objetivo}</p>
-          </div>
-
-          <!-- Productos Incluidos -->
-          <div>
-            <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Productos Incluidos</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-              {productos.map((prod) => {
-                const ptsNIO = (prod.comercial?.nio?.puntos ?? 0) * prod.cantidad;
-                const ptsUSD = (prod.comercial?.usa?.puntos ?? 0) * prod.cantidad;
-                const prNIO = prod.comercial?.nio?.precio ? prod.comercial.nio.precio * prod.cantidad : undefined;
-                const prUSD = prod.comercial?.usa?.precio ? prod.comercial.usa.precio * prod.cantidad : undefined;
-
-                return (
-                  <div 
-                    class="combo-product-item"
-                    data-has-nio={prod.disponibleNIO ? "true" : "false"}
-                    data-has-usa={prod.disponibleUSA ? "true" : "false"}
-                  >
-                    <a 
-                      href={`${baseUrl}productos/${prod.id}`}
-                      class="group/item relative bg-slate-50 dark:bg-purple-950/20 hover:bg-purple-100/60 dark:hover:bg-purple-900/40 p-3 rounded-2xl border border-slate-100 dark:border-purple-950/40 hover:border-purple-300 dark:hover:border-purple-500/50 transition-all text-center flex flex-col items-center justify-between h-full"
-                      title={`Ver detalles de ${prod.data.nombre}`}
-                    >
-                      {prod.cantidad > 1 && (
-                        <span class="absolute top-2 right-2 z-10 bg-purple-900 text-white font-black text-[10px] px-2 py-0.5 rounded-full shadow-xs border border-purple-700/50">
-                          x{prod.cantidad}
-                        </span>
-                      )}
-
-                      <div class="w-16 h-16 mb-2 flex items-center justify-center relative">
-                        {prod.data.imagen ? (
-                          <Image 
-                            src={prod.data.imagen} 
-                            alt={prod.data.nombre}
-                            width={80}
-                            height={80}
-                            class="max-h-full w-auto object-contain group-hover/item:scale-105 transition-transform"
-                          />
-                        ) : (
-                          <span class="text-2xl">📦</span>
-                        )}
-                      </div>
-
-                      <div>
-                        <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 group-hover/item:text-purple-700 dark:group-hover/item:text-purple-300 transition-colors line-clamp-1">
-                          {prod.data.nombre}
-                        </h4>
-                        
-                        <span 
-                          class="pts-badge text-[10px] text-slate-500 dark:text-slate-400 font-semibold block"
-                          data-nio-pts={`${ptsNIO} pts`}
-                          data-usa-pts={`${ptsUSD} pts`}
-                        >
-                          <span class="pts-value">{ptsNIO} pts</span>
-                        </span>
-
-                        {(prNIO || prUSD) && (
-                          <div class="mt-1">
-                            <PrecioBadge 
-                              precioNIO={prNIO} 
-                              precioUSD={prUSD} 
-                              clases="!text-[10px] !py-0.5 !px-1.5" 
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </a>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <!-- Pie de Tarjeta y Botón Compartir -->
-          <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100 dark:border-purple-950/60">
-            <span class="text-xs font-bold text-purple-600 dark:text-purple-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-              <span>Ver protocolo completo</span>
-              <span>→</span>
-            </span>
-
-            <ShareWhatsApp 
-              nombre={combo.data.nombre}
-              subtitulo={combo.data.subtitulo}
-              precioNIO={precioNIOTotal}
-              precioUSD={precioUSDTotal}
-              clases="shrink-0 w-full sm:w-auto"
-            />
-          </div>
-
-          <!-- MODAL NATIVO (<dialog>) CENTRADO EXACTO -->
-          <dialog 
-            id={`modal-${combo.id}`}
-            class="dialog-combo fixed inset-0 m-auto w-[92vw] max-w-2xl max-h-[85vh] p-0 rounded-3xl backdrop:bg-slate-950/70 backdrop:backdrop-blur-xs bg-white dark:bg-[#130f24] text-slate-900 dark:text-white border border-slate-200 dark:border-purple-950 shadow-2xl overflow-y-auto outline-none"
-          >
-            <div class="p-6 sm:p-8 space-y-6 relative">
-              <!-- Botón Cerrar -->
-              <button 
-                type="button" 
-                data-close-modal={`modal-${combo.id}`}
-                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 dark:bg-purple-950/80 text-slate-500 dark:text-purple-300 hover:bg-slate-200 dark:hover:bg-purple-900 flex items-center justify-center font-bold text-sm cursor-pointer transition-colors z-20"
-                aria-label="Cerrar modal"
-              >
-                ✕
-              </button>
-
-              <!-- Encabezado Modal -->
-              <div class="border-b border-slate-100 dark:border-purple-950/60 pb-4 pr-8">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="text-3xl">{combo.data.icono}</span>
-                  <h3 class="text-2xl font-black">{combo.data.nombre}</h3>
-                </div>
-                <p class="text-xs text-purple-700 dark:text-purple-300 font-semibold">{combo.data.subtitulo}</p>
-              </div>
-
-              <!-- Beneficios (Mínimo 5) -->
-              {combo.data.beneficios && combo.data.beneficios.length > 0 && (
-                <div class="bg-purple-50/60 dark:bg-purple-950/30 p-5 rounded-2xl border border-purple-100 dark:border-purple-900/40">
-                  <h4 class="text-xs font-extrabold text-purple-950 dark:text-purple-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <span>✨</span> Beneficios Integrales del Protocolo
-                  </h4>
-                  <ul class="space-y-2.5 text-xs text-slate-700 dark:text-purple-100">
-                    {combo.data.beneficios.map((ben) => (
-                      <li class="flex items-start gap-2.5">
-                        <span class="text-purple-600 dark:text-purple-400 font-black">✓</span>
-                        <span class="leading-relaxed" set:html={ben} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <!-- Recomendaciones Técnicas -->
-              <div class="space-y-4">
-                <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                  📋 Recomendaciones Técnicas de Uso
-                </h4>
-
-                {combo.data.recomendaciones?.horarios && (
-                  <div class="bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-100 dark:border-purple-950/40">
-                    <span class="block text-[11px] font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wider">
-                      ⏰ Horarios y Tomas Sugeridas por Producto:
-                    </span>
-
-                    {Array.isArray(combo.data.recomendaciones.horarios) ? (
-                      <div class="space-y-2">
-                        {combo.data.recomendaciones.horarios.map((h) => {
-                          const isObj = typeof h === 'object' && h !== null && 'producto' in h;
-                          const nombreProducto = isObj ? h.producto : '';
-                          const instruccionToma = isObj ? h.toma : h;
-
-                          return (
-                            <div class="bg-white dark:bg-[#18132e] p-3 rounded-xl border border-slate-200/60 dark:border-purple-900/40 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 shadow-2xs">
-                              {nombreProducto && (
-                                <span class="font-black text-xs text-purple-700 dark:text-purple-300 shrink-0 sm:w-1/3 flex items-center gap-1.5">
-                                  <span class="text-xs">📌</span> {nombreProducto}
-                                </span>
-                              )}
-                              <span class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed sm:w-2/3">
-                                {instruccionToma}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      /* Fallback si el combo aún tiene el formato de texto antiguo */
-                      <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        {combo.data.recomendaciones.horarios}
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                {combo.data.recomendaciones?.duracionEstimada && (
-                  <div class="bg-amber-50/70 dark:bg-amber-950/20 p-4 rounded-2xl border border-amber-200/60 dark:border-amber-900/40 text-amber-950 dark:text-amber-200 text-xs">
-                    <span class="block font-bold mb-1">📅 Rendimiento y Duración Estimada:</span>
-                    <p class="leading-relaxed">{combo.data.recomendaciones.duracionEstimada}</p>
-                  </div>
-                )}
-
-                {combo.data.recomendaciones?.tips && combo.data.recomendaciones.tips.length > 0 && (
-                  <div class="bg-slate-50 dark:bg-purple-950/20 p-4 rounded-2xl border border-slate-100 dark:border-purple-950/40">
-                    <span class="block text-[11px] font-bold text-slate-900 dark:text-white mb-2">💡 Tips Adicionales:</span>
-                    <ul class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
-                      {combo.data.recomendaciones.tips.map((tip) => (
-                        <li class="flex items-start gap-2">
-                          <span class="text-amber-500 font-bold">•</span>
-                          <span>{tip}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-
-              <!-- Footer Modal -->
-              <div class="pt-4 border-t border-slate-100 dark:border-purple-950/60 flex justify-end">
-                <button 
-                  type="button" 
-                  data-close-modal={`modal-${combo.id}`}
-                  class="bg-slate-200 dark:bg-purple-900 hover:bg-slate-300 dark:hover:bg-purple-800 text-slate-800 dark:text-white font-bold px-5 py-2 rounded-xl text-xs transition-colors cursor-pointer"
-                >
-                  Cerrar
-                </button>
-              </div>
-            </div>
-          </dialog>
-        </div>
+      {combosConProductos.map((props) => (
+        <ComboCard {...props} baseUrl={baseUrl} />
       ))}
     </div>
   </main>
 </LayoutBase>
 
 <style>
-  .combo-product-item.region-hidden {
+  .combo-product-item.region-hidden,
+  .combo-card.market-hidden {
     display: none !important;
   }
-  
-  /* Animación nativa de entrada centrada */
+
   dialog[open] {
     animation: modalScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
@@ -358,20 +121,52 @@ const combosConProductos = await Promise.all(
 </style>
 
 <script is:inline>
-  function initCombosPage() {
-    // 1. Sincronización de Moneda / Región
+  function sincronizarMercadoYCombos() {
     let moneda = localStorage.getItem('moneda_pref') || 'NIO';
     if (moneda === 'USD') moneda = 'USA';
-    const key = `data-${moneda.toLowerCase()}-pts`;
+    const marketKey = moneda.toLowerCase();
 
+    // 1. Actualizar el atributo HTML global
+    document.documentElement.setAttribute('data-market', marketKey);
+
+    // 2. Sincronizar Badges de Puntos
+    const ptsKey = `data-${marketKey}-pts`;
     document.querySelectorAll('.pts-badge').forEach((badge) => {
-      const val = badge.getAttribute(key);
+      const val = badge.getAttribute(ptsKey);
       const target = badge.querySelector('.pts-value');
       if (val && target) {
         target.textContent = val;
       }
     });
 
+    // 3. Ocultar TARJETAS DE COMBOS según mercado y contar las visibles
+    let visibleCount = 0;
+    const cards = document.querySelectorAll('.combo-card');
+    
+    cards.forEach((card) => {
+      const hasNio = card.getAttribute('data-has-nio') === 'true';
+      const hasUsa = card.getAttribute('data-has-usa') === 'true';
+      const disponible = moneda === 'USA' ? hasUsa : hasNio;
+
+      if (!disponible) {
+        card.classList.add('market-hidden');
+      } else {
+        card.classList.remove('market-hidden');
+        visibleCount++;
+      }
+    });
+
+    // 4. Estado Vacío (Empty State)
+    const emptyState = document.getElementById('empty-state-combos');
+    if (emptyState) {
+      if (visibleCount === 0) {
+        emptyState.classList.remove('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+      }
+    }
+
+    // 5. Ocultar productos individuales no disponibles
     document.querySelectorAll('.combo-product-item').forEach((item) => {
       const hasNio = item.getAttribute('data-has-nio') === 'true';
       const hasUsa = item.getAttribute('data-has-usa') === 'true';
@@ -383,13 +178,25 @@ const combosConProductos = await Promise.all(
         item.classList.remove('region-hidden');
       }
     });
+  }
 
-    // 2. Apertura del Modal al hacer clic sobre la Tarjeta (evitando enlaces/botones)
+  function initCombosInteractions() {
+    sincronizarMercadoYCombos();
+
+    // 1. Evento para abrir el modal al hacer clic en la tarjeta
     document.querySelectorAll('.combo-card').forEach((card) => {
+      if (card.dataset.hasClickListener) return;
+      card.dataset.hasClickListener = 'true';
+
       card.addEventListener('click', (e) => {
-        // Ignorar si el usuario hizo clic sobre un enlace <a> o sobre el botón de compartir
         const target = e.target;
-        if (target.closest('a') || target.closest('button')) {
+        
+        // Ignorar clics en enlaces, botones O interacciones dentro/sobre el modal
+        if (
+          target.closest('a') || 
+          target.closest('button') || 
+          target.closest('dialog')
+        ) {
           return;
         }
 
@@ -401,8 +208,11 @@ const combosConProductos = await Promise.all(
       });
     });
 
-    // 3. Cierre del Modal
+    // 2. Evento para cerrar modal desde los botones internos (✕ y Cerrar)
     document.querySelectorAll('[data-close-modal]').forEach((btn) => {
+      if (btn.dataset.hasCloseListener) return;
+      btn.dataset.hasCloseListener = 'true';
+
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const modalId = btn.getAttribute('data-close-modal');
@@ -413,23 +223,21 @@ const combosConProductos = await Promise.all(
       });
     });
 
-    // 4. Clic fuera del contenido (Backdrop Click) para cerrar
+    // 3. Cierre por Clic en el Backdrop (Fondo oscuro)
     document.querySelectorAll('dialog.dialog-combo').forEach((dialog) => {
+      if (dialog.dataset.hasBackdropListener) return;
+      dialog.dataset.hasBackdropListener = 'true';
+
       dialog.addEventListener('click', (e) => {
-        const rect = dialog.getBoundingClientRect();
-        const isInDialog = (
-          rect.top <= e.clientY &&
-          e.clientY <= rect.top + rect.height &&
-          rect.left <= e.clientX &&
-          e.clientX <= rect.left + rect.width
-        );
-        if (!isInDialog) {
+        // Si el objetivo exacto del clic es el <dialog> (el contenedor raíz que proyecta el ::backdrop)
+        if (e.target === dialog) {
+          e.stopPropagation(); // Detiene la propagación hacia .combo-card
           dialog.close();
         }
       });
     });
   }
 
-  document.addEventListener('DOMContentLoaded', initCombosPage);
-  window.addEventListener('currency-changed', initCombosPage);
+  document.addEventListener('DOMContentLoaded', initCombosInteractions);
+  window.addEventListener('currency-changed', sincronizarMercadoYCombos);
 </script>

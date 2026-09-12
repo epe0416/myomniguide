@@ -3,38 +3,29 @@
 interface Props {
   nombre: string;
   subtitulo?: string;
-  precioNIO?: number;
-  precioUSD?: number;
-  // puntosNIO?: number;
-  // puntosUSD?: number;
+  objetivo?: string;    // Usado en combos
+  descripcion?: string; // Usado en productos individuales
   clases?: string;
 }
 
 const {
   nombre,
   subtitulo = '',
-  precioNIO,
-  precioUSD,
-  // puntosNIO,
-  // puntosUSD,
+  objetivo = '',
+  descripcion = '',
   clases = '',
 } = Astro.props;
 
-const precioNIOFmt = precioNIO ? `C$ ${precioNIO.toLocaleString('es-NI', { minimumFractionDigits: 2 })}` : 'Consultar';
-const precioUSDFmt = precioUSD ? `$${precioUSD.toFixed(2)} USD` : 'Consultar';
-// const ptsNIOFmt = puntosNIO ? `${puntosNIO} PTS` : '';
-// const ptsUSDFmt = puntosUSD ? `${puntosUSD} PTS` : '';
-
-const textNIO = `¡Hola! Te comparto la información técnica de *${nombre}* 🇳🇮:\n` +
+const textNIO = `¡Hola! Te comparto la información de *${nombre}* 🇳🇮:\n` +
   (subtitulo ? `✨ _${subtitulo}_\n` : '') +
-  `🏷️ *Precio:* ${precioNIOFmt}\n` +
-  // (ptsNIOFmt ? `💎 *Puntos:* ${ptsNIOFmt}\n` : '') +
+  (objetivo ? `🎯 *Objetivo:* ${objetivo}\n` : '') +
+  (descripcion ? `💡 *Detalle:* ${descripcion}\n` : '') +
   `🔗 *Ver Ficha:* `;
 
-const textUSA = `¡Hola! Te comparto la información técnica de *${nombre}* 🇺🇸:\n` +
+const textUSA = `¡Hola! Te comparto la información de *${nombre}* 🇺🇸:\n` +
   (subtitulo ? `✨ _${subtitulo}_\n` : '') +
-  `🏷️ *Precio:* ${precioUSDFmt}\n` +
-  // (ptsUSDFmt ? `💎 *Puntos:* ${ptsUSDFmt}\n` : '') +
+  (objetivo ? `🎯 *Objetivo:* ${objetivo}\n` : '') +
+  (descripcion ? `💡 *Detalle:* ${descripcion}\n` : '') +
   `🔗 *Ver Ficha:* `;
 ---
 
