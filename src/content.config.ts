@@ -1,3 +1,4 @@
+// src/content.config.ts
 import { defineCollection, reference } from 'astro:content';
 import { z } from 'zod';
 import { glob } from 'astro/loaders';
@@ -16,11 +17,9 @@ const productos = defineCollection({
       imagen: image().optional(),
       imagenCatalogo: image().optional(),
 
-      // Estructura regional simétrica por mercado
       nio: mercadoSchema.optional(),
       usa: mercadoSchema.optional(),
 
-      // Validación estricta de categorías (Omnilife + Seytú)
       categorias: z.array(
         z.enum([
           'Sistema Inmune',
@@ -74,6 +73,19 @@ const productos = defineCollection({
     }),
 });
 
+const elementoProductoCombo = z.union([
+  reference('productos'),
+  z.object({
+    item: reference('productos'),
+    cantidad: z.number().int().positive().default(1),
+  }),
+]);
+
+const horarioProductoSchema = z.object({
+  producto: z.string(),
+  toma: z.string(),
+});
+
 const combos = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/combos' }),
   schema: z.object({
@@ -81,9 +93,21 @@ const combos = defineCollection({
     subtitulo: z.string(),
     icono: z.string().default('🔥'),
     objetivo: z.string(),
-    productos: z.array(reference('productos')),
+    productos: z.array(elementoProductoCombo),
     protocoloConsumo: z.string(),
     destacado: z.boolean().default(false),
+
+    beneficios: z.array(z.string()).optional(),
+    recomendaciones: z.object({
+      // Soporta: Objetos estructurados [{ producto, toma }], Arreglo de strings o String plano
+      horarios: z.union([
+        z.array(horarioProductoSchema),
+        z.array(z.string()),
+        z.string()
+      ]).optional(),
+      duracionEstimada: z.string().optional(),
+      tips: z.array(z.string()).optional(),
+    }).optional(),
   }),
 });
 
